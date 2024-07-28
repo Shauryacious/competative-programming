@@ -1,7 +1,7 @@
-// Author
-// Linkedin: 
-// Codeforces: 
-// Codechef: 
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -116,8 +116,6 @@ int32_t main()
     #ifndef ONLINE_JUDGE
         freopen("Error.txt","w",stderr);
     #endif
-    //Rating? Neh. In love with experience.
-    //Code Karlo, Coz KHNH :)
     int t;
     cin>>t;
     while(t--)
