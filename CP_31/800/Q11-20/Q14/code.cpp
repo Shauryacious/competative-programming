@@ -36,27 +36,21 @@ T sumvec(const vector<T>& vec) {
 }
 
 void solve() {
-    ll n; cin >> n;
-    vll b(n);
-    invec(b, n);
-    vll a;
-    a.push_back(b[0]);
-
-    for(int i=0; i<n-1; i++){
-        if(b[i]>b[i+1]){
-            a.push_back(b[i+1]);
-            a.push_back(b[i+1]);
+    ll a, b, c; cin>>a>>b>>c;
+    if(a == b){
+        if(c%2 != 0){
+            cout<<"First"<<endl;
         }
         else{
-            a.push_back(b[i+1]);
+            cout<<"Second"<<endl;
         }
     }
-
-    cout << a.size() << endl;
-    for(auto x: a){
-        cout << x << " ";
+    else if(a>b){
+        cout<<"First"<<endl;
     }
-    cout<<endl;
+    else{
+        cout<<"Second"<<endl;
+    }
 }
 
 int32_t main() {
