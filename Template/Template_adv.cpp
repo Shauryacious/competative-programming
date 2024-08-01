@@ -4,6 +4,7 @@
 // Codechef: https://www.codechef.com/users/shauryacious
 
 #include <bits/stdc++.h>
+
 using namespace std;
 
 //Speed
@@ -28,6 +29,7 @@ using namespace std;
 #define inll(x) long long int x; cin>>x;
 #define instr(x) string x; cin>>x;
 #define all(x) x.begin(), x.end()
+#define invll(v, n) for(int i=0; i<n; i++) cin>>v[i];
 #define os(x) cout << x << " ";
 #define out(x) cout << x << endl;
 #define MAX(x) *max_element(all(x))
@@ -48,7 +50,7 @@ typedef long double lld;
 typedef pair<int, int> pi;
 typedef pair<ll, ll> pl;
 typedef vector<int> vi;
-typedef vector<ll> vl;
+typedef vector<ll> vll;
 typedef vector<pi> vpi;
 typedef vector<pl> vpl;
 typedef vector<vi> vvi;
@@ -104,9 +106,11 @@ ll moduloMultiplication(ll a,ll b,ll mod){ll res = 0;a %= mod;while (b){if (b & 
 ll powermod(ll x, ll y, ll p){ll res = 1;x = x % p;if (x == 0) return 0;while (y > 0){if (y & 1)res = (res*x) % p;y = y>>1;x = (x*x) % p;}return res;}
 ll modinv(ll p,ll q){ll ex;ex=M-2;while (ex) {if (ex & 1) {p = (p * q) % M;}q = (q * q) % M;ex>>= 1;}return p;}
 
-void solve()
-{
-    
+void solve(){
+    inll(n);
+    vll v(n);
+    invll(v, n);
+    debug(v);
 }
 
 
