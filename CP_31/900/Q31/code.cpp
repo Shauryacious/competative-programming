@@ -32,38 +32,34 @@ template <typename T>
 T sumvec(const vector<T>& vec) { T sum = 0; for (auto val : vec) sum += val; return sum;}
 
 void solve() {
-    int n;
+    long long n;
     cin >> n;
-    vector<int> a(n);
-    int sum = 0;
-    int countn1 = 0;
     
-    for (int i = 0; i < n; ++i) {
-        cin >> a[i];
-        sum += a[i];
-        if (a[i] == -1) {
-            countn1++;
-        }
+    ll powOf2 = 0;
+    // Check for factors 2 and 3
+    while (n % 2 == 0){
+        n /= 2;
+        powOf2++;
+    }
+    ll powOf3 = 0;
+    while (n % 3 == 0){
+        n /= 3;
+        powOf3++;
     }
 
-    if (sum >= 0) {
-        if (countn1 % 2 == 0) {
-            cout << 0 << endl;
+    ll noOf6 = min(powOf2, powOf3);
+    
+    // If the remaining number is 1, n has only factors 2 and 3
+    if (n == 1) {
+        if(powOf2 > powOf3) {
+            cout <<-1<< endl;
         } else {
-            cout << 1 << endl;
+            cout << powOf3 + (powOf3 - noOf6) << endl;
         }
     } else {
-        int needed_flips = (-sum + 1) / 2;
-        countn1 -= needed_flips;
-        if (countn1 % 2 == 0) {
-            cout << needed_flips << endl;
-        } else {
-            cout << needed_flips + 1 << endl;
-        }
+        cout <<-1<< endl;
     }
-
 }
-
 
 int32_t main() {
     fastio();
