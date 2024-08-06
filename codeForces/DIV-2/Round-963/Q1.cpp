@@ -1,18 +1,6 @@
-// #include <bits/stdc++.h>
 #include<iostream>
 #include<vector>
 #include<string>
-#include<unordered_map>
-#include<map>
-#include<set>
-#include<unordered_set>
-#include<algorithm>
-#include<cmath>
-#include<climits>
-#include<queue>
-#include<stack>
-#include<deque>
-#include<bitset>
 using namespace std;
 
 // Speed
@@ -20,24 +8,39 @@ using namespace std;
 
 // Macros
 #define rep(i, j) for (int i = 0; i < j; i++)
-#define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i];
 
 // Typedef
 typedef long long ll;
 typedef vector<int> vi;
 typedef vector<ll> vll;
 
-// Functions
-template <typename T>
-T sumvec(const vector<T>& vec) { T sum = 0; for (auto val : vec) sum += val; return sum;}
-
 void solve() {
-    int n; cin >> n;
-    cout << n/2 + 1 << endl;
+    ll n; cin >> n;
+
+    string s; cin >> s;
+    ll ca = 0, cb = 0, cc = 0, cd = 0, cq = 0;
+    for(int i = 0; i < s.length(); i++) {
+        if(s[i] == 'A') ca++;
+        if(s[i] == 'B') cb++;
+        if(s[i] == 'C') cc++;
+        if(s[i] == 'D') cd++;
+        if(s[i] == '?') cq++;
+    }
+
+    // cout << ca << " " << cb << " " << cc << " " << cd << " " << cq << endl;
+    ll t = 0;
+    if(ca >= n) t += n;
+    else t += ca;
+    if(cb >= n) t += n;
+    else t += cb;
+    if(cc >= n) t += n;
+    else t += cc;
+    if(cd >= n) t += n;
+    else t += cd;
+    cout << t << endl;
 }
 
-
-int32_t main() {
+int main() {
     fastio();
     int t;
     cin >> t;
