@@ -68,32 +68,43 @@ template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i
 // Macros
 #define rep(i, j) for (int i = 0; i < j; i++)
 #define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
-
+#define sumvec(v) accumulate(v.begin(), v.end(), 0)
+#define sortvec(v) sort(v.begin(), v.end())
+#define revsortvec(v) sort(v.rbegin(), v.rend())
+#define maxvec(v) *max_element(v.begin(), v.end())
+#define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-bool f(ll k, vll a, ll c){
-    
+bool f(ll mid, vll a, ll c){
+    ll cows = 1;
+    ll last = a[0];
+    for(int i = 1; i < a.size(); i++){
+        ll diff = a[i] - last;
+        if(diff >= mid){
+            cows++;
+            last = a[i];
+        }
+    }
+    return cows >= c;
 }
 
 void solve(){
     ll n, c; cin >> n >> c;
     vll a(n);
     invec(a, n);
+    sortvec(a);
 
-    debug(n);
-    debug(c);
-    debug(a);
-
-    sort(a.begin(), a.end());
-
-    debug(a);
-
-    ll l = 0, u = 1e15;
-    while(l <= u){
-        ll mid = l + (u-l)/2;
-
+    ll l = 0, r = maxvec(a);
+    while(l + 1 < r){
+        ll mid = (r-l)/2 + l;
+        if(f(mid, a, c)){
+            l = mid;
+        }
+        else{
+            r = mid;
+        }
     }
-
+    cout << l << endl;
 }
 
 int main(){

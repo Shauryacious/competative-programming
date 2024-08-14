@@ -105,9 +105,25 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n, x; cin >> n >> x;
-    vll a = sieve(n);
-    debug(a);
+    ll n, q;
+    vll a(n);
+    invec(a, n);
+    unordered_map<ll, vector<ll>> adj;
+    for(ll i = 1; i <= n; i++){
+        for(int j=1; j<=a[i]; j++){
+            adj[i].push_back(i+j);
+        }
+    }
+    for(auto i: adj){
+        cout<<i.first<<" -> ";
+        for(auto j: i.second){
+            cout<<j<<" ";
+        }
+        cout<<nline;
+    }
+    while(q--){
+        ll x, y; cin>>x>>y;
+    }
 }
 
 int main(){

@@ -5,7 +5,10 @@
     "vector": "cpp",
     "bitset": "cpp",
     "algorithm": "cpp",
-    "ios": "cpp"
+    "ios": "cpp",
+    "__tree": "cpp",
+    "set": "cpp",
+    "map": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.cCompilerPath": "clang",
@@ -47,7 +50,10 @@
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [],
-  "C_Cpp_Runner.includeSearch": ["*", "**/*"],
+  "C_Cpp_Runner.includeSearch": [
+    "*",
+    "**/*"
+  ],
   "C_Cpp_Runner.excludeSearch": [
     "**/build",
     "**/build/**",

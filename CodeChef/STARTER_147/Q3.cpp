@@ -105,9 +105,12 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n, x; cin >> n >> x;
-    vll a = sieve(n);
-    debug(a);
+    ll a, b, c; cin >> a >> b >> c;
+    if(a <= (b+c+1) && b <= (a+c+1) && c <= (a+b+1)){
+        cout << "Yes" << nline;
+    }else{
+        cout << "No" << nline;
+    }
 }
 
 int main(){

@@ -20,19 +20,9 @@ using namespace std;
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
 
 // Define Constants
-#define MOD 1000000007
-#define MOD1 998244353
+#define MOD 1000000007 // 1e9 + 7
+#define MOD1 998244353 
 #define INF 1e18
-#define nline "\n"
-#define pb push_back
-#define ppb pop_back
-#define mp make_pair
-#define ff first
-#define ss second
-#define PI 3.141592653589793238462
-#define set_bits __builtin_popcountll
-#define sz(x) ((int)(x).size())
-#define all(x) (x).begin(), (x).end()
 
 // Typedef
 typedef long long ll;
@@ -103,11 +93,30 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+void solve() {
+    ll n; cin >> n;
+    vll a(n);
+    invec(a, n);
+    vll b(n);
+    invec(b, n);
+    sortvec(a);
+    sortvec(b);
 
-void solve(){
-    ll n, x; cin >> n >> x;
-    vll a = sieve(n);
-    debug(a);
+    vll count(n); // count[i] = number of elements in a that are greater than b[i]
+
+    for(int i = 0; i < n; i++){
+        count[i] = n - (upper_bound(a.begin(), a.end(), b[i]) - a.begin());
+    }
+    debug(count);
+    sortvec(count);
+
+    ll ans = 1;
+    for(int i = 0; i < n; i++){
+        ll a = ans % MOD;
+        ll b = (count[i]-i) % MOD;
+        ans = (a*b) % MOD;
+    }
+    cout << ans << endl;
 }
 
 int main(){
