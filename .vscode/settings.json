@@ -8,7 +8,11 @@
     "ios": "cpp",
     "__tree": "cpp",
     "set": "cpp",
-    "map": "cpp"
+    "map": "cpp",
+    "array": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "string_view": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.cCompilerPath": "clang",

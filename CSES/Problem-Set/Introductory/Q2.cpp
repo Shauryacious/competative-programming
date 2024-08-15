@@ -96,60 +96,24 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 // Macros
 #define rep(i, j) for (int i = 0; i < j; i++)
 #define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
-#define sumvec(v) accumulate(v.begin(), v.end(), 0)
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-vll primes;
-set<ll> s;
 
-void print(ll i, ll j, vll a){
-    for(int k=0; k<a.size(); k++){
-        if(a[k] == j){
-            if(k != i){
-                cout<<i+1<<" "<<k+1<<nline;
-                return;
-            }
-        }
-    }
-}
 void solve(){
     ll n; cin >> n;
     vll a(n);
     invec(a, n);
-    set<ll> vec;
-    for(int i=0; i<n; i++){
-        vec.insert(a[i]);
+    ll x = n*(n+1)/2;
+    ll y = 0;
+    for(auto i: a){
+        y+=i;
     }
-    for(int i=0; i<n; i++){
-        vec.insert(a[i]);
-    }
-    debug(vec);
-    int maxx = *max_element(a.begin(), a.end());
-    unordered_map<ll, ll> m;
-    for(int i=0; i<n; i++){
-        m[a[i]]++;
-    }
-    for(int i=0; i<n; i++){
-        m[a[i]]--;
-        for(ll j=1; j<=maxx; j++){
-            if(vec.find(j) != vec.end()){ // found => j is present in the array
-                if(m[j] == 0){
-                    continue;
-                }
-                ll val = a[i] + j;
-                if(s.find(val) == s.end()){ // not found i.e. val is not prime
-                        // cout<<"i : "<<i<<" "<<"j : "<<j<<" val : "<<val<<nline;
-                        print(i, j, a);
-                        return;
-                }
-            }
-        }
-    }
-    cout<<-1<<nline;
+    debug(y);
+    cout<<x-y;
 }
 
 int main(){
@@ -157,15 +121,6 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-
-    primes = sieve(199);
-    for(int i=0; i<primes.size(); i++){
-        s.insert(primes[i]);
-    }
-    debug(s);
-    ll t; cin >> t;
-    while(t--){
         solve();
-    }
     return 0;
 }
