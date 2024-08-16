@@ -107,6 +107,17 @@ void solve(){
     ll n; cin >> n;
     vector<ll> a(n);
     invec(a, n);
+    if(n>2){
+        cout<<"NO"<<nline;
+    }
+    else{ //n==2
+        if(a[1]-a[0]>1){
+            cout<<"YES"<<nline;
+        }
+        else{
+            cout<<"NO"<<nline;
+        }
+    }
 }
 
 int main(){

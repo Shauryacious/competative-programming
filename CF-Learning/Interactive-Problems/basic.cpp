@@ -102,26 +102,68 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+struct Interactor {
+    ll n;
+    vll a;
+    ll maxQueries = 20;
+    ll majorityElement = -1;
 
-void solve(){
-    ll n, x; cin >> n >> x;
-    vll a = sieve(n);
-    debug(a);
+    Interactor(ll n) {
+        this->n = n;
+        a = {2, 3, 2, 4, 2, 5, 2, 6, 2, 7, 2};
+        majorityElement = 2;
+        debug(a);
+    }
+
+    string queryInteractor(ll x) {
+        if (x == majorityElement) {
+            return "YES";
+        }
+        return "NO";
+    }
+};
+
+bool testing = true;
+
+string query(ll x, Interactor& it) {
+    cout << "? " << x << nline;
+    string result;
+    if (testing) { // if testing => take input from Interactor
+        result = it.queryInteractor(x);
+        debug(result);
+    } else { // if not testing => take input from server
+        cin >> result;
+    }
+    return result;
 }
 
-int main(){
+void solve() {
+    ll n; cin >> n; // size of array
+    Interactor interactor(n);
+    ll ans = -1;
+    ll queryLimit = 20;
+    for (ll i = 1; i <= queryLimit; i++) { // 20 queries limit
+        ll x = getRandomNumber(1, n); // random number between 1 to n
+        string result = query(x, interactor);
+        if (result == "YES") {
+            ans = x;
+            break;
+        }
+    }
+    if (ans != -1) {
+        cout << "! " << ans << nline;
+        return;
+    }
+}
+
+int main() {
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
     ll t; cin >> t;
-    while(t--){
+    while (t--) {
         solve();
     }
     return 0;
 }
-
-// Author : Shaurya Agrawal
-// Linkedin: https://www.linkedin.com/in/shauryacious/
-// Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious

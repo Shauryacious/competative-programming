@@ -103,10 +103,35 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
-void solve(){
-    ll n, x; cin >> n >> x;
-    vll a = sieve(n);
-    debug(a);
+void solve() {
+    int n, x;
+    cin >> n >> x;
+    vll a(n);   
+    invec(a, n);
+    revsortvec(a);
+    for (int j = 0; j < n; j++) {
+        if (x == 0) {
+            break;
+        }
+        if (j == n - 1) {
+            break;
+        }
+        int diff = a[j] - a[j + 1];
+        int s = min(diff, x);  
+        a[j + 1] += s;
+        x -= s;
+        j++;
+    }
+    int sumO = 0;
+    int sumE = 0;   
+    for (int j = 0; j < n; j++) {
+        if (j % 2 == 0) {
+            sumE += a[j];
+        } else {
+            sumO += a[j];
+        }
+    }
+    cout << abs(sumO - sumE) << endl;
 }
 
 int main(){
@@ -120,8 +145,3 @@ int main(){
     }
     return 0;
 }
-
-// Author : Shaurya Agrawal
-// Linkedin: https://www.linkedin.com/in/shauryacious/
-// Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious

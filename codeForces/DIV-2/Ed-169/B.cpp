@@ -104,9 +104,32 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n, x; cin >> n >> x;
-    vll a = sieve(n);
-    debug(a);
+    ll l, r, L, R; cin >> l >> r >> L >> R;
+    ll left = max(l, L);
+    ll right = min(r, R);
+    ll mxr = max(r, R);
+    ll mnl = min(l, L);
+    ll ans = 0;
+    debug(left);
+    debug(right);
+    // if((right - left) == 0){
+    //     cout<<2<<nline;
+    //     return;
+    // }
+    if((left - right) >= 1){ // no intersection
+        cout<<1<<nline;
+        return;
+    }
+    else{ // intersection i.e. right - left >= 1
+        ans += (right - left);
+        if(right < mxr){
+            ans++;
+        }
+        if(left > mnl){
+            ans++;
+        }
+    }
+    cout<<ans<<nline;
 }
 
 int main(){
@@ -120,8 +143,3 @@ int main(){
     }
     return 0;
 }
-
-// Author : Shaurya Agrawal
-// Linkedin: https://www.linkedin.com/in/shauryacious/
-// Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious

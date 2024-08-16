@@ -12,7 +12,8 @@
     "array": "cpp",
     "deque": "cpp",
     "list": "cpp",
-    "string_view": "cpp"
+    "string_view": "cpp",
+    "queue": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.cCompilerPath": "clang",
