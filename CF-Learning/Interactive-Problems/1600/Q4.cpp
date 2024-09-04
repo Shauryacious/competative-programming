@@ -1,3 +1,5 @@
+// F1. Guess the K-th Zero (Easy version)
+// D. Pythagorean Triples
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -104,8 +106,35 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
+void pre(vll &v){
+    ll n = 1e5;
+    v.pb(0);
+    for(ll a=3; a<n; a+=2){
+        ll A = a*a; // i^2
+        ll B = A/2; // i^2/2
+        ll C = B+1; // i^2/2 + 1
+        if(A == B + C){
+            if((a * a) + (B * B) == (C * C)){
+                v.pb(C);
+            }
+        }
+    }
+}
+
 void solve(){
-    
+    // vll v;
+    // pre(v);
+    // debug(v);
+    // ll t; cin >> t;
+    // while(t--){
+    //     ll n; cin >> n;
+    //     auto it = upper_bound(all(v), n) - v.begin();
+    //     cout<<it-1<<nline;
+    // }
+    int x = 3;
+    int y = x++;
+    int z = ++x;
+    cout << x << " " << y << " " << z << endl;
 }
 
 int main(){
@@ -113,9 +142,7 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t; cin >> t;
-    while(t--){
         solve();
-    }
+
     return 0;
 }
