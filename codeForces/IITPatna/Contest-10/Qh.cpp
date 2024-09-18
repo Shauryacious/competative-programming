@@ -108,22 +108,59 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve() {
-    int N, M;
-    cin >> N >> M;
-    int sum_of_squares = (N * (N + 1) * (2 * N + 1)) / 6;    
-    int total_capacity = sum_of_squares * M;
-    cout << total_capacity << endl;
+    ll n; cin >> n;
+    string s; cin>>s;
+    ll c0 = 0, c1 = 0;
+    for(int i=0; i<n; i++){
+        if(s[i] == '0') c0++;
+        else c1++;
+    }
+    debug(c0);
+    debug(c1);
+    int count = 0;
+    for(int i=1; i<=n; i++){
+        // debug(i);
+        // if(c0 == 0 || c1 == 0){
+        //     if(i%2 == 0){
+        //         count++;
+        //     }
+        //     // continue;
+        // }
+        // if(c0 == 1 || c1 == 1){
+        //     if(i%2 != 0){ // odd
+        //         count++;
+        //     }
+        //     // continue;
+        // }
+        if(c0 != 0 && i >= c0){
+            // cout<<"a"<<nline;
+            int k = i-c0;
+            // debug(k);
+            if(k%2 == 0) count++;
+            // debug(count);
+            continue;
+        }
+        if(c1 != 0 && i >= c1){
+            // cout<<"b"<<nline;
+            int k = i-c1;
+            // debug(k);
+            if(k%2 == 0) count++;
+            // debug(count);
+            continue;
+        }
+    }
+    cout<<count<<nline;
 }
 
-
-int main(){
+int main() {
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
-    fastio();
 
-    ll t; cin >> t;
-    while(t--) {
+    fastio();
+    ll t;
+    cin >> t;
+    while (t--) {
         solve();
     }
     return 0;

@@ -108,11 +108,40 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve() {
-    int N, M;
-    cin >> N >> M;
-    int sum_of_squares = (N * (N + 1) * (2 * N + 1)) / 6;    
-    int total_capacity = sum_of_squares * M;
-    cout << total_capacity << endl;
+    ll n;
+    cin >> n;
+
+    set<pair<int, int>> segments;
+
+    for (int i = 0; i < n; ++i) {
+        ll x1, y1, x2, y2;
+        cin >> x1 >> y1 >> x2 >> y2;
+        segments.insert({min(x1, x2), max(x1, x2)});
+    }
+
+    auto it = segments.begin();
+    while (it != segments.end()) {
+        auto current = *it;
+        auto next = it;
+        next++;
+        if (next == segments.end()) break;
+
+        if (current.second >= next->first) {
+            current.second = max(current.second, next->second);
+            it = segments.erase(it); 
+            it = segments.erase(next); 
+            segments.insert(current); 
+            it = segments.find(current); 
+        } else {
+            ++it;
+        }
+    }
+
+    ll count = 0;
+    for (const auto &segment : segments) {
+        count += segment.second - segment.first;
+    }
+    cout<<count<<nline;
 }
 
 
@@ -122,9 +151,8 @@ int main(){
     #endif
     fastio();
 
-    ll t; cin >> t;
-    while(t--) {
+
         solve();
-    }
+
     return 0;
 }
