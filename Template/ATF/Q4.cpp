@@ -128,11 +128,7 @@ bool canDistribute(vector<ll>& a, ll n, ll k, ll minShare) {
 void solve() {
     ll n, k;
     cin >> n >> k;
-    vector<ll> a(n);
-    
-    for(ll i = 0; i < n; i++) {
-        cin >> a[i];
-    }
+    vll a(n); invec(a, n);
     
     // Binary search for the maximum minShare
     ll low = 0;

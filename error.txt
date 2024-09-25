@@ -1,1 +1,2 @@
-n = 5
+minAT = 1
+minPid = 2

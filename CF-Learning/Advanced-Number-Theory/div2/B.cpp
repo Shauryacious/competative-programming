@@ -107,11 +107,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
 void solve(){
-    ll n; cin>>n;
-}
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
 
+    ll ans = 0;
+    for(int i = 0; i < n; i++){
+        ll b = abs(a[i] - a[n - 1 - i]);
+        ans = gcd(ans, b);
+    }
+    
+    cout << ans << nline;
+}
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);

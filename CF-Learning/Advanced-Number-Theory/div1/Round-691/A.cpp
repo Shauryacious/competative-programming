@@ -109,17 +109,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n; cin>>n;
+    ll n, m; cin>>n>>m;
+    vll a(n); invec(a, n);
+    vll b(m); invec(b, m); 
+    
 }
-
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t; cin >> t;
-    while(t--){
+
         solve();
-    }
+
     return 0;
 }

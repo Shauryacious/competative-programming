@@ -25,7 +25,6 @@ using namespace std;
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
 
 // Define Constants
-#define MOD 1000000007
 #define MOD1 998244353
 #define INF 1e18
 #define nline "\n"
@@ -78,7 +77,7 @@ template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i
 /*---------------------------------------------------------------------------------------------------------------------------*/
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count()); //generates random numbers
 /*---------------------------------------------------------------------------------------------------------------------------*/
-ll gcd(ll a, ll b) {if (b > a) {return gcd(b, a);} if (b == 0) {return a;} return gcd(b, a % b);}
+// ll gcd(ll a, ll b) {if (b > a) {return gcd(b, a);} if (b == 0) {return a;} return gcd(b, a % b);}
 ll expo(ll a, ll b, ll mod) {ll res = 1; while (b > 0) {if (b & 1)res = (res * a) % mod; a = (a * a) % mod; b = b >> 1;} return res;}
 void extendgcd(ll a, ll b, ll*v) {if (b == 0) {v[0] = 1; v[1] = 10; v[2] = a; return ;} extendgcd(b, a % b, v); ll x = v[1]; v[1] = v[0] - v[1] * (a / b); v[0] = x; return;} //pass an arry of size1 3
 ll mod_add(ll a, ll b, ll m) {a = a % m; b = b % m; return (((a + b) % m) + m) % m;}
@@ -108,18 +107,69 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
-void solve(){
-    ll n; cin>>n;
+#define int long long
+const int MOD = 1e9 + 7;
+
+// Function to calculate phi from 1 to N using O(N log log N) time complexity
+vector<int> phi_1_to_n(int N) {
+    vector<int> phi(N + 1);
+    for (int i = 1; i <= N; i++) {
+        phi[i] = i;
+    }
+
+    for (int i = 2; i <= N; i++) {
+        if (phi[i] == i) { // i is prime
+            for (int j = i; j <= N; j += i) {
+                phi[j] -= phi[j] / i;
+            }
+        }
+    }
+    return phi;
 }
 
-int main(){
-    #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr);
-    #endif
-    fastio();
-    ll t; cin >> t;
-    while(t--){
-        solve();
+// Function to calculate LCM of two numbers
+int lcm(int a, int b) {
+    return a * b / gcd(a, b); // Use built-in gcd for efficiency
+}
+
+// Function to solve the problem
+void solve() {
+    int n; 
+    cin >> n;
+    
+    vector<int> phi = phi_1_to_n(1e5); // Precompute Euler's Totient function
+    int answer = 0;
+
+    for (int c = 1; c <= n - 2; c++) { // Possible values of c
+        for (int d = 1; d * d <= (n - c); d++) { // d is a divisor of n-c
+            if ((n - c) % d == 0) { // if d is a factor of n-c
+                // Add contribution for divisor d
+                answer += phi[(n - c) / d] * lcm(c, d);
+                answer %= MOD;
+
+                // Check the second divisor (n-c) / d
+                int d2 = (n - c) / d;
+                if (d2 != d && d2 > 1) { // Add contribution for divisor d2
+                    answer += phi[(n - c) / d2] * lcm(c, d2);
+                    answer %= MOD;
+                }
+            }
+        }
     }
+    cout << answer << "\n";
+}
+
+signed main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    freopen("Error.txt", "w", stderr);
+    #endif
+
+    solve();
+
     return 0;
 }

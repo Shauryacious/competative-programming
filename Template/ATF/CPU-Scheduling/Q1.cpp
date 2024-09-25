@@ -107,9 +107,76 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+struct Process{
+    int Pid;
+    int AT;
+    int BT;
+    int CT;
+    int TAT; 
+    int WT;
+};
+
+// void calcCT(vector<Process>& processes, int n){
+//     processes[0].CT = 0 + processes[0].AT + processes[0].BT; // CT of prev + AT of curr + BT of curr
+//     for(int i=1; i<n; i++){
+//         processes[i].CT = processes[i-1].CT + processes[i].BT;  // CT of prev + BT of curr
+//     }
+// }
+
+// void calcTAT(vector<Process>& processes, int n){
+//     for(int i=0; i<n; i++){
+//         processes[i].TAT = processes[i].CT - processes[i].AT;
+//     }
+// }
+
+// void calcWT(vector<Process>& processes, int n){
+//     for(int i=0; i<n; i++){
+//         processes[i].WT = processes[i].TAT - processes[i].BT;
+//     }
+// }
+
+// void calcPramas(vector<Process>& processes, int n){
+//     calcCT(processes, n);
+//     calcTAT(processes, n);
+//     calcWT(processes, n);
+// }
+
+void inProcess(vector<Process>& processes, int n){
+    for(int i=0; i<n; i++){
+        int at; cin>>at;
+        processes[i].Pid = i+1;
+        processes[i].AT = at;
+        int bt; cin>>bt;
+        processes[i].BT = bt;
+    }
+}
 
 void solve(){
-    ll n; cin>>n;
+    int n; cin>>n;
+    vector<Process> processes(n);
+    inProcess(processes, n);
+
+    map<int, Process> mp;
+    for(int i=0; i<n; i++){
+        mp[i+1] = processes[i];
+    }
+
+
+    auto lambda = [&](Process& P1, Process& P2){
+        return P1.AT < P2.AT;
+    }
+    sort(processes.begin(), processes.end(), lambda);
+
+    Process firstProcess = processes[0];
+
+    firstProcess.CT = 0 + firstProcess.AT + firstProcess.BT;
+
+    queue<Process> RQ;
+
+    while(!RQ.empty()){
+
+    }
+
 }
 
 int main(){
@@ -117,9 +184,8 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t; cin >> t;
-    while(t--){
+
         solve();
-    }
+
     return 0;
 }

@@ -109,17 +109,53 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n; cin>>n;
-}
+    ll n, k, m; cin >> n >> k >> m;
+    vll a(n); invec(a, n);
 
+    vll r(a.begin(), a.end());
+
+    for(int i = 0; i < n; i++){
+        r[i] = a[i] % m;
+    }
+
+    map<ll, vll> mp;
+    for(int i = 0; i < n; i++){
+        ll A = a[i];
+        ll R = r[i];
+        mp[R].pb(A);
+    }
+
+    vll ans;
+
+    bool flag = false;
+    for(auto x : mp){
+        if(x.second.size() >= k){
+            flag = true;
+            vll v = x.second;
+            for(int i = 0; i < k; i++){
+                ans.pb(v[i]);
+            }
+            break;
+        }
+    }
+
+    if(flag == false){
+        cout << "No";
+        return;
+    }
+    cout<<"Yes"<<nline;
+    for(int i = 0; i < ans.size(); i++){
+        cout << ans[i] << " ";
+    }
+}
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t; cin >> t;
-    while(t--){
+
         solve();
-    }
+
     return 0;
 }
+// No additional code needed at the placeholder
