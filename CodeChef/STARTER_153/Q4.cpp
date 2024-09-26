@@ -110,8 +110,19 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve(){
     ll n; cin>>n;
+    vll a(n); invec(a, n);
+    for(int i=n-1; i>=0; i--){
+        if(a[i] == i){
+            continue;
+        }
+        else{
+            ll x = min((ll)(i), a[i]); 
+            cout<<x<<nline;
+            return;
+        }
+    }
+    cout<<0<<nline;
 }
-
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);

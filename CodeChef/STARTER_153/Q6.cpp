@@ -110,11 +110,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve(){
     ll n; cin>>n;
-    if(n<=60){
-        cout<<"YES"<<nline;
+    vll a(n); invec(a, n);
+    map<ll, vector<pair<ll, ll>>> mp;
+
+    for(int i=0; i<n; i++){
+        for(int j=i+1; j<n; j++){
+            ll x = a[i] ^ a[j];
+            mp[x].pb({a[i], a[j]});
+            mp[x].pb({a[j], a[i]});
+        }
     }
-    else{
-        cout<<"NO"<<nline;
+    for(auto x: mp){
+        debug(x);
     }
 }
 
@@ -123,8 +130,9 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-
+    ll t; cin >> t;
+    while(t--){
         solve();
-
+    }
     return 0;
 }

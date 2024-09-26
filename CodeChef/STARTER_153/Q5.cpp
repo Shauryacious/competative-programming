@@ -108,23 +108,66 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
-void solve(){
-    ll n; cin>>n;
-    if(n<=60){
-        cout<<"YES"<<nline;
+void solve() {
+    ll n; 
+    cin >> n;
+    map<ll, vll> adj;
+    
+    // Read the tree edges
+    for (int i = 0; i < n-1; i++) {
+        ll u, v; 
+        cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-    else{
-        cout<<"NO"<<nline;
+    
+    // Array to store levels for each vertex
+    vector<ll> level(n + 1, -1); // To track the level of each node
+    
+    // BFS traversal starting from node 1 to calculate levels
+    queue<ll> q;
+    q.push(1);
+    level[1] = 0;
+    
+    ll max_level = 0; // To track the maximum level (last level)
+    
+    while (!q.empty()) {
+        ll node = q.front(); q.pop();
+        
+        for (ll neighbor : adj[node]) {
+            if (level[neighbor] == -1) { // If not visited yet
+                level[neighbor] = level[node] + 1;
+                max_level = max(max_level, level[neighbor]);
+                q.push(neighbor);
+            }
+        }
     }
+
+    // Calculate the sum based on the conditions
+    ll sum = 0;
+    for (int i = 1; i <= n; i++) {
+        if (adj[i].size() == 1) {
+            // Leaf node
+            sum += 3;
+        } else {
+            // Non-leaf node
+            sum += 2;
+        }
+    }
+
+    // Output the sum for this test case
+    cout << sum << endl;
 }
 
-int main(){
+int main() {
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-
+    ll t; 
+    cin >> t;
+    while(t--) {
         solve();
-
+    }
     return 0;
 }

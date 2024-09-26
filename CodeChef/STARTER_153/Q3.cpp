@@ -109,7 +109,13 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n; cin>>n;
+    ll r, g, b; cin >> r >> g >> b;
+    if(r > (g+b) || g > (r+b) || b > (r+g)){
+        cout << "NO" << nline;
+    }
+    else{
+        cout << "YES" << nline;
+    }
 }
 
 int main(){

@@ -109,7 +109,13 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n; cin>>n;
+    ll x, y, z; cin >> x >> y >> z;
+    if(y-x == z-y){
+        cout<<0<<nline;
+    }
+    else{
+        cout<<1<<nline;
+    }
 }
 
 int main(){
