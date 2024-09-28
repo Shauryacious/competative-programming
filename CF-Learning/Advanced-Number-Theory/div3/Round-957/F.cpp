@@ -78,7 +78,7 @@ template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i
 /*---------------------------------------------------------------------------------------------------------------------------*/
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count()); //generates random numbers
 /*---------------------------------------------------------------------------------------------------------------------------*/
-// ll gcd(ll a, ll b) {if (b > a) {return gcd(b, a);} if (b == 0) {return a;} return gcd(b, a % b);}
+ll gcd(ll a, ll b) {if (b > a) {return gcd(b, a);} if (b == 0) {return a;} return gcd(b, a % b);}
 ll expo(ll a, ll b, ll mod) {ll res = 1; while (b > 0) {if (b & 1)res = (res * a) % mod; a = (a * a) % mod; b = b >> 1;} return res;}
 void extendgcd(ll a, ll b, ll*v) {if (b == 0) {v[0] = 1; v[1] = 10; v[2] = a; return ;} extendgcd(b, a % b, v); ll x = v[1]; v[1] = v[0] - v[1] * (a / b); v[0] = x; return;} //pass an arry of size1 3
 ll mod_add(ll a, ll b, ll m) {a = a % m; b = b % m; return (((a + b) % m) + m) % m;}
@@ -107,30 +107,39 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-ll precom(vll a){
-    ll g = 0;
-    for(int i=1; i<a.size(); i++){
-        g = __gcd(g, a[i] - a[0]);
-    }
-    return g;
-}
 
 void solve(){
-    ll n, m; cin>>n>>m;
+    ll n, x; cin>>n>>x;
     vll a(n); invec(a, n);
-    vll b(m); invec(b, m); 
-    ll g = precom(a);
-    for(int i=0; i<m; i++){
-        cout<<abs(__gcd(a[0]+b[i], g))<<" ";
+    set<ll> factors; // store all factors of x
+    factors.insert(x);
+
+    ll count = 1; // count no of partitions
+    for(int i=0; i<n; i++){
+        ll curr = a[i];
+        for(auto factor : factors){
+            if(factor%curr != 0){ // curr is not a factor of x
+                continue;
+            }
+            if(curr == factor){
+                count++;
+                factors = {x, x/curr};
+                break;
+            }
+            factors.insert(factor/curr);
+            
+        }
     }
+    cout<<count<<nline;
 }
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-
+    ll t; cin >> t;
+    while(t--){
         solve();
-
+    }
     return 0;
 }

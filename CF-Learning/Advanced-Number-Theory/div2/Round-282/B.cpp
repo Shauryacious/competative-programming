@@ -107,22 +107,33 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-ll precom(vll a){
-    ll g = 0;
-    for(int i=1; i<a.size(); i++){
-        g = __gcd(g, a[i] - a[0]);
-    }
-    return g;
-}
-
 void solve(){
-    ll n, m; cin>>n>>m;
-    vll a(n); invec(a, n);
-    vll b(m); invec(b, m); 
-    ll g = precom(a);
-    for(int i=0; i<m; i++){
-        cout<<abs(__gcd(a[0]+b[i], g))<<" ";
+    ll a, b; cin >> a >> b;
+    
+    if(a == b){
+        cout<<"infinity";
+        return;
     }
+    else if(a < b){
+        cout<<0;
+        return;
+    }
+    ll k = a - b;
+    vll fact;
+    for(ll i=1; i*i<=k; i++){
+        if(k%i == 0){ // i is a factor
+            ll factor1 = i;
+            ll factor2 = k/i;
+            if(factor1 > b){
+                fact.pb(factor1);
+            }
+            if(factor2 > b && factor1 != factor2){
+                fact.pb(factor2);
+            }
+        }
+    }
+
+    cout<<fact.size();
 }
 int main(){
     #ifndef ONLINE_JUDGE
@@ -134,3 +145,4 @@ int main(){
 
     return 0;
 }
+// https://codeforces.com/problemset/problem/495/B
