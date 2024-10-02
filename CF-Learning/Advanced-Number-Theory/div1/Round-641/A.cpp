@@ -107,103 +107,33 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-ll N = 1e5+5;
-vll spf(N+1);
-
-void construct_spf(){ // T.C. O(NloglogN)
-    for(ll i = 0; i <= N; i++){
-        spf[i] = i;
-    }
-    for(ll i=2; i*i<=N; i++){
-        if(spf[i] == i){
-            for(ll j=2*i; j<=N; j+=i){
-                spf[j] = min(spf[j], i);
-            }
-        }
-    }
-}
-
-vll prime_factors(ll n){ // T.C. O(logN)
-    vll Pfactors;
-    while(n != 1){ // while n doesn't become 1
-        ll x = spf[n]; // x is the smallest prime factor of n
-        Pfactors.pb(x);
-        while(n % x == 0){
-            n /= x;
-        }
-    }
-    return Pfactors;
-}
 
 void solve(){
-    ll n, m; cin>>n>>m;
-    vll isActive(N + 1, 0);      // Increased size to N+1 to handle all possible x
-    vll occupied(N + 1, 0);      // Increased size to N+1 to handle all prime factors
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
+    vll suffix_gcd(n);
 
-    for(ll i=0 ; i<m; i++){
-        char type; cin>>type;
-        ll x; cin>>x;
-        vll pf = prime_factors(x); // Get all Prime Factors of x
-
-        if(type == '+'){
-            if(isActive[x] == 1){
-                cout<<"Already on"<<nline;
-            }
-            else{ 
-                bool conflict = false;
-                ll conflictWith = -1;
-                
-                // Check for any conflicts
-                for(auto p: pf){
-                    if(occupied[p] != 0){
-                        conflict = true;
-                        conflictWith = occupied[p];
-                        break; // Stop at first conflict
-                    }
-                }
-
-                if(conflict){
-                    cout<<"Conflict with "<<conflictWith<<nline;
-                }
-                else{
-                    // No conflict, proceed to activate
-                    isActive[x] = 1;
-                    for(auto p: pf){
-                        occupied[p] = x;
-                    }
-                    cout<<"Success"<<nline;
-                }
-            }
-        }
-        else{ // Deactivate the LHC x i.e. type == '-'
-            if(isActive[x] == 0){
-                cout<<"Already off"<<nline;
-            }
-            else{
-                cout<<"Success"<<nline;
-                isActive[x] = 0;
-                for(auto p: pf){
-                    occupied[p] = 0;
-                }
-            }
-        }
+    suffix_gcd[n-1] = a[n-1];
+    for(ll i = n-2; i>=0; i--){
+        suffix_gcd[i] = gcd(a[i], suffix_gcd[i+1]);
     }
+
+    vll b(n); // Individual GCDs
+    for(ll i = 0; i<n-1; i++){
+        b[i] = (a[i] * suffix_gcd[i+1]) / gcd(a[i], suffix_gcd[i+1]);
+    }
+    ll ans = b[0];
+    for(ll i = 1; i<n-1; i++){
+        ans = gcd(ans, b[i]);
+    }
+    cout<<ans<<nline;
 }
-
-
-// TIME COMPLEXITY: O(NloglogN + MlogN) ~ O(NlogN)
-// O(MlogN) => logN to find prime factors of x(<=N)
-// (MlogN) => M queries
-// For each query, we are checking if there is a conflict or not
-// and in the inner loops, the Vll pf = prime_factors(x) takes logN time to traverse
-// SPACE COMPLEXITY: O(N)
 
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    construct_spf();
     ll t = 1; 
     // cin >> t;
     while(t--){
@@ -211,7 +141,3 @@ int main(){
     }
     return 0;
 }
-// https://codeforces.com/problemset/problem/154/B
-// https://www.youtube.com/watch?v=M54O-FKxYOY
-
-

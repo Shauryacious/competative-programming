@@ -108,9 +108,32 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
-void solve(){
-    ll n; cin>>n;
+void solve() {
+    ll n,k; cin>>n>>k;
+    if(k>n){
+        cout<<n<<nline;
+    }
+    else if(k==1){
+        cout<<n<<nline;
+    }
+    else{
+        ll l = 1;
+        ll count = 0;
+        while(n>=k){
+            while((ll)n>=(ll)l*k){
+                l = l*k;
+            }
+            n = n-l;
+            count++;
+            l = 1;
+        }
+        if(n!=0 && n<k){
+            count += n;
+        }
+        cout<<count<<endl;
+    }
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
