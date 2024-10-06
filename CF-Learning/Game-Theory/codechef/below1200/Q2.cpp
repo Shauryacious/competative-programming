@@ -111,6 +111,27 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve(){
     ll n; cin>>n;
     vll a(n); invec(a, n);
+    ll minn = 1e9+1;
+    for(ll i=0; i<n; i++){
+        minn = min(a[i], minn);
+    }
+    if(minn == 1){
+        cout<<"CHEF"<<nline;
+        return;
+    }
+
+    ll rest_sum = 0;
+    for(ll i=0; i<n; i++){
+        rest_sum += (a[i] - 2);
+    }
+
+    if((rest_sum)%2 == 0){
+        cout<<"CHEFINA"<<nline;
+    }
+    else{
+        cout<<"CHEF"<<nline;
+    }
+
 }
 
 int main(){

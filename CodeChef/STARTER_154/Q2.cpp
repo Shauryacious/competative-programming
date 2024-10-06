@@ -109,8 +109,20 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n; cin>>n;
+    ll n, k; cin>>n>>k;
     vll a(n); invec(a, n);
+    ll sum = 0;
+    ll count = 0;
+    for(int i=0; i<n; i++){
+        if(sum + a[i] <= k){
+            sum += a[i];
+            count++;
+        }
+        else{
+            break;
+        }
+    }
+    cout<<count<<endl;
 }
 
 int main(){

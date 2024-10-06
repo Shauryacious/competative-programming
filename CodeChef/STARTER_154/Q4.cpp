@@ -107,10 +107,58 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
 void solve(){
-    ll n; cin>>n;
+    ll n, k; cin >> n >> k;
     vll a(n); invec(a, n);
+    
+    map<ll, ll> mp;
+    for(ll i=0; i<n; i++){
+        mp[a[i]]++;
+    }
+
+    bool is_all_K = true;
+    for(ll i = 0; i < n; i++){
+        if(a[i] != k){
+            is_all_K = false;
+            break;
+        }
+    }
+
+    if(is_all_K){
+        cout << 0 << endl;
+        return;
+    }
+
+    ll s = -1, e = -1;
+    for(ll i=0; i<n; i++){
+        if(a[i] != k){
+            if(s == -1){
+                s = i;
+            }
+            e = i;
+        }
+    }
+
+    if(s == e){
+        cout<<1<<endl;
+        return;
+    }
+
+    bool isxor = true, isgcd = true;
+    ll x = (a[s] ^ k);
+
+    for(ll i=s; i<=e; i++){
+        if(a[i] % k != 0) isgcd = false;
+        if((a[i] ^ k) != x) isxor = false;
+    }
+
+    if(isxor || isgcd){
+        cout<<1<<endl;
+        return;
+    }
+
+    cout<<2<<endl;
+
 }
 
 int main(){
@@ -124,3 +172,5 @@ int main(){
     }
     return 0;
 }
+
+
