@@ -110,34 +110,15 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n;
-    cin >> n;
+    ll n, k; cin>>n>>k;
 
-    vll b;
-    for (ll i = 1; i * i <= n; i++) {
-        if (n % i == 0) {
-            b.pb(i);
-            if (i != n / i) {
-                b.pb(n / i);
-            }
+    for(int i=1; i<=k; i++){
+        if((n%i) != (i-1)){
+            cout<<"NO"<<nline;
+            return;
         }
     }
-
-    sort(b.begin(), b.end());
-
-
-    ll count = 1, max_cnt = 1;
-    for (int i = 0; i < b.size() - 1; i++) {
-        if (abs(b[i] - b[i + 1]) == 1) {
-            count++;
-        } else {
-            count = 1;  // Reset to 1 since this divisor starts a new sequence
-        }
-        max_cnt = max(max_cnt, count);
-    }
-
-
-    cout << max_cnt << nline;
+    cout<<"YES"<<nline;
 }
 
 int main(){
@@ -146,7 +127,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }
