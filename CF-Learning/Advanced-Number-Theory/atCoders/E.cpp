@@ -37,14 +37,14 @@ using namespace std;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
+#define all(x) (x).begin(), (x).end()
 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
+typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef vector<vll> vvll;
-typedef vector<string> vs;
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -99,7 +99,6 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 // Macros
-#define all(x) (x).begin(), (x).end()
 #define rep(i, j) for (int i = 0; i < j; i++)
 #define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
@@ -108,18 +107,22 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll countNoOf5s(ll n){
+    ll cnt = 0;
+    for(ll i = 5; i <= n; i *= 5){ // till 5^x <= n
+        cnt += n/i;
+    }
+    return cnt;
+}
 
-void solve(){
+void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
-    sortvec(a);
-
-    vll ans;
-
-    do{
-        ans.pb(s)
-    }(while(next_permutation(all(a))));
-
+    if(n%2 == 1){
+        cout<<0;
+        return;
+    }
+    // there are n/2 even numbers in n!
+    cout<<countNoOf5s(n/2);
 }
 
 int main(){
@@ -127,7 +130,8 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t; cin >> t;
+    ll t = 1; 
+    // cin >> t;
     while(t--){
         solve();
     }

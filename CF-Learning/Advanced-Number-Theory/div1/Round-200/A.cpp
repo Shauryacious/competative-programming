@@ -37,14 +37,14 @@ using namespace std;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
+#define all(x) (x).begin(), (x).end()
 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
+typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef vector<vll> vvll;
-typedef vector<string> vs;
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -99,7 +99,6 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 // Macros
-#define all(x) (x).begin(), (x).end()
 #define rep(i, j) for (int i = 0; i < j; i++)
 #define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
@@ -109,25 +108,41 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
-void solve(){
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
-    sortvec(a);
 
-    vll ans;
+void solve() {
+    ll a, b;
+    cin >> a >> b;
 
-    do{
-        ans.pb(s)
-    }(while(next_permutation(all(a))));
+    ll count = 0;
+    while (b != 0) {
+        count += a / b; // Add how many times `b` fits into `a`
+        a %= b; // Update `a` to the remainder
+        swap(a, b); // Swap `a` and `b` to continue the process
+    }
 
+    cout << count << '\n'; // Output the total steps
 }
+
+// 199/200
+
+// 199R || R
+
+// 199.1
+//  /
+// 199 + 1
+
+
+// // 21/8
+
+// 2 + 5/8
 
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t; cin >> t;
+    ll t = 1; 
+    // cin >> t;
     while(t--){
         solve();
     }
