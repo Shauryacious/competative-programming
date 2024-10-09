@@ -42,8 +42,9 @@ using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
-typedef vector<int> vi;
 typedef vector<ll> vll;
+typedef vector<vll> vvll;
+typedef vector<string> vs;
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -109,10 +110,11 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    string s;
+    string s; cin>>s;
     sortvec(s);
+    debug(s);
 
-    vector<string> ans;
+    vs ans;
 
     do{
         ans.pb(s);

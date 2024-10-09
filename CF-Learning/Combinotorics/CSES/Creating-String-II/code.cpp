@@ -50,13 +50,13 @@ ll expo(ll a, ll n, ll M){
 
 void precompute(){
     fact[0] = 1;
-    for(int i=1; i<N; i++){
+    for(int i=1; i<=N; i++){
         fact[i] = mod_mul(i, fact[i-1], M);
     }
 
-    ifact[N-1] = expo(fact[N-1], M-2, M);  // Modular inverse of fact[N-1]
-    for(int i=N-2; i>=0; i--){
-        ifact[i] = mod_mul(ifact[i+1], i+1, M);
+    ifact[N] = expo(fact[N], M-2, M);  // Modular inverse of fact[N-1]
+    for(int i=N-1; i>=0; i--){
+        ifact[i] = mod_mul(i+1, ifact[i+1], M);
     }
 }
 

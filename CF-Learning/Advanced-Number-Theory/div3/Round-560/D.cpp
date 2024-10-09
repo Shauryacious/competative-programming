@@ -108,26 +108,49 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 ll lcm(ll a, ll b){
-    return (a*b)/__gcd(a, b);
+    return (a*b)/gcd(a, b);
 }
+
+
 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+    sortvec(a);
 
+    vll b;
+    ll ans = a[0]*a[n-1];
+    debug(ans);
 
-    if(n%2 != 0){
-        sort(a.begin(), a.end());
-        cout<<(ll)(a[ceil(n/2)]*a[ceil(n/2)])<<nline;
-        return;
+    for(int i=2; i*i<=ans; i++){
+        if(ans%i == 0){
+            b.pb(i);
+            if(i != ans/i){
+                b.pb(ans/i);
+            }
+        }
     }
 
-    ll ans = a[0];
-    for(int i=1; i<n; i++){
-        ans = lcm(ans, a[i]);
+    sortvec(b);
+    debug(b);
+
+    if(b.size() == a.size()){
+        bool flag = true;
+        for(int i=0; i<n; i++){
+            if(b[i] != a[i]){
+                flag = false;
+                break;
+            }
+        }
+
+        if(flag){
+            cout<<ans<<nline;
+            return;
+        }
     }
 
-    cout<<ans<<nline;
+    cout<<-1<<nline;
+
 }
 
 int main(){
