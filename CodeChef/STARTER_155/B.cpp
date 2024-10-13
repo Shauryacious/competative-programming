@@ -111,9 +111,12 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve(){
     ll n; cin>>n;
-    vll a(n); invec(a, n);
-    sortvec(a);
-
+    if(n<4){
+        cout<<0<<nline;
+        return;
+    }
+    ll x = n/2;
+    cout<<(x/2)*(x-x/2)<<nline;
 }
 
 int main(){

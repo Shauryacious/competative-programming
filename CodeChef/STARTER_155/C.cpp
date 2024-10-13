@@ -110,11 +110,71 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve(){
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
-    sortvec(a);
+    ll n, m;
+    cin >> n >> m;
+    if(n>m){
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if((i%m) == j){
+                    cout << 3 << " ";
+                }else{
+                    cout << 2 << " ";
+                }
+            }
+            cout << nline;
+        }
+        cout<<nline;
+    }
+    else if(n==m){
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(i == j){
+                    cout << 3 << " ";
+                }else{
+                    cout << 2 << " ";
+                }
+            }
+            cout << nline;
+        }
+        cout<<nline;
+    }
+    else{
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if((j%n) == i){
+                    cout << 3 << " ";
+                }else{
+                    cout << 2 << " ";
+                }
+            }
+            cout << nline;
+        }
+        cout<<nline;
+    }
+} 
+// i want to print like say n=4, m=4
+// 3 2 2 2 
+// 2 3 2 2 
+// 2 2 3 2 
+// 2 2 2 3 
 
-}
+// if n = 2, m = 6
+// 3 2 3 2 3 2
+// 2 3 2 3 2 3
+
+// if n = 6, m = 2
+// 3 2
+// 2 3
+// 3 2
+// 2 3
+// 3 2
+// 2 3
+
+// if n = 3, m = 6
+// 3 2 2 3 2 2
+// 2 3 2 2 3 2
+// 2 2 3 2 2 3
+
 
 int main(){
     #ifndef ONLINE_JUDGE

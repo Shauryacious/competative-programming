@@ -108,42 +108,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+int a of
+
 void solve(){
-    
-    ll n;
-    cin>>n;
-    vector<ll>v(n);
-    ll cnt = 0;
-    for (int i = 0; i < n; ++i)
-    {
-        cin>>v[i];
-        if(v[i]%2==0) cnt++;
- 
-    }
-    if(cnt%2!=0) cout<<-1<<endl;
-    else{
-        ll r =0;
-        for (int i = 0; i < n; ++i)
-        {
-                if(v[i]%2==0) r++;
-                if(r==(cnt/2)){
-                    cout<<i+1<<endl;
-                    break;
-                }
+    ll n; cin>>n;
+    ll a[14] = {4, 7, 44, 47, 74, 77, 444, 447, 474, 477, 744, 747, 774, 777};
+    for(int i=0; i<14; i++){
+        if(n%a[i] == 0){
+            cout<<"YES"<<nline;
+            return;
         }
     }
- 
+
+    cout<<"NO"<<nline;
 }
 
-int main() {
+int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    
-    ll t; 
-    cin >> t; 
-    while (t--) {
+    ll t = 1; 
+    // cin >> t;
+    while(t--){
         solve();
     }
     return 0;

@@ -100,8 +100,8 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 // Macros
 #define all(x) (x).begin(), (x).end()
-#define rep(i, j) for (int i = 0; i < j; i++)
-#define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
+#define rep(i, j) for (ll i = 0; i < j; i++)
+#define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
 #define maxvec(v) *max_element(v.begin(), v.end())
