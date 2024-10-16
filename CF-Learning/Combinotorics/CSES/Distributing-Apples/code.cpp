@@ -60,29 +60,17 @@ void precompute(){
     }
 }
 
-ll nCr(ll n, ll r, ll M){
+ll nCr(ll n, ll r){
     if(r > n) return 0;
-    ll ans = 1;
-    ans = mod_mul(ans, fact[n], M);
+    ll ans = fact[n];
     ans = mod_mul(ans, ifact[r], M);
     ans = mod_mul(ans, ifact[n-r], M);
     return ans;
 }
 
 void solve(){
-    string s; cin>>s;
-    ll n = s.length();
-    ll ans = fact[n];
-    map<char, ll> mp;
-    for(int i=0; i<n; i++){
-        mp[s[i]]++;
-    }
-
-    for(auto p : mp){
-        ans = mod_mul(ans, ifact[p.second], M);
-    }
-
-    cout<<ans << "\n";
+    ll n, m; cin>>n>>m;
+    cout<<nCr(m+n-1, m)<<endl;
 }
 
 int main(){
@@ -96,4 +84,4 @@ int main(){
     return 0;
 }
 
-// https://cses.fi/alon/task/1715
+// https://cses.fi/alon/task/1716

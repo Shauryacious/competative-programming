@@ -110,7 +110,54 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 void solve() {
-    ll n; cin >> n;
+    ll n, k; 
+    cin >> n >> k;
+    vector<ll> a(n);
+    for(ll i = 0; i < n; i++) cin >> a[i];
+
+    // Frequency map
+    map<ll, ll> mp;
+    for(int i = 0; i < n; i++) {
+        mp[a[i]]++;
+    }
+
+    // Convert the map to a vector of pairs
+    vector<pair<ll, ll>> v;
+    for(auto p : mp) {
+        v.push_back({p.first, p.second});
+    }
+
+    // Variables to track max consecutive frequency sum
+    ll count = v[0].second;
+    ll canTake = k - 1;
+    ll maxCount = v[0].second;
+
+    // Sliding window approach
+    for(int i = 0; i < v.size() - 1; i++) {
+        maxCount = max(maxCount, count);
+
+        if((v[i + 1].first - v[i].first == 1) && canTake > 0) {
+            // Case 1: Numbers are consecutive and we can still take elements
+            count += v[i + 1].second;
+            canTake--;
+        }
+        else if(canTake == 0) {
+            // Case 2: The window is full, so slide it
+            count -= v[i - (k - 1)].second;
+            count += v[i + 1].second;
+        }
+        else {
+            // Case 3: Numbers are not consecutive, reset the count
+            count = v[i + 1].second;
+            canTake = k - 1;
+        }
+
+        // Update maxCount with the largest count found
+        maxCount = max(maxCount, count);
+    }
+
+    // Output the maximum consecutive sum
+    cout << maxCount << "\n";
 }
 
 

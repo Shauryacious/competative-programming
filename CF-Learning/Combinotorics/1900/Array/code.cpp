@@ -23,9 +23,9 @@ using namespace std;
 
 #define ll long long
 #define vll vector<ll>
-#define fastio() ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+#define fastio() ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0)
 
-ll N = 2e6 + 10;  
+ll N = 1e6 + 10;
 ll M = 1e9 + 7;
 vll fact(N+1);
 vll ifact(N+1);
@@ -33,28 +33,35 @@ vll ifact(N+1);
 ll mod_mul(ll a, ll b, ll M){
     a = a % M;
     b = b % M;
-    return (((a * b) % M) + M) % M;
+    return (((a*b) % M) + M) % M;
+}
+
+ll mod_sub(ll a, ll b, ll M){
+    a = a % M;
+    b = b % M;
+    return (((a-b) % M) + M) % M;
 }
 
 ll expo(ll a, ll n, ll M){
     ll ans = 1;
     while(n > 0){
-        if((n & 1) == 1){  // i.e., Last bit is set
+        if((n & 1) == 1){
             ans = mod_mul(ans, a, M);
         }
-        a = mod_mul(a, a, M);
+
         n >>= 1;
+        a = mod_mul(a, a, M);
     }
     return ans;
 }
 
 void precompute(){
     fact[0] = 1;
-    for(int i=1; i<=N; i++){
+    for(ll i=1; i<=N; i++){
         fact[i] = mod_mul(i, fact[i-1], M);
     }
 
-    ifact[N] = expo(fact[N], M-2, M);  // Modular inverse of fact[N-1] -> fermat's little theorem 
+    ifact[N] = expo(fact[N], M-2, M); // Fermat's Little theorem for modular inverse
     for(int i=N-1; i>=0; i--){
         ifact[i] = mod_mul(i+1, ifact[i+1], M);
     }
@@ -70,19 +77,12 @@ ll nCr(ll n, ll r, ll M){
 }
 
 void solve(){
-    string s; cin>>s;
-    ll n = s.length();
-    ll ans = fact[n];
-    map<char, ll> mp;
-    for(int i=0; i<n; i++){
-        mp[s[i]]++;
-    }
-
-    for(auto p : mp){
-        ans = mod_mul(ans, ifact[p.second], M);
-    }
-
-    cout<<ans << "\n";
+    ll n; cin>>n;
+    ll ans = 1;
+    ans = nCr((2*n-1), n, M);
+    ans = mod_mul(ans, 2, M);
+    ans = mod_sub(ans, n, M);
+    cout << ans << "\n";
 }
 
 int main(){
@@ -90,10 +90,11 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    precompute();
-    solve();
-
+    precompute(); // You forgot to call this in the original code
+    ll t = 1; 
+    // cin >> t;
+    while(t--){
+        solve();
+    }
     return 0;
 }
-
-// https://cses.fi/alon/task/1715
