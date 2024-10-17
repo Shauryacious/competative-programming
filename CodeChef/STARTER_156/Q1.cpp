@@ -107,118 +107,47 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
-class Process {
-public:
-    ll pid;
-    ll AT;
-    ll BT;
-    ll CT;
-    ll TAT;
-    ll WT;
-
-    Process(ll pid, ll AT, ll BT) {
-        this->pid = pid;
-        this->AT = AT;
-        this->BT = BT;
-        CT = -1; 
-        TAT = 0;
-        WT = 0;
-    }
-};
-
-ll currTime = 0;
-ll TQ; // Time Quantum
-
-bool CPU(Process& p) {
-    if (p.BT > TQ) {
-        p.BT -= TQ;
-        currTime += TQ;
-    }
-    else { // p.BT <= TQ
-        currTime += p.BT;
-        p.BT = 0;
-        p.CT = currTime;
-    }
-
-    if (p.BT == 0) {
-        return false;
-    }
-    return true;
-}
 
 void solve() {
-    ll n;
+    ll n; 
     cin >> n;
-    vector<Process> processes;
-    processes.reserve(n); 
-
+    vll a(n);
+    
+    // Reading the array
     for (ll i = 0; i < n; i++) {
-        ll AT, BT;
-        cin >> AT >> BT;
-        Process temp(i + 1, AT, BT); 
-        processes.push_back(temp);
+        cin >> a[i];
     }
 
-    cin >> TQ;
+    ll x = a[n - 1]; // Last element
+    ll count = 0;
 
-    auto lambda = [](const Process& a, const Process& b) {
-        return a.AT <= b.AT;
-    };
-
-    sort(processes.begin(), processes.end(), lambda);
-
-    currTime = processes[0].AT;
-
-    queue<Process> q;
-    for (ll i = 0; i < n; i++) {
-        q.push(processes[i]);
-    }
-
-    while (!q.empty()) {
-        Process p = q.front();
-        q.pop();
-        bool add = CPU(p);
-        if (add == true) {
-            q.push(p);
+    // Loop through the array from second last element down to the first
+    for (int i = n - 2; i >= 0; i--) {
+        if (a[i] <= x / 2) {
+            count++;
+            debug(count);
         }
-
-        //Update original Vector
-        ll idx = p.pid - 1;
-        processes[idx].CT = p.CT;
+        else{
+            break;
+        }
     }
 
-    for(int i=0; i<n; i++){
-        processes[i].TAT = processes[i].CT - processes[i].AT;
-        processes[i].WT = processes[i].TAT - processes[i].BT;
-    }
-
-
-    ll totalTAT = 0, totalWT = 0;
-    for(int i=0; i<n; i++){
-        totalTAT += processes[i].TAT;
-        totalWT += processes[i].WT;
-    }
-
-    double avgTAT = (double)totalTAT/n;
-    double avgWT = (double)totalWT/n;
-
-    cout<<"Average TAT : "<<avgTAT<<endl;
-    cout<<"Average WT : "<<avgWT<<endl;
-
-    for (ll i = 0; i < n; i++) {
-        cout << processes[i].pid << " " << processes[i].AT << " " << processes[i].BT << " " << processes[i].CT << " "<<processes[i].TAT<< " "<<processes[i].WT<<endl;
-    }
+    // Output the number of elements greater than half of x
+    cout << n - count << "\n";
 }
 
 int main() {
     #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr); 
+        freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t = 1;
-    // cin >> t;
-    while (t--) {
+    
+    ll t = 1; 
+    cin >> t;
+    
+    while(t--) {
         solve();
     }
+    
     return 0;
 }
