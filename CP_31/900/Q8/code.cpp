@@ -110,7 +110,44 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
+    string s; cin >> s;
+    debug(n);
+    debug(s);
+    ll cnt1 = 0, mxcnt1 = 0;
+    for(int i=0; i<n; i++){
+        if(s[i] == '<'){
+            while(i < n && s[i] == '<'){
+                cnt1++;
+                i++;
+            }
+            i--;
+        }
+        else{
+            cnt1 = 0;
+        }
+        mxcnt1 = max(mxcnt1, cnt1);
+    }
+    ll cnt2 = 0, mxcnt2 = 0;
+    for(int i=0; i<n; i++){
+        if(s[i] == '>'){
+            while(i < n && s[i] == '>'){
+                cnt2++;
+                i++;
+            }
+            i--;
+        }
+        else{
+            cnt2 = 0;
+        }
+        mxcnt2 = max(mxcnt2, cnt2);
+    }
+    debug(cnt1)
+    debug(cnt2)
+    debug(mxcnt1)
+    debug(mxcnt2)
+
+    ll mx = max(mxcnt1, mxcnt2);
+    cout<<mx+1<<nline;
 }
 
 
@@ -119,9 +156,8 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    precomputeSPF();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

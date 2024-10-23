@@ -108,9 +108,41 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll N = 1e5 + 10;
+vll SPF(N);
+
+void precomputeSPF(){
+    for(ll i=0; i<N; i++){
+        SPF[i] = i;
+    }
+    for(ll i=2; i*i<N; i++){
+        if(SPF[i] == i){
+            for(ll j=i*i; j<N; j+=i){
+                SPF[j] = min(SPF[j], i);
+            }
+        }
+    }
+}
+
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
+    vll dp(N, 0);
+    for(auto x: a){
+        dp[x] = 1;
+    }
+    ll ans = 1;
+    for(ll i=0; i<n; i++){
+        while(a[i] > 1){ // Prime Factorization
+            ll x = SPF[a[i]];
+            dp[a[i]] = max(dp[a[i]], dp[x] + 1);
+            ans = max(ans, dp[a[i]]);
+            while(a[i] % x == 0){
+                a[i] /= x;
+            }
+        }
+    }
+    cout<<ans<<nline;
 }
 
 

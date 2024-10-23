@@ -108,9 +108,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
+    ll n, ans = 0; cin >> n;
+    vll v(n); invec(v, n);
+    map<ll, ll> m;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            for (int k = 0; k < n; k++) {
+                ll x = v[i] * v[j] + v[k];
+                m[x]++;
+            }
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            for (int k = 0; k < n; k++) {
+                ll x = (v[i] + v[j]) * v[k];
+                ans += m[x];
+            }
+        }
+    }
+    cout << ans << endl;
+
 }
 
 
@@ -119,7 +139,6 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    precomputeSPF();
     ll t = 1; 
     // cin >> t;
     while(t--){

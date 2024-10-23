@@ -111,6 +111,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
+    for(int i=0; i<n-1; i++){
+        if(a[i+1]%a[i] == 0){
+            while(a[i+1]%a[i] == 0){
+                a[i] = a[i]+1;
+            }
+        }
+    }
+
+    for(int i=0; i<n; i++){
+        cout << a[i] << " ";
+    }
+    cout << nline;
 }
 
 
@@ -119,9 +131,8 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    precomputeSPF();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

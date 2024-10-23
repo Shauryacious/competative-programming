@@ -108,9 +108,89 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll N = 2e6 + 10;
+vll SIEVE(N+1, 1);
+
+void precomputeSieve(){
+    for(ll i=2; i*i<=N; i++){
+        if(SIEVE[i] == 1){
+            for(ll j=i*i; j<=N; j+=i){
+                SIEVE[j] = 0;
+            }
+        }
+    }
+}
+
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
+    bitset<1000001> b;
+    for(ll i=0; i<n; i++){
+        b[a[i]] = 1;
+    }
+    if(b[1] == 1){
+        ll count1 = 0;
+        for(ll i=0; i<n; i++){
+            if(a[i] == 1){
+                count1++;
+            }
+        }
+        if(count1 == 1){
+            for(ll i=0; i<n; i++){
+                for(ll j=i+1; j<n; j++){
+                    ll x = a[i] + a[j];
+                    if(SIEVE[x] == 1){
+                        cout<<2<<nline;
+                        cout<<a[i]<<" "<<a[j]<<nline;
+                        return;
+                    }
+                }
+            }
+        }
+        for(ll i=0; i<n; i++){
+            if(a[i] == 1){
+                continue;
+            }
+            ll x = a[i]+1;
+            if(SIEVE[x] == 1){
+                cout<<count1+1<<nline;
+                for(ll i=0; i<count1; i++){
+                    cout<<1<<" ";
+                }
+                cout<<a[i]<<nline;
+                return;
+            }
+        }
+        cout<<count1<<nline;
+        for(ll i=0; i<count1; i++){
+            cout<<1<<" ";
+        }
+        return;
+    }
+    else{
+        for(ll i=0; i<n; i++){
+            for(ll j=i+1; j<n; j++){
+                ll x = a[i] + a[j];
+                if(SIEVE[x] == 1){
+                    cout<<2<<nline;
+                    cout<<a[i]<<" "<<a[j]<<nline;
+                    return;
+                }
+            }
+        }
+    }
+
+    for(ll i=0; i<n; i++){
+        ll x = a[i];
+        if(SIEVE[x] == 1){
+            cout<<1<<nline;
+            cout<<a[i]<<nline;
+            return;
+        }
+    }
+
+    cout<<1<<nline;
+    cout<<a[0]<<nline;
 }
 
 
@@ -119,7 +199,7 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    precomputeSPF();
+    precomputeSieve();
     ll t = 1; 
     // cin >> t;
     while(t--){
