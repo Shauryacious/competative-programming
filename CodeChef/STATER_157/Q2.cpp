@@ -109,8 +109,31 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
+    ll n, m; cin >> n >> m;
+    string sa, sb; cin >> sa >> sb;
+    map<char, ll> ma;
+    for (char c : sa) {
+        ma[c]++;
+    }
+    for (char c : sb) {
+        ma[c]++;
+    }
+    string ans = "";
+    for(int i=0; i<26; i++){
+        char c = 'a' + i;
+        if(ma[c] > 0){
+            continue;
+        }
+        ans += c;
+    }
+
+    if(ans != ""){
+        cout<<"YES"<<nline;
+        // cout << ans << nline;
+    }
+    else{
+        cout<<"NO"<<nline;
+    }
 }
 
 
@@ -120,7 +143,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

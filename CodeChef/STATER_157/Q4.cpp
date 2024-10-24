@@ -110,7 +110,24 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
+    string s; cin >> s;
+    ll count1 = 0;
+    for(ll i = 0; i < n; i++){
+        if(s[i] == '1'){
+            count1++;
+        }
+    }
+    if(count1 == 0){
+        cout << n << nline;
+        return;
+    }
+    if(count1%2 == 0){
+        cout << 0 << nline;
+        return;
+    }
+    else{
+        cout<<1<<nline;
+    }
 }
 
 
@@ -120,7 +137,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

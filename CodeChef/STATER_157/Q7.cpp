@@ -18,7 +18,6 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
-#include<climits>
 
 using namespace std;
 
@@ -109,43 +108,51 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+// Custom hash function for pair<int, int>
+struct pair_hash {
+    template <class T1, class T2>
+    size_t operator() (const pair<T1, T2>& p) const {
+        auto hash1 = hash<T1>{}(p.first);
+        auto hash2 = hash<T2>{}(p.second);
+        return hash1 ^ hash2;  // Combine the two hash values.
+    }
+};
+
 void solve() {
-    ll n; cin >> n;
-    n++;
-    vll a(n); invec(a, n);
+    ll n;
+    cin >> n;
+    vll a(n);
+    invec(a, n);
+    
+    // Prefix count of 1s, 3s, and 2s
+    ll cnt1 = 0, cnt3 = 0, cnt2 = 0;
+    ll result = 0;
+    
+    // Hash map to store prefix state (cnt1 - cnt3, cnt2) -> frequency
+    unordered_map<pair<int, int>, int, hash<pair<int, int>>> prefix_map;
+    
+    // Insert initial state: (0, 0) -> 1, as the starting point has count1 - count3 = 0 and cnt2 = 0
+    prefix_map[{0, 0}] = 1;
+    
+    for (ll i = 0; i < n; ++i) {
+        if (a[i] == 1) cnt1++;
+        if (a[i] == 2) cnt2++;
+        if (a[i] == 3) cnt3++;
 
-    ll max_sum = 0;
-    for(ll i=0; i<n; i++){
-        max_sum += a[i];
-    }
-    debug(max_sum);
+        // Calculate the current difference between counts of 1s and 3s
+        int diff = cnt1 - cnt3;
 
-    while(true){
-        ll x = a[n-1];
-        bool notfound = true;
-        ll maxx = LLONG_MIN;
-        ll maxxidx = n-1;
-        for(ll i=0; i<n-1; i++){
-            if(a[i] <= 2*x && x < a[i]){
-                if(a[i] > maxx){
-                    maxx = a[i];
-                    maxxidx = i;
-                    notfound = false;
-                }
-            }
+        // Check if there exists a valid prefix state with this difference and enough 2s
+        pair<int, int> current_state = {diff, cnt2};
+        if (prefix_map.find(current_state) != prefix_map.end()) {
+            result += prefix_map[current_state];
         }
-        if(notfound){
-            break;
-        }
-        swap(a[maxxidx], a[n-1]);
-    }
-    debug(a);
 
-    ll sum = 0;
-    for(ll i=0; i<n-1; i++){
-        sum += a[i];
+        // Update the prefix map with the current state
+        prefix_map[current_state]++;
     }
-    cout<<sum<<nline;
+
+    cout << result << endl;
 }
 
 

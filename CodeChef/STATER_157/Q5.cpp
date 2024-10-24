@@ -108,22 +108,122 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    debug(a);
+#include <bits/stdc++.h>
+using namespace std;
+
+// Count subarrays with all equal values
+long long countEqualValSubarrays(vector<int>& arr, int target) {
+    long long totalSubarrays = 0;
+    int currentRun = 0;
+    
+    for (int element : arr) {
+        if (element == target) {
+            currentRun++;
+        } else {
+            if (currentRun >= 2) {
+                totalSubarrays += (1LL * currentRun * (currentRun - 1)) / 2;
+            }
+            currentRun = 0;
+        }
+    }
+    if (currentRun >= 2) {
+        totalSubarrays += (1LL * currentRun * (currentRun - 1)) / 2;
+    }
+    return totalSubarrays;
 }
 
-
-int main(){
-    #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr);
-    #endif
-    fastio();
-    ll t = 1; 
-    cin >> t;
-    while(t--){
-        solve();
+void solveTestCase() {
+    int arraySize;
+    cin >> arraySize;
+    
+    vector<int> inputArray(arraySize);
+    for (int i = 0; i < arraySize; i++) {
+        cin >> inputArray[i];
     }
+    
+    long long totalCount = arraySize;  // Single element subarrays
+    totalCount += countEqualValSubarrays(inputArray, 1);
+    totalCount += countEqualValSubarrays(inputArray, 3);
+    
+    // Create auxiliary array based on input values: 1->1, 2->0, 3->-1
+    vector<int> transformedArray(arraySize);
+    int countOfTwos = 0;
+    for (int i = 0; i < arraySize; i++) {
+        if (inputArray[i] == 1) transformedArray[i] = 1;
+        else if (inputArray[i] == 2) {
+            transformedArray[i] = 0;
+            countOfTwos++;
+        }
+        else transformedArray[i] = -1;
+    }
+    
+    // Calculate sumZero using frequency array
+    const int OFFSET = arraySize;
+    vector<long long> freqArray(2 * arraySize + 1, 0);
+    long long sumZero = 0;
+    int prefixSum = 0;
+    freqArray[prefixSum + OFFSET]++;
+    
+    for (int i = 0; i < arraySize; i++) {
+        prefixSum += transformedArray[i];
+        if (0 <= prefixSum + OFFSET && prefixSum + OFFSET < 2 * arraySize + 1) {
+            sumZero += freqArray[prefixSum + OFFSET];
+            freqArray[prefixSum + OFFSET]++;
+        }
+    }
+    
+    // Calculate sumZeroY
+    long long sumZeroY = 0;
+    int index = 0;
+    while (index < arraySize) {
+        if (inputArray[index] == 2) {
+            index++;
+            continue;
+        }
+        
+        int segmentStart = index;
+        while (index < arraySize && inputArray[index] != 2) index++;
+        int segmentEnd = index;
+        int segmentLength = segmentEnd - segmentStart;
+        
+        if (segmentLength == 0) continue;
+        
+        vector<int> segmentArray;
+        segmentArray.reserve(segmentLength);
+        for (int j = 0; j < segmentLength; j++) {
+            segmentArray.push_back(inputArray[segmentStart + j] == 1 ? 1 : -1);
+        }
+        
+        const int OFFSET_SEG = segmentLength;
+        vector<long long> freqSegment(2 * segmentLength + 1, 0);
+        int prefixSegment = 0;
+        freqSegment[prefixSegment + OFFSET_SEG]++;
+        
+        for (int j = 0; j < segmentLength; j++) {
+            prefixSegment += segmentArray[j];
+            if (0 <= prefixSegment + OFFSET_SEG && prefixSegment + OFFSET_SEG < 2 * segmentLength + 1) {
+                sumZeroY += freqSegment[prefixSegment + OFFSET_SEG];
+                freqSegment[prefixSegment + OFFSET_SEG]++;
+            }
+        }
+    }
+    
+    long long additionalSubarrays = sumZero - sumZeroY - countOfTwos;
+    totalCount += additionalSubarrays;
+    
+    cout << totalCount << "\n";
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    int testCases;
+    cin >> testCases;
+    
+    while (testCases--) {
+        solveTestCase();
+    }
+    
     return 0;
 }

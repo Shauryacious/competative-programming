@@ -18,7 +18,6 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
-#include<climits>
 
 using namespace std;
 
@@ -109,43 +108,73 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+//! Method 1 
+// void solve() {
+//     ll n; cin >> n;
+//     vll a(n); invec(a, n);
+
+//     map<ll, ll> last_occ;
+//     for(ll i = 0; i < n; i++){
+//         last_occ[a[i]] = max(last_occ[a[i]], i);
+//     }
+//     ll count = 0;
+//     ll till = 0;
+//     for(ll i = 0; i < n; i++){
+//         till = max(till, last_occ[a[i]]);
+//         if(till == i){
+//             count++;
+//         }
+//     }
+//     ll ans = 1;
+//     ll M = 998244353;
+//     for(ll i = 0; i < count - 1; i++){
+//         ans = (ans * 2) % M;
+//     }
+//     cout << ans << nline;
+// }
+
 void solve() {
     ll n; cin >> n;
-    n++;
     vll a(n); invec(a, n);
 
-    ll max_sum = 0;
-    for(ll i=0; i<n; i++){
-        max_sum += a[i];
+    map<ll, ll> last_occ;
+    for(ll i = 0; i < n; i++){
+        last_occ[a[i]] = max(last_occ[a[i]], i);
     }
-    debug(max_sum);
-
-    while(true){
-        ll x = a[n-1];
-        bool notfound = true;
-        ll maxx = LLONG_MIN;
-        ll maxxidx = n-1;
-        for(ll i=0; i<n-1; i++){
-            if(a[i] <= 2*x && x < a[i]){
-                if(a[i] > maxx){
-                    maxx = a[i];
-                    maxxidx = i;
-                    notfound = false;
-                }
-            }
+    debug(last_occ);
+    set<pair<ll, ll>> s;
+    for(int i = 0; i < n; i++){
+        s.insert({i, last_occ[a[i]]});
+    }
+    debug(s);
+    for(int i=0; i<n; i++){
+        pair<ll, ll> p1 = *s.begin();
+        auto next_it = next(s.begin());
+        pair<ll, ll> p2 = *next_it;
+        ll a1 = p1.ff;
+        ll b1 = p1.ss;
+        ll a2 = p2.ff;
+        ll b2 = p2.ss;
+        debug(p1);
+        debug(p2);
+        if(b1 >= a2){
+            debug(p1);
+            debug(p2);
+            s.erase(p1);
+            s.erase(p2);
+            pair<ll, ll> new_pair = mp(min(a1, a2), max(b1, b2));
+            s.insert(new_pair);
         }
-        if(notfound){
-            break;
-        }
-        swap(a[maxxidx], a[n-1]);
     }
-    debug(a);
+    debug(s);
 
-    ll sum = 0;
-    for(ll i=0; i<n-1; i++){
-        sum += a[i];
+    ll count = s.size();
+    ll ans = 1;
+    ll M = 998244353;
+    for(ll i = 0; i < count - 1; i++){
+        ans = (ans * 2) % M;
     }
-    cout<<sum<<nline;
+    cout << ans << nline;
 }
 
 
@@ -155,7 +184,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

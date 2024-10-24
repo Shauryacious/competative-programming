@@ -18,7 +18,6 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
-#include<climits>
 
 using namespace std;
 
@@ -111,41 +110,60 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    n++;
     vll a(n); invec(a, n);
-
-    ll max_sum = 0;
-    for(ll i=0; i<n; i++){
-        max_sum += a[i];
-    }
-    debug(max_sum);
-
-    while(true){
-        ll x = a[n-1];
-        bool notfound = true;
-        ll maxx = LLONG_MIN;
-        ll maxxidx = n-1;
-        for(ll i=0; i<n-1; i++){
-            if(a[i] <= 2*x && x < a[i]){
-                if(a[i] > maxx){
-                    maxx = a[i];
-                    maxxidx = i;
-                    notfound = false;
-                }
+    ll ans = 0;
+    ll count1 = 0;
+    for(int i=0; i<n; i++){
+        if(a[i] == 1){
+            while(i < n && a[i] == 1){
+                count1++;
+                i++;
             }
+            i--;
+            ll x = (count1 * (count1 + 1)) / 2;
+            ans += x;
         }
-        if(notfound){
-            break;
+        else{
+            count1 = 0;
         }
-        swap(a[maxxidx], a[n-1]);
     }
-    debug(a);
 
-    ll sum = 0;
-    for(ll i=0; i<n-1; i++){
-        sum += a[i];
+    ll count2 = 0;
+    for(int i=0; i<n; i++){
+        if(a[i] == 2){
+            while(i < n && a[i] == 2){
+                count2++;
+                i++;
+            }
+            debug(count2);
+            i--;
+            ll x = (count2 * (count2 + 1)) / 2;
+            ans += x;
+        }
+        else{
+            count2 = 0;
+        }
     }
-    cout<<sum<<nline;
+
+    ll count3 = 0;
+    for(int i=0; i<n; i++){
+        if(a[i] == 3){
+            while(i < n && a[i] == 3){
+                count3++;
+                i++;
+            }
+            i--;
+            ll x = (count3 * (count3 + 1)) / 2;
+            ans += x;
+        }
+        else{
+            count3 = 0;
+        }
+    }
+
+    // code to find no of subarrays with same no of 1s and 3s (atleast one 1 and one 3) and atleast one 2
+
+    cout << ans << nline;
 }
 
 
