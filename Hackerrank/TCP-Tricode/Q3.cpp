@@ -110,8 +110,52 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
+    ll n, k;
+    cin >> n >> k;
+    vll a(n);
+    invec(a, n);
+    sortvec(a);
+    
+    vll picked(n, 0);  // Track picked coins
+    ll ans = 0;
+    ll lower_pointer = 0;  // Pointer for smallest unpicked coin
+    debug(a);
+    for (ll i = n - 1; i >= 0; i--) {
+        if (picked[i]) continue;  // Skip if coin already used
+        ll x = a[i];
+        ll y = k - (x % k);  // Required remainder to make x + y divisible by k
+        
+        bool found = false;
+        ll l = 0, r = n - 1;
+        
+        // Binary search for y in the array
+        while (l <= r) {
+            ll mid = l + (r - l) / 2;
+            if (a[mid] == y && !picked[mid]) {
+                picked[mid] = 1; // Mark this coin as used
+                picked[i] = 1;   // Mark current coin as used
+                ans += (x + a[mid]) / k;
+                found = true;
+                break;
+            } else if (a[mid] < y) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        
+        if (!found) {  // If exact match not found, pair with smallest unpicked coin
+            while (lower_pointer < n && picked[lower_pointer]) {
+                lower_pointer++;
+            }
+            if (lower_pointer < n && !picked[lower_pointer]) {
+                picked[lower_pointer] = 1;
+                picked[i] = 1;
+                ans += (x + a[lower_pointer]) / k;
+            }
+        }
+    }
+    cout << ans << endl;
 }
 
 
@@ -121,7 +165,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

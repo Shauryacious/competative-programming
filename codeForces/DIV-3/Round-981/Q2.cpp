@@ -110,9 +110,53 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
+    ll n; 
+    cin >> n;
+    vector<vector<ll>> a(n, vector<ll>(n));
+
+    // Input the matrix
+    for (ll i = 0; i < n; i++) {
+        for (ll j = 0; j < n; j++) {
+            cin >> a[i][j];
+        }
+    }
+
+    ll count = 0;
+
+    // Process diagonals: traverse each diagonal starting from both (i,0) and (0,j)
+    for (ll start = 0; start < n; start++) {
+        // Top-left to bottom-right diagonal starting from (start, 0)
+        ll min_val = 0;
+        for (ll i = start, j = 0; i < n && j < n; i++, j++) {
+            min_val = min(min_val, a[i][j]);
+        }
+        // Increment diagonal values by the absolute value of the most negative number
+        if (min_val < 0) {
+            count += abs(min_val);
+            for (ll i = start, j = 0; i < n && j < n; i++, j++) {
+                a[i][j] -= min_val;
+            }
+        }
+        
+        // Top-left to bottom-right diagonal starting from (0, start)
+        if (start != 0) {
+            min_val = 0;
+            for (ll i = 0, j = start; i < n && j < n; i++, j++) {
+                min_val = min(min_val, a[i][j]);
+            }
+            if (min_val < 0) {
+                count += abs(min_val);
+                for (ll i = 0, j = start; i < n && j < n; i++, j++) {
+                    a[i][j] -= min_val;
+                }
+            }
+        }
+    }
+
+    // Output the result
+    cout << count << endl;
 }
+
 
 
 int main(){
@@ -121,7 +165,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

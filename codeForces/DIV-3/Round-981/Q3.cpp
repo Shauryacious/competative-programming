@@ -112,7 +112,62 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
+    vll b = a;
+    vll c = a;
+
+    for(ll i = 0; i < n-1; i++) {
+        ll i1 = i;
+        ll i2 = i+1;
+        if(a[i1] == a[i2]) { // Check if adjacent elements are equal
+            ll j1 = n-i-1;      // Find corresponding positions from the end
+            ll j2 = n-(i+1)-1;
+
+            debug(i1);
+            debug(j1);
+            
+            debug(i2);
+            debug(j2);
+            
+            ll sameInB = 0, sameInC = 0;
+
+            swap(b[i1], b[j1]); // Swap for array b
+
+            if(i1-1 >= 0 && b[i1] == b[i1-1]) sameInB++;    // Check adjacent elements for b
+            if(i1+1 < n && b[i1] == b[i1+1]) sameInB++;
+            if(j1-1 >= 0 && b[j1] == b[j1-1]) sameInB++;
+            if(j1+1 < n && b[j1] == b[j1+1]) sameInB++;
+
+            swap(c[i2], c[j2]); // Swap for array c
+
+            if(i2-1 >= 0 && c[i2] == c[i2-1]) sameInC++;    // Check adjacent elements for c
+            if(i2+1 < n && c[i2] == c[i2+1]) sameInC++;
+            if(j2-1 >= 0 && c[j2] == c[j2-1]) sameInC++;
+            if(j2+1 < n && c[j2] == c[j2+1]) sameInC++;
+
+            debug(sameInB);
+            debug(sameInC);
+
+            if(sameInB > sameInC) { // Choose the array with fewer adjacent duplicates
+                a = c;
+            } else {
+                a = b;
+            }
+
+            b = a;
+            c = a;
+        }
+    }
+    debug(a);
+
+    ll count = 0;
+    for(ll i = 0; i < n-1; i++) { // Count adjacent duplicates in the final array
+        if(a[i] == a[i+1]) {
+            count++;
+        }
+    }
+    cout << count << nline;
 }
+
 
 
 int main(){
@@ -121,7 +176,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

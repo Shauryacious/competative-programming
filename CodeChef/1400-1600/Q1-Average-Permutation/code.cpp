@@ -18,7 +18,6 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
-#include <climits>
 
 using namespace std;
 
@@ -111,7 +110,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
+    if(n == 3){
+        cout << "2 3 1" << nline;
+        return;
+    }
+    cout<< n << " ";
+    cout << n-3 <<" ";
+
+    for(ll i = 1; i <= n-4; i++){
+        cout << i << " ";
+    }
+    cout << n-2 <<" ";
+    cout << n-1 <<" "<<nline;
 }
 
 
@@ -121,7 +131,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

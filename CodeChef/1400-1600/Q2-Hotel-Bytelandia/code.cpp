@@ -109,9 +109,54 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+//! METHOD 1
+// void solve() {
+//     ll n; cin >> n;
+//     vll a(n); invec(a, n);
+//     vll b(n); invec(b, n);
+//     vll v(1001, 0);
+//     for(int i=0; i<n; i++){
+//         ll L = a[i];
+//         ll R = b[i];
+//         for(int j=L; j<=R-1; j++){
+//             v[j]++;
+//         }
+//     }
+//     cout << *max_element(v.begin(), v.end()) << nline;
+// }
+
+//! METHOD 2
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
+    vll d(n); invec(d, n);
+    vector<pair<char, ll>> v;
+    for(int i=0; i<n; i++){
+        v.push_back({'a', a[i]});
+    }
+    for(int i=0; i<n; i++){
+        v.push_back({'d', d[i]});
+    }
+
+    auto lambda = [&](pair<char, ll>& a, pair<char, ll>& b){
+        if(a.second == b.second){
+            return b.first < a.first; // 'd' comes before 'a'
+        }
+        return a.second < b.second;
+    };
+    sort(all(v), lambda);
+
+    ll maxx = 0;
+    ll curr = 0;
+    for(auto i: v){
+        if(i.first == 'a'){
+            curr++;
+        }else{
+            curr--;
+        }
+        maxx = max(maxx, curr);
+    }
+    cout << maxx << nline;
 }
 
 
@@ -121,7 +166,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

@@ -109,10 +109,51 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll countMaxNonOverlappingRegions(vector<pair<ll, ll>>& v) {
+    // Sort the vector based on the end points (second element of the pair)
+    sort(v.begin(), v.end(), [](pair<ll, ll>& a, pair<ll, ll>& b) {
+        return a.second < b.second;
+    });
+
+    debug(v);
+    ll count = 0;
+    ll lastEnd = -1; // Initialize to a value before the start of any segment
+
+    // Iterate over the sorted intervals
+    for (auto& p : v) {
+        if (p.first > lastEnd) {
+            // If the current interval starts after the last selected interval ends
+            count++;
+            lastEnd = p.second; // Update the end point of the last selected interval
+        }
+    }
+
+    return count;
+}
+
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
+    
+    unordered_map<ll, ll> m; 
+    m[0] = -1; 
+
+    vector<pair<ll, ll>> v; 
+    ll sum = 0;
+
+    for (ll i = 0; i < n; i++) {
+        sum += a[i];
+        
+        if (m.find(sum) != m.end()) {
+            v.pb({m[sum] + 1, i}); 
+        }
+        
+        m[sum] = i;
+    }
+
+    cout << countMaxNonOverlappingRegions(v) << nline;
 }
+
 
 
 int main(){
@@ -121,7 +162,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }
