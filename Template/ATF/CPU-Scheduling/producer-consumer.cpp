@@ -18,6 +18,13 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
+#include <climits>
+
+
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+
 
 using namespace std;
 
@@ -93,6 +100,8 @@ void google(int t) {cout << "Case #" << t << ": ";}
 vector<ll> sieve(int n) {int*arr = new int[n + 1](); vector<ll> vect; for (int i = 2; i <= n; i++)if (arr[i] == 0) {vect.push_back(i); for (int j = 2 * i; j <= n; j += i)arr[j] = 1;} return vect;}
 ll phin(ll n) {ll number = n; if (n % 2 == 0) {number /= 2; while (n % 2 == 0) n /= 2;} for (ll i = 3; i <= sqrt(n); i += 2) {if (n % i == 0) {while (n % i == 0)n /= i; number = (number / i * (i - 1));}} if (n > 1)number = (number / n * (n - 1)) ; return number;} //O(sqrt(N))
 ll getRandomNumber(ll l, ll r) {return uniform_int_distribution<ll>(l, r)(rng);} 
+ll max_ele(vector<ll> v) {return *max_element(v.begin(), v.end());}
+ll min_ele(vector<ll> v) {return *min_element(v.begin(), v.end());}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; i++) { if (isPrime[i] == 1) {for (ll j = i * i; j <= n; j += i) { isPrime[j] = 0;}}}vector<ll> primes;for (ll i = 2; i <= n; i++) {if (isPrime[i]) {primes.push_back(i);}}return primes;}
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -107,117 +116,66 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
-class Process {
-public:
-    ll pid;
-    ll AT;
-    ll BT;
-    ll CT;
-    ll TAT;
-    ll WT;
 
-    Process(ll pid, ll AT, ll BT) {
-        this->pid = pid;
-        this->AT = AT;
-        this->BT = BT;
-        CT = -1; 
-        TAT = 0;
-        WT = 0;
-    }
-};
 
-ll currTime = 0;
-ll TQ; 
+queue<int> buffer;
+int maxBufferSize = 10;
+mutex mtx;
+condition_variable cv;
 
-bool CPU(Process& p) {
-    if (p.BT > TQ) {
-        p.BT -= TQ;
-        currTime += TQ;
-    }
-    else { // p.BT <= TQ
-        currTime += p.BT;
-        p.BT = 0;
-        p.CT = currTime;
-    }
+void producer(int id) {
+    int item = 0;
+    while (true) {
+        unique_lock<mutex> lock(mtx);
+        cv.wait(lock, [] { return buffer.size() < maxBufferSize; });
 
-    if (p.BT == 0) {
-        return false;
+        buffer.push(item);
+        cout << "Producer " << id << " produced item: " << item++ << endl;
+
+        lock.unlock();  
+        cv.notify_all();
+
+        this_thread::sleep_for(chrono::milliseconds(100));
     }
-    return true;
+}
+
+void consumer(int id) {
+    while (true) {
+        unique_lock<mutex> lock(mtx); 
+        cv.wait(lock, [] { return !buffer.empty(); }); 
+
+        int item = buffer.front();
+        buffer.pop();
+        cout << "Consumer " << id << " consumed item: " << item << endl;
+
+        lock.unlock();  
+        cv.notify_all();
+
+        this_thread::sleep_for(chrono::milliseconds(150));  
+    }
 }
 
 void solve() {
-    ll n;
-    cin >> n;
-    vector<Process> processes;
-    processes.reserve(n); 
+    thread producerThread1(producer, 1);
+    thread producerThread2(producer, 2);
+    thread consumerThread1(consumer, 1);
+    thread consumerThread2(consumer, 2);
 
-    for (ll i = 0; i < n; i++) {
-        ll AT, BT;
-        cin >> AT >> BT;
-        Process temp(i + 1, AT, BT); 
-        processes.push_back(temp);
-    }
-
-    cin >> TQ;
-
-    auto lambda = [](const Process& a, const Process& b) {
-        return a.AT <= b.AT;
-    };
-
-    sort(processes.begin(), processes.end(), lambda);
-
-    currTime = processes[0].AT;
-
-    queue<Process> q;
-    for (ll i = 0; i < n; i++) {
-        q.push(processes[i]);
-    }
-
-    while (!q.empty()) {
-        Process p = q.front();
-        q.pop();
-        bool add = CPU(p);
-        if (add == true) {
-            q.push(p);
-        }
-
-        //Update original Vector
-        ll idx = p.pid - 1;
-        processes[idx].CT = p.CT;
-    }
-
-    for(int i=0; i<n; i++){
-        processes[i].TAT = processes[i].CT - processes[i].AT;
-        processes[i].WT = processes[i].TAT - processes[i].BT;
-    }
-
-
-    ll totalTAT = 0, totalWT = 0;
-    for(int i=0; i<n; i++){
-        totalTAT += processes[i].TAT;
-        totalWT += processes[i].WT;
-    }
-
-    double avgTAT = (double)totalTAT/n;
-    double avgWT = (double)totalWT/n;
-
-    cout<<"Average TAT : "<<avgTAT<<endl;
-    cout<<"Average WT : "<<avgWT<<endl;
-
-    for (ll i = 0; i < n; i++) {
-        cout << processes[i].pid << " " << processes[i].AT << " " << processes[i].BT << " " << processes[i].CT << " "<<processes[i].TAT<< " "<<processes[i].WT<<endl;
-    }
+    producerThread1.join();
+    producerThread2.join();
+    consumerThread1.join();
+    consumerThread2.join();
 }
 
-int main() {
+
+int main(){
     #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr); 
+        freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t = 1;
+    ll t = 1; 
     // cin >> t;
-    while (t--) {
+    while(t--){
         solve();
     }
     return 0;
