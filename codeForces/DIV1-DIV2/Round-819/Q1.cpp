@@ -18,6 +18,7 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
+#include <climits>
 
 using namespace std;
 
@@ -93,6 +94,8 @@ void google(int t) {cout << "Case #" << t << ": ";}
 vector<ll> sieve(int n) {int*arr = new int[n + 1](); vector<ll> vect; for (int i = 2; i <= n; i++)if (arr[i] == 0) {vect.push_back(i); for (int j = 2 * i; j <= n; j += i)arr[j] = 1;} return vect;}
 ll phin(ll n) {ll number = n; if (n % 2 == 0) {number /= 2; while (n % 2 == 0) n /= 2;} for (ll i = 3; i <= sqrt(n); i += 2) {if (n % i == 0) {while (n % i == 0)n /= i; number = (number / i * (i - 1));}} if (n > 1)number = (number / n * (n - 1)) ; return number;} //O(sqrt(N))
 ll getRandomNumber(ll l, ll r) {return uniform_int_distribution<ll>(l, r)(rng);} 
+ll max_ele(vector<ll> v) {return *max_element(v.begin(), v.end());}
+ll min_ele(vector<ll> v) {return *min_element(v.begin(), v.end());}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; i++) { if (isPrime[i] == 1) {for (ll j = i * i; j <= n; j += i) { isPrime[j] = 0;}}}vector<ll> primes;for (ll i = 2; i <= n; i++) {if (isPrime[i]) {primes.push_back(i);}}return primes;}
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -108,98 +111,30 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-ll N = 2e6 + 10;
-vll SIEVE(N+1, 1);
-
-void precomputeSieve(){
-    for(ll i=2; i*i<=N; i++){
-        if(SIEVE[i] == 1){
-            for(ll j=i*i; j<=N; j+=i){
-                SIEVE[j] = 0;
-            }
-        }
-    }
-}
-
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
-    bitset<1000001> b;
-    for(ll i=0; i<n; i++){
-        b[a[i]] = 1;
-    }
-    vll ans;
-    for(ll i=0; i<10000; i++){
-        if(SIEVE[i] == 1){
-            ans.pb(i);
-        }
-    }
-    debug(ans);
-    if(b[1] == 1){
-        ll count1 = 0;
-        for(ll i=0; i<n; i++){
-            if(a[i] == 1){
-                count1++;
-            }
-        }
-        if(count1 == 1){
-            for(ll i=0; i<n; i++){
-                for(ll j=i+1; j<n; j++){
-                    ll x = a[i] + a[j];
-                    if(SIEVE[x] == 1){
-                        cout<<2<<nline;
-                        cout<<a[i]<<" "<<a[j]<<nline;
-                        return;
-                    }
-                }
-            }
-        }
-        for(ll i=0; i<n; i++){
-            if(a[i] == 1){
-                continue;
-            }
-            ll x = a[i]+1;
-            if(SIEVE[x] == 1){
-                cout<<count1+1<<nline;
-                for(ll i=0; i<count1; i++){
-                    cout<<1<<" ";
-                }
-                cout<<a[i]<<nline;
-                return;
-            }
-        }
-        cout<<count1<<nline;
-        for(ll i=0; i<count1; i++){
-            cout<<1<<" ";
-        }
+    ll max_idx = max_element(all(a)) - a.begin();
+    ll min_idx = min_element(all(a)) - a.begin();
+    ll maxx = *max_element(all(a));
+    ll minn = *min_element(all(a));
+    if(abs(max_idx - min_idx) == 1){
+        cout<<maxx-minn<<nline;
         return;
     }
-    else{
-        for(ll i=0; i<n; i++){
-            for(ll j=i+1; j<n; j++){
-                ll x = a[i] + a[j];
-                if(SIEVE[x] == 1){
-                    cout<<2<<nline;
-                    cout<<a[i]<<" "<<a[j]<<nline;
-                    return;
-                }
-            }
-        }
+
+    if(abs(max_idx - min_idx) == n-1){
+        cout<<maxx-minn<<nline;
+        return;
     }
 
-    for(ll i=0; i<n; i++){
-        ll x = a[i];
-        if(SIEVE[x] == 1){
-            cout<<1<<nline;
-            cout<<a[i]<<nline;
-            return;
-        }
-    }
-
-    cout<<1<<nline;
-    cout<<a[0]<<nline;
+    ll ans1 = 0, ans2 = 0;
+    ans1 = maxx - a[0];
+    ans2 = a[n-1] - minn;
 
 
+
+    cout<<max(ans1, ans2)<<nline;
 }
 
 
@@ -208,9 +143,8 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    precomputeSieve();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }
