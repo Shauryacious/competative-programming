@@ -69,6 +69,31 @@ ll nCr(ll n, ll r, ll M){
     return ans;
 }
 
+
+
+
+void solve() {
+    ll n, d; cin >> n >> d;
+    vll a(n); invec(a, n);
+    ll num = d+1;
+    ll den = 2*d;
+    cout<<mod_div(nums, den, M)
+}
+
+
+int main(){
+    #ifndef ONLINE_JUDGE
+        freopen("Error.txt", "w", stderr);
+    #endif
+    fastio();
+    ll t = 1; 
+    cin >> t;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
+
 void solve(){
     string s; cin>>s;
     ll n = s.length();
