@@ -112,63 +112,8 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin>>n>>m;
-    string s, t; cin>>s>>t;
-    ll countas = 0, countat = 0;
-    ll countbs = 0, countbt = 0;
-    ll count_firstb_in_s = 0, count_firstb_in_t = 0;
-    for(ll i=0; i<n; i++){
-        if(s[i] == 'b'){
-            count_firstb_in_s++;
-        }
-        else{
-            break;
-        }
-    }
-    for(ll i=0; i<m; i++){
-        if(t[i] == 'b'){
-            count_firstb_in_t++;
-        }
-        else{
-            break;
-        }
-    }
-    debug(count_firstb_in_s);
-    debug(count_firstb_in_t);
-    for(ll i=0; i<n; i++){
-        if(s[i] == 'a'){
-            countas++;
-        }
-        else{
-            countbs++;
-        }
-    }
-    for(ll i=0; i<m; i++){
-        if(t[i] == 'a'){
-            countat++;
-        }
-        else{
-            countbt++;
-        }
-    }
-    if(countas == 0 && countat == 0){
-        if(n == m){
-            cout<<"YES"<<nline;
-            return;
-        }
-        else{
-            cout<<"NO"<<nline;
-            return;
-        }
-    }
-
-    if(countas == countat){
-        if(count_firstb_in_s == count_firstb_in_t){
-            cout<<"YES"<<nline;
-            return;
-        }
-    }
-    cout<<"NO"<<nline;
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
 }
 
 
@@ -178,7 +123,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }
