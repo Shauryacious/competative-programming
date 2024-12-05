@@ -111,128 +111,151 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-// Node class definition
-class Node {
-public:
-    char data;
-    Node* next;
-
-    // Constructor to initialize the node
-    Node(char val) {
-        data = val;
-        next = nullptr;
-    }
-};
-
-// Function to create a linked list from the string
-Node* createLinkedList(const string& s) {
-    if (s.empty()) return nullptr;
-
-    Node* head = new Node(s[0]);  // Initialize the head
-    Node* current = head;
-
-    for (size_t i = 1; i < s.size(); i++) {
-        current->next = new Node(s[i]);  // Create new node and link it
-        current = current->next;
-    }
-
-    return head;
-}
-
-// Function to print the linked list (for debugging/verification)
-void printLinkedList(Node* head) {
-    while (head) {
-        cout << head->data << " -> ";
-        head = head->next;
-    }
-    cout << "NULL\n";
-}
-
-// Function to solve the problem
 void solve() {
     ll n; 
     cin >> n;
-    string s; 
-    cin >> s;
+    string s, p; 
+    cin >> s >> p;
 
-    // Create the linked list from the string
-    Node* linkedList = createLinkedList(s);
-    ll count = 0; // To count the number of passes
-
-    // printLinkedList(linkedList);
-
-    bool remaining = false;
-    while (linkedList) {
-        Node* head = linkedList;
-        Node* prev = nullptr;
-        char expectedChar = (head->data == 'A') ? 'B' : 'A';
-        linkedList = head->next; // Prepare for potential head removal
-        head = head->next;
-
-        bool removedNode = false;
-
-        while (head) {
-            if (head->data == expectedChar) {
-                // Remove the current node
-                if (prev) {
-                    prev->next = head->next;  // Skip the current node
-                } else {
-                    linkedList = head->next;  // Update the head if first node is removed
-                }
-                Node* temp = head;
-                head = head->next;
-                delete temp;
-                removedNode = true;
-
-                // Alternate the expected character
-                expectedChar = (expectedChar == 'A') ? 'B' : 'A';
-            } else {
-                // Move forward without deleting
-                prev = head;
-                head = head->next;
-            }
-        }
-
-        // printLinkedList(linkedList);
-        // Increment the count if any nodes were removed
-        if (removedNode) {
-            count++;
-            
-        } else {
-            remaining = true;
-            break; // If no nodes were removed, exit the loop
-        }
+    // Create mapping from character to its reverse in p
+    map<char, char> m;
+    for (ll i = 0; i < 26; i++) {
+        m[p[i]] = p[25 - i];
     }
 
-    if(!remaining){
-        cout<<count<<endl;
+    // Check if already sorted
+    if (is_sorted(s.begin(), s.end())) {
+        cout << 0 << nline;
         return;
     }
 
-    // cout<<"Outside";
-    // printLinkedList(linkedList);
-    //count length of linked list
-    ll c = 1;
-    Node* temp = linkedList;
-    while(temp!=NULL){
-        c++;
-        temp = temp->next;
+    // Handle case where the size of the string is 2
+    if (n == 2) {
+        if (s[0] <= s[1]) {
+            cout << 0 << nline;
+            return;
+        } else {
+            if (s[0] <= m[s[1]] || m[s[0]] <= s[1]) {
+                cout << 1 << nline;
+                return;
+            } else if (m[s[0]] <= m[s[1]]) {
+                cout << 2 << nline;
+                return;
+            } else {
+                cout << -1 << nline;
+                return;
+            }
+        }
     }
 
+    // Main logic for strings of size > 2
+    ll count = 0;
 
-    // Output the number of passes required
-    cout << count + c<< endl;
+    for (ll i = 0; i < n - 2; i++) {
+        if (s[i] <= s[i + 1] && s[i + 1] <= s[i + 2]) {
+            continue; // Already sorted, skip
+        }
+
+        // Handle various unsorted cases
+        if (s[i] <= s[i + 1] && s[i + 1] > s[i + 2]) {
+            if (s[i] <= m[s[i + 1]] && m[s[i + 1]] <= s[i + 2]) {
+                s[i + 1] = m[s[i + 1]];
+                count++;
+            } else if (s[i] <= s[i + 1] && s[i + 1] <= m[s[i + 2]]) {
+                s[i + 2] = m[s[i + 2]];
+                count++;
+            } else if (s[i] <= m[s[i + 1]] && m[s[i + 1]] <= m[s[i + 2]]) {
+                s[i + 1] = m[s[i + 1]];
+                s[i + 2] = m[s[i + 2]];
+                count += 2;
+            } else if (m[s[i]] <= m[s[i + 1]] && m[s[i + 1]] <= m[s[i + 2]]) {
+                s[i] = m[s[i]];
+                s[i + 1] = m[s[i + 1]];
+                s[i + 2] = m[s[i + 2]];
+                count += 3;
+            }
+            else {
+                cout << -1 << nline;
+                return;
+            }
+        } else if (s[i] > s[i + 1] && s[i + 1] > s[i + 2]) {
+            if (s[i] <= s[i+1] && s[i+1] <= m[s[i+2]]){
+                s[i+2] = m[s[i+2]];
+                count++;
+            } 
+            else if(s[i] <= m[s[i+1]] && m[s[i+1]] <= s[i+2]){
+                s[i+1] = m[s[i+1]];
+                count++;
+            }
+            else if(m[s[i]] <= s[i+1] && s[i+1] <= s[i+2]){
+                s[i] = m[s[i]];
+                count++;
+            }
+            else if(m[s[i]] <= s[i+1] && s[i+1] <= m[s[i+2]]){
+                s[i] = m[s[i]];
+                s[i+2] = m[s[i+2]];
+                count += 2;
+            }
+            else if(m[s[i]] <= m[s[i+1]] && m[s[i+1]] <= s[i+2]){
+                s[i] = m[s[i]];
+                s[i+1] = m[s[i+1]];
+                count += 2;
+            }
+            else if(m[s[i]] <= m[s[i+1]] && m[s[i+1]] <= m[s[i+2]]){
+                s[i] = m[s[i]];
+                s[i+1] = m[s[i+1]];
+                s[i+2] = m[s[i+2]];
+                count += 3;
+            }
+            else if (s[i] <= m[s[i+1]] && m[s[i+1]] <= m[s[i+2]]){
+                s[i+1] = m[s[i+1]];
+                s[i+2] = m[s[i+2]];
+                count += 2;
+            } else if (m[s[i]] <= m[s[i+1]] && m[s[i+1]] <= m[s[i+2]]){
+                s[i] = m[s[i]];
+                s[i+1] = m[s[i+1]];
+                s[i+2] = m[s[i+2]];
+                count += 3;
+            } else {
+                cout << -1 << nline;
+                return;
+            }
+        } else if (s[i] > s[i + 1] && s[i + 1] <= s[i + 2]) {
+            if (m[s[i]] <= s[i + 1] && s[i + 1] <= s[i + 2]) {
+                s[i] = m[s[i]];
+                count++;
+            } else if (m[s[i]] <= s[i + 1] && s[i + 1] <= m[s[i + 2]]) {
+                s[i] = m[s[i]];
+                s[i + 2] = m[s[i + 2]];
+                count += 2;
+            } else if (m[s[i]] <= m[s[i + 1]] && m[s[i + 1]] <= s[i + 2]) {
+                s[i] = m[s[i]];
+                s[i + 1] = m[s[i + 1]];
+                count += 2;
+            } else if (m[s[i]] <= m[s[i + 1]] && m[s[i + 1]] <= m[s[i + 2]]) {
+                s[i] = m[s[i]];
+                s[i + 1] = m[s[i + 1]];
+                s[i + 2] = m[s[i + 2]];
+                count += 3;
+            } else {
+                cout << -1 << nline;
+                return;
+            }
+        }
+    }
+
+    cout << count << nline;
 }
 
 
-int main() {
+int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
     ll t = 1; 
     cin >> t;
-    while (t--) {
+    while(t--){
         solve();
     }
     return 0;

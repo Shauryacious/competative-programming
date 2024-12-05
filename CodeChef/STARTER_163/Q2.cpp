@@ -111,128 +111,52 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-// Node class definition
-class Node {
-public:
-    char data;
-    Node* next;
-
-    // Constructor to initialize the node
-    Node(char val) {
-        data = val;
-        next = nullptr;
-    }
-};
-
-// Function to create a linked list from the string
-Node* createLinkedList(const string& s) {
-    if (s.empty()) return nullptr;
-
-    Node* head = new Node(s[0]);  // Initialize the head
-    Node* current = head;
-
-    for (size_t i = 1; i < s.size(); i++) {
-        current->next = new Node(s[i]);  // Create new node and link it
-        current = current->next;
-    }
-
-    return head;
-}
-
-// Function to print the linked list (for debugging/verification)
-void printLinkedList(Node* head) {
-    while (head) {
-        cout << head->data << " -> ";
-        head = head->next;
-    }
-    cout << "NULL\n";
-}
-
-// Function to solve the problem
 void solve() {
-    ll n; 
-    cin >> n;
-    string s; 
-    cin >> s;
+    lld n, k;
+    cin >> n >> k;
+    vector<lld> a(n);
 
-    // Create the linked list from the string
-    Node* linkedList = createLinkedList(s);
-    ll count = 0; // To count the number of passes
-
-    // printLinkedList(linkedList);
-
-    bool remaining = false;
-    while (linkedList) {
-        Node* head = linkedList;
-        Node* prev = nullptr;
-        char expectedChar = (head->data == 'A') ? 'B' : 'A';
-        linkedList = head->next; // Prepare for potential head removal
-        head = head->next;
-
-        bool removedNode = false;
-
-        while (head) {
-            if (head->data == expectedChar) {
-                // Remove the current node
-                if (prev) {
-                    prev->next = head->next;  // Skip the current node
-                } else {
-                    linkedList = head->next;  // Update the head if first node is removed
-                }
-                Node* temp = head;
-                head = head->next;
-                delete temp;
-                removedNode = true;
-
-                // Alternate the expected character
-                expectedChar = (expectedChar == 'A') ? 'B' : 'A';
-            } else {
-                // Move forward without deleting
-                prev = head;
-                head = head->next;
-            }
-        }
-
-        // printLinkedList(linkedList);
-        // Increment the count if any nodes were removed
-        if (removedNode) {
-            count++;
-            
-        } else {
-            remaining = true;
-            break; // If no nodes were removed, exit the loop
-        }
+    for (lld i = 0; i < n; i++) {
+        cin >> a[i];
     }
 
-    if(!remaining){
-        cout<<count<<endl;
-        return;
+    vector<lld> b(n);
+    vector<lld> c(n);
+    for (lld i = 0; i < n; i++) {
+        lld floor_val = floor(a[i] / k);
+        lld ceil_val = ceil(a[i] / k);
+        b[i] = floor_val;
+        c[i] = ceil_val;
     }
 
-    // cout<<"Outside";
-    // printLinkedList(linkedList);
-    //count length of linked list
-    ll c = 1;
-    Node* temp = linkedList;
-    while(temp!=NULL){
-        c++;
-        temp = temp->next;
+    debug(b);
+    debug(c);
+
+    lld sumb = 0, sumc = 0;
+    for (lld i = 0; i < n; i++) {
+        sumb += b[i];
+        sumc += c[i];
     }
 
+    debug(sumb);
+    debug(sumc);
 
-    // Output the number of passes required
-    cout << count + c<< endl;
+    if ((sumb < 0 && sumc > 0) || sumb == 0 || sumc == 0 || (sumb > 0 && sumc < 0)) {
+        cout << "YES" << nline;
+    } else {
+        cout << "NO" << nline;
+    }
 }
 
 
-int main() {
+int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
     ll t = 1; 
     cin >> t;
-    while (t--) {
+    while(t--){
         solve();
     }
     return 0;

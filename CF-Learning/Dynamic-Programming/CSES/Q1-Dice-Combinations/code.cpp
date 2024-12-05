@@ -110,130 +110,49 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
+// APPROACH 1 => Constrcut dp from 0 to n
+void solve1() {
+    ll n; cin >> n;
+    vll dp(n+1);
 
-// Node class definition
-class Node {
-public:
-    char data;
-    Node* next;
-
-    // Constructor to initialize the node
-    Node(char val) {
-        data = val;
-        next = nullptr;
-    }
-};
-
-// Function to create a linked list from the string
-Node* createLinkedList(const string& s) {
-    if (s.empty()) return nullptr;
-
-    Node* head = new Node(s[0]);  // Initialize the head
-    Node* current = head;
-
-    for (size_t i = 1; i < s.size(); i++) {
-        current->next = new Node(s[i]);  // Create new node and link it
-        current = current->next;
-    }
-
-    return head;
-}
-
-// Function to print the linked list (for debugging/verification)
-void printLinkedList(Node* head) {
-    while (head) {
-        cout << head->data << " -> ";
-        head = head->next;
-    }
-    cout << "NULL\n";
-}
-
-// Function to solve the problem
-void solve() {
-    ll n; 
-    cin >> n;
-    string s; 
-    cin >> s;
-
-    // Create the linked list from the string
-    Node* linkedList = createLinkedList(s);
-    ll count = 0; // To count the number of passes
-
-    // printLinkedList(linkedList);
-
-    bool remaining = false;
-    while (linkedList) {
-        Node* head = linkedList;
-        Node* prev = nullptr;
-        char expectedChar = (head->data == 'A') ? 'B' : 'A';
-        linkedList = head->next; // Prepare for potential head removal
-        head = head->next;
-
-        bool removedNode = false;
-
-        while (head) {
-            if (head->data == expectedChar) {
-                // Remove the current node
-                if (prev) {
-                    prev->next = head->next;  // Skip the current node
-                } else {
-                    linkedList = head->next;  // Update the head if first node is removed
-                }
-                Node* temp = head;
-                head = head->next;
-                delete temp;
-                removedNode = true;
-
-                // Alternate the expected character
-                expectedChar = (expectedChar == 'A') ? 'B' : 'A';
-            } else {
-                // Move forward without deleting
-                prev = head;
-                head = head->next;
+    dp[0] = 1;
+    for(ll i=0; i<=n; i++){
+        for(ll j=1; j<=6; j++){
+            if(i-j >= 0){
+                dp[i] = (dp[i] + dp[i-j]) % MOD;
             }
         }
+    }
 
-        // printLinkedList(linkedList);
-        // Increment the count if any nodes were removed
-        if (removedNode) {
-            count++;
-            
-        } else {
-            remaining = true;
-            break; // If no nodes were removed, exit the loop
+    cout<<dp[n]<<nline;
+}
+
+// APPROACH 2
+void solve2() {
+    ll n; cin >> n;
+    vll dp(n+1);
+    dp[n] = 1;
+    for(ll i=n-1; i>=0; i--){
+        for(ll j=1; j<=6; j++){
+            if(i+j <= n){
+                dp[i] = (dp[i] + dp[i+j]) % MOD;
+            }
         }
     }
-
-    if(!remaining){
-        cout<<count<<endl;
-        return;
-    }
-
-    // cout<<"Outside";
-    // printLinkedList(linkedList);
-    //count length of linked list
-    ll c = 1;
-    Node* temp = linkedList;
-    while(temp!=NULL){
-        c++;
-        temp = temp->next;
-    }
-
-
-    // Output the number of passes required
-    cout << count + c<< endl;
+    cout<<dp[0]<<nline;
 }
 
 
-int main() {
+int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
-    while (t--) {
-        solve();
+    // cin >> t;
+    while(t--){
+        // solve1();
+        solve2();
     }
     return 0;
 }

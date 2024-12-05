@@ -111,9 +111,69 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+vll rotate(vll a){
+    ll n = a.size();
+    vll b(n);
+    for(ll i=0;i<n;i++){
+        b[i] = a[(i+1)%n];
+    }
+    return b;
+}
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
+    ll n, k; cin >> n >>k;
+    vll a(n);
+    for(ll i=0;i<n;i++){
+        a[i] = i+1;
+    }
+    if(k==1){
+        cout<<-1<<nline;
+    }
+    else if(k >= n){
+        cout<<n<<" ";
+        for(ll i=1;i<n;i++){
+            cout<<i<<" ";
+        }
+        cout<<nline;
+    }
+    else{ 
+        vll b(n);
+        for(ll i=0;i<n;i++){
+            b[i] = a[i];
+        }
+        for(ll i=0;i<n;i++){
+            b[i] = a[i]%k;
+        }
+        debug(a);
+        debug(b);
+        bool possible = false;
+        vll c = b;
+        ll count = 0;
+        for(ll i=0; i<=n; i++){
+            c = rotate(c);
+            count++;
+            bool flag = true;
+            for(ll i=0; i<n; i++){
+                if(b[i] == c[i]){
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){ // no element is same
+                possible = true;
+                break;
+            }
+        }
+        if(!possible){
+            cout<<-1<<nline;
+            return;
+        }
+        // rotate a by count times
+        for(ll i=0;i<n;i++){
+            cout<<a[(i+count)%n]<<" ";
+        }
+        cout<<nline;
+    }
 }
 
 
@@ -123,7 +183,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

@@ -114,6 +114,20 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
+    ll score = (n+1)*50;
+    ll sum = 0;
+    for(ll i = 0; i < n; i++){
+        sum += a[i];
+    }
+    if((score - sum) > 100){
+        cout<<-1<<endl;
+    }
+    else if(score-sum <= 0){
+        cout<<0<<endl;
+    }
+    else{
+        cout<<score - sum<<endl;
+    }
 }
 
 
@@ -123,7 +137,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }
