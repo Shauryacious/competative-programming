@@ -113,47 +113,48 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a,n);
-    set<ll> s;
-    vll orderedVec;
-    for(ll i=0; i<n; i++){
-        if(s.find(a[i]) == s.end()){ // if a[i] is not present in the set s then insert it
-            s.insert(a[i]);
-            orderedVec.pb(a[i]);
-        }
-    }
-    debug(orderedVec);
-    ll noOfDistictEle = s.size();
-
-    set<ll> notPresent;
-    for(ll i=1; i<=n; i++){
-        if(s.find(i) == s.end()){ // if i is not present in the set s
-            notPresent.insert(i);
+    string s; cin>>s;
+    ll count0 = 0, count1 = 0;
+    for(ll i = 0; i<n; i++){
+        if(s[i] == '0'){
+            count0++;
+        }else{
+            count1++;
         }
     }
 
-
-    ll ele = n/noOfDistictEle; // no of times i have to repeat the element in the new array b
-    ll rem = n%noOfDistictEle;
-
-    map<ll,ll> m;
-    for(auto i:s){
-        m[i] = ele;
+    if(abs(count0 - count1) > 1){ // if the difference between the count of 0 and 1 is greater than 1, then it is impossible to make the string good
+        cout<<"NO"<<nline;
+        return;
     }
 
-    vll b()
-
-    for(ll i = b.size(); i<n; i++){
-        b[i] = *notPresent.begin();
-        notPresent.erase(notPresent.begin());
+    if(n >= 3){
+        for(ll i=0; i<n-2; i++){
+            if(s[i] == s[i+1] && s[i+1] == s[i+2]){ // if there are 3 consecutive characters in the string, then it is impossible to make the string good
+                cout<<"NO"<<nline;
+                return;
+            }
+        }
     }
 
-    for(auto i:b){
-        cout<<i<<" ";
+    if(n>=2){
+        ll countsame0 = 0, countsame1 = 0;
+        for(ll i=0; i<n-1; i++){
+            if(s[i] == '0' && s[i+1] == '0'){
+                countsame0++;
+            }
+            if(s[i] == '1' && s[i+1] == '1'){
+                countsame1++;
+            }
+        }
+        if(countsame0 > 1 || countsame1 > 1){ // if there are more than 1 consecutive characters of the same type, then it is impossible to make the string good
+            cout<<"NO"<<nline;
+            return;
+        }
     }
 
+    cout<<"YES"<<nline;
 
-    cout<<nline;
 }
 
 

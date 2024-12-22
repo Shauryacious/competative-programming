@@ -112,50 +112,107 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a,n);
-    set<ll> s;
-    vll orderedVec;
+    ll n; cin >> n;
+    string s; cin>>s;
+    debug(s);
+
+    if(n == 2){
+        cout<<"YES"<<nline;
+        return;
+    }
+
+
+    bool all_p = true;
+    bool all_s = true;
     for(ll i=0; i<n; i++){
-        if(s.find(a[i]) == s.end()){ // if a[i] is not present in the set s then insert it
-            s.insert(a[i]);
-            orderedVec.pb(a[i]);
+        if(s[i] == 's'){
+            all_p = false;
+            break;
         }
     }
-    debug(orderedVec);
-    ll noOfDistictEle = s.size();
+    for(ll i=0; i<n; i++){
+        if(s[i] == 'p'){
+            all_s = false;
+            break;
+        }
+    }
+    if(all_p || all_s){
+        cout<<"YES"<<nline;
+        return;
+    }
 
-    set<ll> notPresent;
-    for(ll i=1; i<=n; i++){
-        if(s.find(i) == s.end()){ // if i is not present in the set s
-            notPresent.insert(i);
+
+    for(ll j=0; j<n; j++){
+        if(s[j] == 'p'){
+            bool found_s = false;
+            for(ll i = j; i<n; i++){
+                if(s[i] == 's'){
+                    found_s = true;
+                    break;
+                }
+            }
+            if(found_s){
+                // debug(found_s);
+                cout<<"NO"<<nline;
+                return;
+            }
+            break;
+        }
+    }
+    for(ll j=n-1; j>=0; j--){
+        if(s[j] == 's'){
+            bool found_p = false;
+            for(ll i = j; i>=0; i--){
+                if(s[i] == 'p'){
+                    found_p = true;
+                    break;
+                }
+            }
+            if(found_p){
+                cout<<"NO"<<nline;
+                return;
+            }
+            break;
         }
     }
 
-
-    ll ele = n/noOfDistictEle; // no of times i have to repeat the element in the new array b
-    ll rem = n%noOfDistictEle;
-
-    map<ll,ll> m;
-    for(auto i:s){
-        m[i] = ele;
+    bool found_s = false;
+    for(ll i=0; i<n; i++){
+        if(s[i] == 's'){
+            found_s = true;
+            bool found_p = false;
+            for(ll j=i+1; j<n; j++){
+                if(s[j] == 'p'){
+                    found_p = true;
+                    bool found_sps = false;
+                    for(ll k=j+1; k<n; k++){
+                        if(s[k] == 's'){
+                            found_sps = true;
+                            break;
+                        }
+                    }
+                    if(found_sps){
+                        cout<<"NO"<<nline;
+                        return;
+                    }
+                    else{
+                        if(s[0] == '.' || s[n-1] == '.'){
+                            cout<<"NO"<<nline;
+                            return;
+                        }
+                        else{
+                            cout<<"YES"<<nline;
+                            return;
+                        }
+                    }
+                }
+            }   
+        }
     }
 
-    vll b()
-
-    for(ll i = b.size(); i<n; i++){
-        b[i] = *notPresent.begin();
-        notPresent.erase(notPresent.begin());
-    }
-
-    for(auto i:b){
-        cout<<i<<" ";
-    }
-
-
-    cout<<nline;
+    cout<<"NO"<<nline;
+    
 }
-
 
 
 int main(){

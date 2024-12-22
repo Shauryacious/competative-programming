@@ -112,48 +112,30 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a,n);
-    set<ll> s;
-    vll orderedVec;
-    for(ll i=0; i<n; i++){
-        if(s.find(a[i]) == s.end()){ // if a[i] is not present in the set s then insert it
-            s.insert(a[i]);
-            orderedVec.pb(a[i]);
-        }
+    ll x1, y1, z1, x2, y2, z2, k; 
+    cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> k;
+
+    // Calculate absolute differences
+    ll x = abs(x1 - x2);
+    ll y = abs(y1 - y2);
+    ll z = abs(z1 - z2);
+
+    // Find the maximum difference and the total available steps excluding the maximum
+    ll maxx = max({x, y, z});
+    ll avlb = x + y + z - maxx;
+
+    // Calculate the required number of steps to cover the maximum difference
+    ll req = (maxx + k - 1) / k; // Equivalent to ceil(maxx / k)
+    ll steps = maxx;
+
+    if (req > avlb) {
+        steps += (req - 1);
     }
-    debug(orderedVec);
-    ll noOfDistictEle = s.size();
-
-    set<ll> notPresent;
-    for(ll i=1; i<=n; i++){
-        if(s.find(i) == s.end()){ // if i is not present in the set s
-            notPresent.insert(i);
-        }
-    }
-
-
-    ll ele = n/noOfDistictEle; // no of times i have to repeat the element in the new array b
-    ll rem = n%noOfDistictEle;
-
-    map<ll,ll> m;
-    for(auto i:s){
-        m[i] = ele;
+    else{
+        steps += avlb;
     }
 
-    vll b()
-
-    for(ll i = b.size(); i<n; i++){
-        b[i] = *notPresent.begin();
-        notPresent.erase(notPresent.begin());
-    }
-
-    for(auto i:b){
-        cout<<i<<" ";
-    }
-
-
-    cout<<nline;
+    cout << steps << '\n';
 }
 
 

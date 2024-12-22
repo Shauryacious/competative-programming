@@ -113,47 +113,27 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a,n);
-    set<ll> s;
-    vll orderedVec;
-    for(ll i=0; i<n; i++){
-        if(s.find(a[i]) == s.end()){ // if a[i] is not present in the set s then insert it
-            s.insert(a[i]);
-            orderedVec.pb(a[i]);
+    vll a(n); invec(a, n);
+    debug(a);
+
+    ll maxx = a[n-1];
+    ll count = 0;
+    ll maxcount = 0;
+    for(ll i=n-1; i>=0; i--){
+        if(a[i] < maxx){
+            count++;
         }
-    }
-    debug(orderedVec);
-    ll noOfDistictEle = s.size();
-
-    set<ll> notPresent;
-    for(ll i=1; i<=n; i++){
-        if(s.find(i) == s.end()){ // if i is not present in the set s
-            notPresent.insert(i);
+        else{
+            maxx = a[i];
+            count = 0;
         }
+        debug(count);
+        maxcount = max(maxcount, count);
     }
 
-
-    ll ele = n/noOfDistictEle; // no of times i have to repeat the element in the new array b
-    ll rem = n%noOfDistictEle;
-
-    map<ll,ll> m;
-    for(auto i:s){
-        m[i] = ele;
-    }
-
-    vll b()
-
-    for(ll i = b.size(); i<n; i++){
-        b[i] = *notPresent.begin();
-        notPresent.erase(notPresent.begin());
-    }
-
-    for(auto i:b){
-        cout<<i<<" ";
-    }
+    cout<<maxcount<<nline;
 
 
-    cout<<nline;
 }
 
 

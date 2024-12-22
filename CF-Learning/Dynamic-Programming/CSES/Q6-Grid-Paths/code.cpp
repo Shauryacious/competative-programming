@@ -113,47 +113,49 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a,n);
-    set<ll> s;
-    vll orderedVec;
+    vector<vector<char>> grid(n, vector<char>(n));
     for(ll i=0; i<n; i++){
-        if(s.find(a[i]) == s.end()){ // if a[i] is not present in the set s then insert it
-            s.insert(a[i]);
-            orderedVec.pb(a[i]);
-        }
-    }
-    debug(orderedVec);
-    ll noOfDistictEle = s.size();
-
-    set<ll> notPresent;
-    for(ll i=1; i<=n; i++){
-        if(s.find(i) == s.end()){ // if i is not present in the set s
-            notPresent.insert(i);
+        for(ll j=0; j<n; j++){
+            cin>>grid[i][j];
         }
     }
 
+    // dp[i][j] = number of ways to go from (i, j) to (n-1, n-1)
+    vector<vector<ll>> dp(n, vector<ll>(n, 0));
 
-    ll ele = n/noOfDistictEle; // no of times i have to repeat the element in the new array b
-    ll rem = n%noOfDistictEle;
-
-    map<ll,ll> m;
-    for(auto i:s){
-        m[i] = ele;
+    // Base case
+    if(grid[n-1][n-1] == '*'){
+        dp[n-1][n-1] = 0;
     }
-
-    vll b()
-
-    for(ll i = b.size(); i<n; i++){
-        b[i] = *notPresent.begin();
-        notPresent.erase(notPresent.begin());
-    }
-
-    for(auto i:b){
-        cout<<i<<" ";
+    else{
+        dp[n-1][n-1] = 1;
     }
 
 
-    cout<<nline;
+    for(ll i=n-1; i>=0; i--){
+        for(ll j=n-1; j>=0; j--){
+            if(i == n-1 && j == n-1){
+                continue;
+            }
+
+            if(grid[i][j] == '*'){ // if there is a trap, then no of ways to go from trap (i*, j*) to (n-1, n-1) is 0
+                dp[i][j] = 0;
+                continue;
+            }
+            
+            ll right = 0, down = 0;
+            if(j+1 < n){
+                right = dp[i][j+1];
+            }
+            if(i+1 < n){
+                down = dp[i+1][j];
+            }
+            dp[i][j] = (right + down) % MOD;
+        }
+    }
+
+    // Final Subproblem
+    cout<<dp[0][0]<<nline;
 }
 
 
@@ -164,7 +166,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

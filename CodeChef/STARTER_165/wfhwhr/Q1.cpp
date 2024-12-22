@@ -112,49 +112,54 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a,n);
-    set<ll> s;
-    vll orderedVec;
-    for(ll i=0; i<n; i++){
-        if(s.find(a[i]) == s.end()){ // if a[i] is not present in the set s then insert it
-            s.insert(a[i]);
-            orderedVec.pb(a[i]);
+    ll n;
+    cin >> n;
+
+    // If n is directly divisible by 33, print YES.
+    if (n % 33 == 0) {
+        cout << "YES" << nline;
+        return;
+    }
+
+    string s = to_string(n);
+    debug(s);
+
+    // Check if "33" occurs in the string representation of n.
+    bool can_be_divided = false;
+
+    while (true) {
+        size_t pos = s.find("33");
+        if (pos == string::npos) {
+            // No more "33" substrings to remove.
+            break;
+        }
+
+        // Remove all occurrences of "33".
+        string temp = "";
+        for (ll i = 0; i < s.length(); i++) {
+            if (i < s.length() - 1 && s[i] == '3' && s[i + 1] == '3') {
+                i++; // Skip the "33".
+            } else {
+                temp += s[i];
+            }
+        }
+        s = temp;
+
+        // Check if the modified number is divisible by 33.
+        if (!s.empty() && stoll(s) % 33 == 0) {
+            can_be_divided = true;
+            break;
         }
     }
-    debug(orderedVec);
-    ll noOfDistictEle = s.size();
 
-    set<ll> notPresent;
-    for(ll i=1; i<=n; i++){
-        if(s.find(i) == s.end()){ // if i is not present in the set s
-            notPresent.insert(i);
-        }
+    // Output the result.
+    if (can_be_divided) {
+        cout << "YES" << nline;
+    } else {
+        cout << "NO" << nline;
     }
-
-
-    ll ele = n/noOfDistictEle; // no of times i have to repeat the element in the new array b
-    ll rem = n%noOfDistictEle;
-
-    map<ll,ll> m;
-    for(auto i:s){
-        m[i] = ele;
-    }
-
-    vll b()
-
-    for(ll i = b.size(); i<n; i++){
-        b[i] = *notPresent.begin();
-        notPresent.erase(notPresent.begin());
-    }
-
-    for(auto i:b){
-        cout<<i<<" ";
-    }
-
-
-    cout<<nline;
 }
+
 
 
 

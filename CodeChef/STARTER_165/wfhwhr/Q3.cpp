@@ -111,50 +111,77 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+#define BITSET_SIZE 5000
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a,n);
-    set<ll> s;
-    vll orderedVec;
+    string s;
+    cin >> s;
+    int n = s.length();
+    ll first_occurence_of_0 = -1;
+    for (ll i = 0; i < n; i++) {
+        if (s[i] == '0') {
+            first_occurence_of_0 = i;
+            break;
+        }
+    }
+    if (first_occurence_of_0 == -1) {
+        cout << 1 << " " << n << " " << 1 << " " << 1 << nline;
+        return;
+    }
+
+    debug(first_occurence_of_0);
+    ll window_size = n - first_occurence_of_0;
+
+    // Vector of all substrings of size window_size
+    set<string> substrings;
+    for (ll i = 0; i < n - window_size + 1; i++) {
+        substrings.insert(s.substr(i, window_size));
+    }
+    debug(substrings);
+
+    ll max_opposite = 0;
+    string max_opposite_substring;
+    for(auto x: substrings){
+        for(ll i=first_occurence_of_0; i<n; i++){
+            debug(i);
+
+            char ch = s[i];
+            debug(ch);
+            debug(x[i-first_occurence_of_0]);
+            if(s[i] == '0' && x[i-first_occurence_of_0] == '1' || s[i] == '1' && x[i-first_occurence_of_0] == '0'){
+                continue;
+            }
+            else{
+                break;
+            }
+            if(max_opposite < i){
+                max_opposite = i;
+                max_opposite_substring = x;
+            }
+        }
+    }
+
+    if(max_opposite == 0){
+        max_opposite_substring = *substrings.begin();
+    }
+
+    // find the first occurence of max_opposite_substring
+    ll idx = -1;
     for(ll i=0; i<n; i++){
-        if(s.find(a[i]) == s.end()){ // if a[i] is not present in the set s then insert it
-            s.insert(a[i]);
-            orderedVec.pb(a[i]);
+        if(s.substr(i, window_size) == max_opposite_substring){
+            idx = i;
+            break;
         }
     }
-    debug(orderedVec);
-    ll noOfDistictEle = s.size();
-
-    set<ll> notPresent;
-    for(ll i=1; i<=n; i++){
-        if(s.find(i) == s.end()){ // if i is not present in the set s
-            notPresent.insert(i);
-        }
-    }
+    debug(max_opposite_substring);
+    debug(idx);
 
 
-    ll ele = n/noOfDistictEle; // no of times i have to repeat the element in the new array b
-    ll rem = n%noOfDistictEle;
-
-    map<ll,ll> m;
-    for(auto i:s){
-        m[i] = ele;
-    }
-
-    vll b()
-
-    for(ll i = b.size(); i<n; i++){
-        b[i] = *notPresent.begin();
-        notPresent.erase(notPresent.begin());
-    }
-
-    for(auto i:b){
-        cout<<i<<" ";
-    }
-
-
-    cout<<nline;
 }
+
+
+
+
 
 
 

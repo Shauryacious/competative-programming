@@ -112,8 +112,34 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a,n);
+    ll k, l1, r1, l2, r2; cin>>k>>l1>>r1>>l2>>r2;
+    ll r = max(r1, r2);
+    ll l = min(l1, l2);
+    vll K = {1};
+    for(ll i = 1; i<=60; i++){
+        K.pb(K.back()*k);
+        if(K.back() > r){
+            K.pop_back();
+            break;
+        }
+    }
+    debug(K);
+
+    for(auto ki : K){
+        if(ki == 1){
+            continue;
+        }
+        ll y2 = r2/ki;
+        debug(y2);
+        ll y1 = l2/ki;
+        debug(y1);
+        ll y = y2 - y1 + 1;
+        debug(y);
+    }
+
+
+
+
 }
 
 

@@ -18,7 +18,6 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
-#include <climits>
 
 using namespace std;
 
@@ -38,14 +37,14 @@ using namespace std;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
+#define all(x) (x).begin(), (x).end()
 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
+typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef vector<vll> vvll;
-typedef vector<string> vs;
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -94,77 +93,71 @@ void google(int t) {cout << "Case #" << t << ": ";}
 vector<ll> sieve(int n) {int*arr = new int[n + 1](); vector<ll> vect; for (int i = 2; i <= n; i++)if (arr[i] == 0) {vect.push_back(i); for (int j = 2 * i; j <= n; j += i)arr[j] = 1;} return vect;}
 ll phin(ll n) {ll number = n; if (n % 2 == 0) {number /= 2; while (n % 2 == 0) n /= 2;} for (ll i = 3; i <= sqrt(n); i += 2) {if (n % i == 0) {while (n % i == 0)n /= i; number = (number / i * (i - 1));}} if (n > 1)number = (number / n * (n - 1)) ; return number;} //O(sqrt(N))
 ll getRandomNumber(ll l, ll r) {return uniform_int_distribution<ll>(l, r)(rng);} 
-ll max_ele(vector<ll> v) {return *max_element(v.begin(), v.end());}
-ll min_ele(vector<ll> v) {return *min_element(v.begin(), v.end());}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; i++) { if (isPrime[i] == 1) {for (ll j = i * i; j <= n; j += i) { isPrime[j] = 0;}}}vector<ll> primes;for (ll i = 2; i <= n; i++) {if (isPrime[i]) {primes.push_back(i);}}return primes;}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
 // Macros
-#define all(x) (x).begin(), (x).end()
-#define rep(i, j) for (ll i = 0; i < j; i++)
-#define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
+#define rep(i, j) for (int i = 0; i < j; i++)
+#define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a,n);
-    set<ll> s;
-    vll orderedVec;
-    for(ll i=0; i<n; i++){
-        if(s.find(a[i]) == s.end()){ // if a[i] is not present in the set s then insert it
-            s.insert(a[i]);
-            orderedVec.pb(a[i]);
+class Solution {
+public:
+    vector<int> remainingMethods(int n, int k, vector<vector<int>>& invocations) {
+        vector<vector<int>> adj(n); // Adjacency list for the graph
+        for(auto& x: invocations) {
+            adj[x[0]].push_back(x[1]); // Build the graph from invocations
         }
-    }
-    debug(orderedVec);
-    ll noOfDistictEle = s.size();
 
-    set<ll> notPresent;
-    for(ll i=1; i<=n; i++){
-        if(s.find(i) == s.end()){ // if i is not present in the set s
-            notPresent.insert(i);
+        vector<int> Bugs; // Stores the final result (methods causing bugs)
+        queue<int> q1;
+        vector<int> isBug(n, 0); // To check if a node is already processed (bug)
+        vector<int> visited(n, 0); // To prevent cycles
+
+        q1.push(k); // Start traversal from method `k`
+        visited[k] = 1;
+
+        while(!q1.empty()) {
+            int x = q1.front();
+            q1.pop();
+            
+            // Process the current node
+            Bugs.push_back(x);
+            isBug[x] = 1;
+            
+            // Traverse its neighbors
+            for(auto neighbour : adj[x]) {
+                if(!visited[neighbour]) {
+                    visited[neighbour] = 1; // Mark as visited
+                    q1.push(neighbour); // Add to queue for further exploration
+                }
+            }
         }
+        
+        return Bugs;
     }
+};
 
-
-    ll ele = n/noOfDistictEle; // no of times i have to repeat the element in the new array b
-    ll rem = n%noOfDistictEle;
-
-    map<ll,ll> m;
-    for(auto i:s){
-        m[i] = ele;
-    }
-
-    vll b()
-
-    for(ll i = b.size(); i<n; i++){
-        b[i] = *notPresent.begin();
-        notPresent.erase(notPresent.begin());
-    }
-
-    for(auto i:b){
-        cout<<i<<" ";
-    }
-
-
-    cout<<nline;
+void solve(){
+    Solution s;
+    int arr[][] = {{1,2}, {0,1 }, {3, 2}};
+    vector<vector>> v(arr, arr+3);
+    vi x = s.remainingMethods(4, 1, v);
+    debug(x);
 }
-
-
 
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t = 1; 
-    cin >> t;
+    ll t; cin >> t;
     while(t--){
         solve();
     }
