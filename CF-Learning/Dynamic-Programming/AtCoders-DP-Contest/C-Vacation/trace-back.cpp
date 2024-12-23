@@ -111,38 +111,41 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
 void solve() {
-    ll n, x, y;
-    cin >> n >> x >> y;
-    vll a(n);
-    invec(a, n);
-
-    // Sort the array for binary search
-    sort(all(a));
-
-    // Total sum of the array
-    ll totalSum = accumulate(all(a), 0LL);
-    ll ans = 0;
-
-    // Compute valid sum range
-    ll lo = totalSum - y; // Minimum required sum
-    ll hi = totalSum - x; // Maximum required sum
-
-    // Iterate through each element to find valid pairs
+    ll n; cin >> n;
+    vll a(n), b(n), c(n);
     for (ll i = 0; i < n; i++) {
-        ll ai = a[i];
-
-        // Binary search range for valid pairs
-        ll it1 = lower_bound(a.begin() + i + 1, a.end(), lo - ai) - a.begin(); // Lower bound
-        ll it2 = upper_bound(a.begin() + i + 1, a.end(), hi - ai) - a.begin(); // Upper bound
-
-        // Count valid pairs
-        ans += (it2 - it1); // Number of elements in range [it1, it2)
+        cin >> a[i] >> b[i] >> c[i];
     }
 
-    cout << ans << '\n';
-}
+    vector<vector<ll>> v;
+    v.pb(a);
+    v.pb(b);
+    v.pb(c);
 
+    // State:
+    // dp[k][i] = maximum points of happiness on the kth day if we are performing activity i on the kth day
+    vector<vector<ll>> dp(n, vector<ll>(3, 0));
+
+    // Base Case: on the first day, we can perform any activity
+    dp[0][0] = a[0];
+    dp[0][1] = b[0];
+    dp[0][2] = c[0];
+
+    for (ll k = 1; k < n; k++) {
+        for (ll i = 0; i <= 2; i++) {
+            ll max_prev = 0;
+            for (ll prev = 0; prev <= 2; prev++) {
+                if (prev == i) continue;
+                max_prev = max(max_prev, dp[k-1][prev]);
+            }
+            dp[k][i] = max_prev + v[i][k];
+        }
+    }
+
+    cout << max({dp[n-1][0], dp[n-1][1], dp[n-1][2]}) << nline;
+}
 
 
 int main(){
@@ -151,7 +154,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

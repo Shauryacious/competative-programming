@@ -113,16 +113,17 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
+    vll h(n); invec(h, n);
     vll dp(n, INF);
     // dp[k] = minimum cost to reach the kth stone
 
-    dp[0] = 0;
-    dp[1] = abs(a[1] - a[0]);
+    // Base Case:
+    dp[0] = 0; // minimum cost to reach the 0th stone is 0 because we are already there
+    dp[1] = abs(h[1] - h[0]);
     for(ll i=2; i<n; i++){
         dp[i] = min(
-            dp[i-1] + abs(a[i] - a[i-1]), 
-            dp[i-2] + abs(a[i] - a[i-2])
+            dp[i-1] + abs(h[i] - h[i-1]), 
+            dp[i-2] + abs(h[i] - h[i-2])
         );
     }
     cout << dp[n-1] << nline;

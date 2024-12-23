@@ -111,38 +111,51 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, x, y;
-    cin >> n >> x >> y;
-    vll a(n);
-    invec(a, n);
+ll n, k;
+vll a, b;
 
-    // Sort the array for binary search
-    sort(all(a));
+ll maxEarning = 0;
 
-    // Total sum of the array
-    ll totalSum = accumulate(all(a), 0LL);
-    ll ans = 0;
-
-    // Compute valid sum range
-    ll lo = totalSum - y; // Minimum required sum
-    ll hi = totalSum - x; // Maximum required sum
-
-    // Iterate through each element to find valid pairs
+bool possiblePrice(ll price) {
+    ll negReviews = 0;
     for (ll i = 0; i < n; i++) {
-        ll ai = a[i];
-
-        // Binary search range for valid pairs
-        ll it1 = lower_bound(a.begin() + i + 1, a.end(), lo - ai) - a.begin(); // Lower bound
-        ll it2 = upper_bound(a.begin() + i + 1, a.end(), hi - ai) - a.begin(); // Upper bound
-
-        // Count valid pairs
-        ans += (it2 - it1); // Number of elements in range [it1, it2)
+        if(price > b[i]) return false; // Early exit if price exceeds b[i]
+        if (price > a[i] && price <= b[i]) {
+            negReviews++;
+        }
+        if (negReviews > k) return false; // Early exit if reviews exceed k
     }
 
-    cout << ans << '\n';
+    return true;
 }
 
+void solve() {
+    cin >> n >> k;
+
+    a.resize(n);
+    b.resize(n);
+
+    for (ll i = 0; i < n; i++) cin >> a[i];
+    for (ll i = 0; i < n; i++) cin >> b[i];
+
+    ll l = *min_element(all(a)), r = *max_element(all(b)), optimalPrice = 0;
+
+    while (l <= r) {
+        ll m = l + (r - l) / 2;
+        if (possiblePrice(m)) {
+            optimalPrice = m; // Track the maximum valid price
+            l = m + 1; // Try higher prices
+        } else {
+            r = m - 1; // Try lower prices
+        }
+    }
+
+    debug(optimalPrice);
+
+    ll lo = optimalPrice, hi = *max_element(all(b));
+    ll maxProfit = 0;
+
+}
 
 
 int main(){

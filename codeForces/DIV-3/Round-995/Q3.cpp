@@ -112,10 +112,53 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    ll t; 
+    cin >> t;  // Number of test cases
+    
+    while (t--) {
+        ll n, m, k; 
+        cin >> n >> m >> k;
+
+        vll a(m); 
+        invec(a, m);  // Input for a
+        vll q(k); 
+        invec(q, k);  // Input for q
+
+        // Fast handling for edge cases
+        if ((n - k) >= 2) {
+            cout << string(m, '0') << '\n';
+            continue;
+        }
+
+        if ((n - k) == 0) {
+            cout << string(m, '1') << '\n';
+            continue;
+        }
+
+        // Track visited elements
+        vector<bool> visited(n + 1, false);
+        for (ll i = 0; i < k; i++) {
+            visited[q[i]] = true;  // Mark visited
+        }
+
+        // Find the first unvisited element
+        ll unknown = -1;
+        for (ll i = 1; i <= n; i++) {
+            if (!visited[i]) {
+                unknown = i;
+                break;
+            }
+        }
+
+        // Generate output string based on `unknown`
+        string res = "";
+        for (ll i = 0; i < m; i++) {
+            res += (a[i] == unknown) ? '1' : '0';
+        }
+        cout << res << '\n';
+    }
 }
+
 
 
 int main(){
@@ -124,7 +167,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

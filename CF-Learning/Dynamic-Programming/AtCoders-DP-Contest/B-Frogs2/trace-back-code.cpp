@@ -111,36 +111,37 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+void trace(int i, ll n, ll k, vll &a, vll &dp){
+    cerr<<i+1<<" ";
+    for(ll j=k; j>=1; j--){
+        if(i-j >= 0){
+            if(dp[i] == min(dp[i], dp[i-j] + abs(a[i] - a[i-j]))){
+                trace(i-j, n, k, a, dp);
+                return;
+            }
+        }
+    }
+}
+
 void solve() {
-    ll n, x, y;
-    cin >> n >> x >> y;
-    vll a(n);
-    invec(a, n);
+    ll n, k; cin >> n >> k;
+    vll a(n); invec(a, n);
+    vll dp(n, INF);
+    // dp[k] = minimum cost to reach the kth stone
+    dp[0] = 0;
 
-    // Sort the array for binary search
-    sort(all(a));
-
-    // Total sum of the array
-    ll totalSum = accumulate(all(a), 0LL);
-    ll ans = 0;
-
-    // Compute valid sum range
-    ll lo = totalSum - y; // Minimum required sum
-    ll hi = totalSum - x; // Maximum required sum
-
-    // Iterate through each element to find valid pairs
-    for (ll i = 0; i < n; i++) {
-        ll ai = a[i];
-
-        // Binary search range for valid pairs
-        ll it1 = lower_bound(a.begin() + i + 1, a.end(), lo - ai) - a.begin(); // Lower bound
-        ll it2 = upper_bound(a.begin() + i + 1, a.end(), hi - ai) - a.begin(); // Upper bound
-
-        // Count valid pairs
-        ans += (it2 - it1); // Number of elements in range [it1, it2)
+    for(ll i=1; i<n; i++){
+        for(ll j=k; j>=1; j--){
+            if(i-j >= 0){
+                dp[i] = min(dp[i], dp[i-j] + abs(a[i] - a[i-j]));
+            }
+        }
     }
 
-    cout << ans << '\n';
+    // Trace Back
+    trace(n-1, n, k, a, dp);
+
+    cout << dp[n-1] << nline;
 }
 
 
@@ -151,7 +152,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }
