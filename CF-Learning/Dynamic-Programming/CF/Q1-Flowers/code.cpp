@@ -1,3 +1,8 @@
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious27
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -13,6 +18,7 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
+#include <climits>
 
 using namespace std;
 
@@ -32,14 +38,14 @@ using namespace std;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define all(x) (x).begin(), (x).end()
 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
-typedef vector<int> vi;
 typedef vector<ll> vll;
+typedef vector<vll> vvll;
+typedef vector<string> vs;
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -88,14 +94,17 @@ void google(int t) {cout << "Case #" << t << ": ";}
 vector<ll> sieve(int n) {int*arr = new int[n + 1](); vector<ll> vect; for (int i = 2; i <= n; i++)if (arr[i] == 0) {vect.push_back(i); for (int j = 2 * i; j <= n; j += i)arr[j] = 1;} return vect;}
 ll phin(ll n) {ll number = n; if (n % 2 == 0) {number /= 2; while (n % 2 == 0) n /= 2;} for (ll i = 3; i <= sqrt(n); i += 2) {if (n % i == 0) {while (n % i == 0)n /= i; number = (number / i * (i - 1));}} if (n > 1)number = (number / n * (n - 1)) ; return number;} //O(sqrt(N))
 ll getRandomNumber(ll l, ll r) {return uniform_int_distribution<ll>(l, r)(rng);} 
+ll max_ele(vector<ll> v) {return *max_element(v.begin(), v.end());}
+ll min_ele(vector<ll> v) {return *min_element(v.begin(), v.end());}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; i++) { if (isPrime[i] == 1) {for (ll j = i * i; j <= n; j += i) { isPrime[j] = 0;}}}vector<ll> primes;for (ll i = 2; i <= n; i++) {if (isPrime[i]) {primes.push_back(i);}}return primes;}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
 // Macros
-#define rep(i, j) for (int i = 0; i < j; i++)
-#define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
+#define all(x) (x).begin(), (x).end()
+#define rep(i, j) for (ll i = 0; i < j; i++)
+#define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
 #define maxvec(v) *max_element(v.begin(), v.end())
@@ -103,31 +112,50 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
-void solve(){
-    string s; cin >> s;
-    ll n = s.size();
-    ll maxcnt = 1, curr = 0;
-    char ch = 'A';
-    for(ll i = 0; i < n; i++){
-        if(s[i] == ch){
-            curr++;
-            maxcnt = max(maxcnt, curr);
-        }
-        else{
-            curr = 1;
-            ch = s[i];
-        }
+void solve() {
+    ll t, k; cin >> t >> k;
+
+    // dp[i] = number of ways to eat i flowers 
+    vll dp(100001, 0);
+
+    // Base Case:
+    // dp[0] = 1 // 1 way to eat 0 flowers (not eat any flower)
+    // for less than k flowers, there is only 1 way to eat them
+
+    for(ll i=0; i<k; i++){
+        dp[i] = 1;
     }
-    cout << maxcnt << nline;
+
+    dp[k] = 2; // 2 ways to eat k flowers (all k red or all k white)
+
+    for(ll i=k+1; i<=100000; i++){
+        dp[i] = mod_add(dp[i-1], dp[i-k], MOD);
+    }
+
+    // Prefix Sum
+    vll prefix(100001, 0);
+    prefix[0] = dp[0];
+    for(ll i=1; i<=100000; i++){
+        prefix[i] = mod_add(prefix[i-1], dp[i], MOD);
+    }
+
+    while(t--){
+        ll a, b; cin >> a >> b;
+        cout << mod_sub(prefix[b], prefix[a-1], MOD) << nline;
+    }
+
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-
+    ll t = 1; 
+    // cin >> t;
+    while(t--){
         solve();
-
+    }
     return 0;
 }
