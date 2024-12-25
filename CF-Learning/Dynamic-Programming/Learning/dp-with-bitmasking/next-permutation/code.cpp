@@ -111,45 +111,89 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+// Print all Permutations of a string
+void solve1() {
+    ll n  = 5;
+    auto f = [&](ll idx, ll mask, string s, auto &&F) -> void {
+        if(idx == n){
+            cout << s << nline;
+            return;
+        }
 
-void solve() {
-    ll n, d; 
-    cin >> n >> d;
+        for(ll i=0; i<n; i++){
+            if((mask & (1<<i)) == 0){ // if the ith element is not present in the mask
+                s += to_string(i+1);
+                mask |= (1<<i); // set the ith bit
 
-    set<int> divisors; 
+                F(idx+1, mask, s, F);
 
-    // 1 always divides
-    divisors.insert(1);
+                // mask ^= (1<<i); // unset the ith bit
+                mask &= ~(1<<i); // unset the ith bit
+                s.pop_back();
+            }
+        }
+    };
 
-    // Check for 3
-    if (d % 3 == 0 || (n >= 3)) {
-        divisors.insert(3);
-    }
-
-    // Check for 5
-    if (d == 5) {
-        divisors.insert(5);
-    }
-
-    // Check for 7
-    if (n >= 3 || d % 7 == 0) {
-        divisors.insert(7);
-    }
-
-    // Check for 9
-    if (n >= 6 || d == 9) { // or if n >= 6
-        divisors.insert(9);
-    }
-    else if(n >= 3 && n < 6 && d % 3 == 0) {
-        divisors.insert(9);
-    }
-
-    // Print results
-    for (auto it : divisors) {
-        cout << it << " ";
-    }
-    cout << nline;
+    f(0, 0, "", f);
 }
+
+
+// Without the string, the code respresents 
+//    |-> Iterating over all the permutations of a set of numbers
+//        of size n
+void solve2() {
+    ll n  = 5;
+    auto f = [&](ll idx, ll mask, auto &&F) -> void {
+        if(idx == n){
+            return;
+        }
+
+        for(ll i=0; i<n; i++){
+            if((mask & (1<<i)) == 0){ // if the ith element is not present in the mask
+                mask |= (1<<i); // set the ith bit
+
+                F(idx+1, mask, F);
+
+                mask &= ~(1<<i); // unset the ith bit
+            }
+        }
+    };
+
+    f(0, 0, f);
+}
+
+
+// Can we memoize the above code?
+// Yes, we can memoize the above code using a 2D dp array
+void solve3() {
+
+    // dp[i][mask] = number of ways to place the ith element in the mask, 
+    // s.t. mask represents the set of elements present in the subset already
+    // and i represents the ith element
+    // Note: bit at the ith position in mask will be 0,
+    // because then only we are calling the recursive function
+
+
+    ll n  = 5;
+    auto f = [&](ll idx, ll mask, auto &&F) -> void {
+        if(idx == n){
+            return;
+        }
+
+        for(ll i=0; i<n; i++){
+            if((mask & (1<<i)) == 0){ // if the ith element is not present in the mask
+                mask |= (1<<i); // set the ith bit
+
+                F(idx+1, mask, F);
+
+                mask &= ~(1<<i); // unset the ith bit
+            }
+        }
+    };
+
+    f(0, 0, f);
+}
+
 
 
 int main(){
@@ -157,10 +201,7 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t = 1; 
-    cin >> t;
-    while(t--){
-        solve();
-    }
+    // solve1();
+    solve2();
     return 0;
 }
