@@ -111,120 +111,35 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-// Print all Permutations of a string
-void solve1() {
-    ll n  = 5;
-    auto f = [&](ll idx, ll mask, string s, auto &&F) -> void {
-        if(idx == n){
-            cout << s << nline;
-            return;
+ll kadaneAlgo(vector<ll>& a){
+    ll n = a.size();
+    ll max_sum = a[0];
+    ll curr_sum = a[0];
+
+    for(ll i=1; i<n; i++){
+        if(curr_sum + a[i] > a[i]){ // agar piche wale se judne mein faida hai toh jud jao
+            curr_sum += a[i];
+        }
+        else{ // nahi toh naya subarray start karo
+            curr_sum = a[i];
         }
 
-        for(ll i=0; i<n; i++){
-            if((mask & (1<<i)) == 0){ // if the ith element is not present in the mask
-                s += to_string(i+1);
-                mask |= (1<<i); // set the ith bit
+        max_sum = max(max_sum, curr_sum);
+    }
 
-                F(idx+1, mask, s, F);
-
-                // mask ^= (1<<i); // unset the ith bit
-                mask &= ~(1<<i); // unset the ith bit
-                s.pop_back();
-            }
-        }
-    };
-
-    f(0, 0, "", f);
-}
-// Time Complexity: O(n * n!)
-//  |-> n! is the number of permutations i.e. the number of calls to the recursive function
-//  |-> n is the number of elements in the set (the loop runs n times in each call)
-
-
-// Without the string, the code respresents 
-//    |-> Iterating over all the permutations of a set of numbers
-//        of size n
-void solve2() {
-    ll n  = 5;
-    auto f = [&](ll idx, ll mask, auto &&F) -> void {
-        if(idx == n){
-            return;
-        }
-
-        for(ll i=0; i<n; i++){
-            if((mask & (1<<i)) == 0){ // if the ith element is not present in the mask
-                mask |= (1<<i); // set the ith bit
-
-                F(idx+1, mask, F);
-
-                mask &= ~(1<<i); // unset the ith bit
-            }
-        }
-    };
-
-    f(0, 0, f);
+    return max_sum;
 }
 
 
-// Can we memoize the above code?
-// Yes, we can memoize the above code using a 2D dp array
-void solve3() {
-
-    // dp[i][mask] = number of ways to place the ith element in the mask, 
-    // s.t. mask represents the set of elements present in the subset already
-    // and i represents the ith element
-    // Note: bit at the ith position in mask will be 0,
-    // because then only we are calling the recursive function
-
-
-    ll n  = 5;
-
-    vector<vector<ll>> dp(n, vector<ll>((1<<n), -1));
-
-    auto f = [&](ll idx, ll mask, auto &&F) -> int {
-        if(idx == n){
-            return 1;
-        }
-
-        if(dp[idx][mask] != -1){
-            return dp[idx][mask];
-        }
-
-        int ways = 0;
-
-        for(ll i=0; i<n; i++){
-            if((mask & (1<<i)) == 0){ // if the ith element is not present in the mask
-                mask |= (1<<i); // set the ith bit
-
-                ways += F(idx+1, mask, F);
-
-                mask &= ~(1<<i); // unset the ith bit
-            }
-        }
-
-        return dp[idx][mask] = ways;
-    };
-
-    cout<<f(0, 0, f);
+void solve() {
+    vll a = {-2, -3, 4, -1, -2, 1, 5, -3};
+    
+    // a vector of 1 and -1s
+    vll a2 = {1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, -1, 1, -1};
+    cout<<kadaneAlgo(a);
+    cout<<nline;
+    cout<<kadaneAlgo(a2);
 }
-
-// Time Complexity: 
-//    |-> f(idx, mask) = O(n * 2^n)
-//    |-> and we are calling f() n times (the loop runs n times in each call)
-//    |-> So, the time complexity of the above code is O(n^2 * 2^n)
-
-// Time Complexity = number of states * time taken to compute each state
-// Here, number of states = n * 2^n
-// and time taken to compute each state = O(n) (as we are iterating over n elements in each call)
-// So, the time complexity of the above code is O(n^2 * 2^n)
-
-
-
-
-// Hence, we have improved the time complexity of the code 
-// from O(n * n!) to O(n^2 * 2^n)
-// by using memoization
-
 
 
 int main(){
@@ -232,8 +147,8 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    // solve1();
-    // solve2();
-    solve3();
+
+    solve();
+
     return 0;
 }
