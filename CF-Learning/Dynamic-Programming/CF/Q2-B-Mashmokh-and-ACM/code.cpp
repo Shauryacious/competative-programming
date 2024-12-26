@@ -111,69 +111,62 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+// Function to solve the problem
 void solve() {
-    ll n; cin >> n;
-    vll a(n+1);
-    a.push_back(0);
-    for(ll i=1; i<=n; i++){
-        cin >> a[i];
+    ll n, k; 
+    cin >> n >> k;
+
+    /*
+     * dp[i][j]: Number of valid sequences of length `i` 
+     *           where the last element of the sequence is `j`.
+     * Dimensions:
+     * dp[k + 1][n + 1] where:
+     * - `k` is the maximum sequence length.
+     * - `n` is the maximum value of elements in the sequence.
+     */
+    vector<vector<ll>> dp(k + 1, vector<ll>(n + 1, 0));
+
+    /*
+     * Base Case:
+     * For sequences of length 1 (`i = 1`), there is exactly 
+     * 1 valid sequence for each `j` (itself).
+     */
+    for (ll j = 1; j <= n; j++) {
+        dp[1][j] = 1;
     }
 
-    vll b(n+1);
-
-    vll visited(n+1, 0);
-    // count number of cycle in the permutation and 
-    // store the number of elements in each cycle
-
-    for(ll i=1; i<=n; i++){
-        if(visited[i] == 0){
-            ll j = i;
-            ll count = 0;
-            while(visited[j] == 0){
-                visited[j] = 1;
-                j = a[j];
-                count++;
-            }
-            b[count]++;
-        }
-    }
-    // debug(b);
-
-    ll ans = 0;
-// Process vector `b` until indices [1, n-1] are all zero
-    while (true) {
-        bool has_nonzero = false;
-
-        // Check if any index from [1, n-1] in `b` is nonzero
-        for (ll i = 1; i < n; i++) {
-            if (b[i] > 0) {
-                has_nonzero = true;
-                break;
-            }
-        }
-
-        if (!has_nonzero) break;  // Exit if all are zero
-
-        // Process the vector `b`
-        for (ll i = 1; i < n; i++) {
-            if (b[i] > 0) {
-                b[i]--;
-                for (ll j = i; j < n; j++) {
-                    if (b[j] > 0) {
-                        b[j]--;
-                        ans += i + j;
-                        b[i + j]++;
-                        break;
-                    }
-                }
-                break;  // Restart processing to avoid invalid state
+    /*
+     * DP Transition:
+     * - We iterate over all sequence lengths (`i`) from 2 to `k`.
+     * - For each possible last element of the sequence (`j`):
+     *   - Add contributions from sequences of length `i - 1`
+     *     ending with any divisor of `j`.
+     *   - Specifically, for all `x` that are multiples of `j` 
+     *     (i.e., `x = j, 2j, 3j, ...` up to `n`), add `dp[i-1][j]`
+     *     to `dp[i][x]`.
+     */
+    for (ll i = 2; i <= k; i++) { // Iterate over sequence lengths
+        for (ll j = 1; j <= n; j++) { // Iterate over possible last elements
+            for (ll x = j; x <= n; x += j) { // Iterate over multiples of `j`
+                dp[i][x] = (dp[i][x] + dp[i - 1][j]) % MOD;
             }
         }
     }
 
-    cout<<ans<<nline;
-    // debug(ans);
+    /*
+     * Compute the Final Result:
+     * The answer is the sum of all `dp[k][j]` for `j = 1` to `n`.
+     * This gives the total number of valid sequences of length `k`.
+     */
+    ll result = 0;
+    for (ll j = 1; j <= n; j++) {
+        result = (result + dp[k][j]) % MOD;
+    }
+
+    // Output the result
+    cout << result << nline;
 }
+
 
 
 int main(){
@@ -182,7 +175,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

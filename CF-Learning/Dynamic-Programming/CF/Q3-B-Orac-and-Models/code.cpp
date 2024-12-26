@@ -112,68 +112,45 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n+1);
-    a.push_back(0);
+    ll n; cin>>n;
+    vll s(n); invec(s, n);
+
+
+    // State:
+    // dp[i] = maximum number of models that Orac can buy s.t. the last 
+    // model he bought was at index i
+
+    // hence he can buy at index 2*i, 3*i, 4*i, ... <=n
+    // dp[2*i] = max(dp[2*i], dp[i] + 1)
+    // dp[3*i] = max(dp[3*i], dp[i] + 1)
+
+    vector<ll> dp(n+1);
+
+
+    // Base Case:
+    // dp[i] = 1, for all i
+    // we can start from anywhere and buy 1 model
+
     for(ll i=1; i<=n; i++){
-        cin >> a[i];
+        dp[i] = 1;
     }
 
-    vll b(n+1);
-
-    vll visited(n+1, 0);
-    // count number of cycle in the permutation and 
-    // store the number of elements in each cycle
-
+    // Transition:
     for(ll i=1; i<=n; i++){
-        if(visited[i] == 0){
-            ll j = i;
-            ll count = 0;
-            while(visited[j] == 0){
-                visited[j] = 1;
-                j = a[j];
-                count++;
-            }
-            b[count]++;
-        }
-    }
-    // debug(b);
-
-    ll ans = 0;
-// Process vector `b` until indices [1, n-1] are all zero
-    while (true) {
-        bool has_nonzero = false;
-
-        // Check if any index from [1, n-1] in `b` is nonzero
-        for (ll i = 1; i < n; i++) {
-            if (b[i] > 0) {
-                has_nonzero = true;
-                break;
-            }
-        }
-
-        if (!has_nonzero) break;  // Exit if all are zero
-
-        // Process the vector `b`
-        for (ll i = 1; i < n; i++) {
-            if (b[i] > 0) {
-                b[i]--;
-                for (ll j = i; j < n; j++) {
-                    if (b[j] > 0) {
-                        b[j]--;
-                        ans += i + j;
-                        b[i + j]++;
-                        break;
-                    }
-                }
-                break;  // Restart processing to avoid invalid state
+        for(ll j=2*i; j<=n; j+=i){
+            if(s[j-1] > s[i-1]){
+                dp[j] = max(dp[j], dp[i] + 1);
             }
         }
     }
 
-    cout<<ans<<nline;
-    // debug(ans);
+    ll max_ans = INT_MIN;
+    for(ll i=1; i<=n; i++){
+        max_ans = max(max_ans, dp[i]);
+    }
+    cout<<max_ans<<nline;
 }
+
 
 
 int main(){

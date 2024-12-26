@@ -113,67 +113,47 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n+1);
-    a.push_back(0);
-    for(ll i=1; i<=n; i++){
-        cin >> a[i];
+
+    // State:
+    // dp[i][j] = number of ways to reach the jth vertex
+    // in the ith move
+    // dp[0][3] = 1
+    // dp[0][2] = 0
+    // dp[0][1] = 0
+    // dp[0][0] = 0
+
+    // dp[1][3] = 0
+    // dp[1][2] = 1
+    // dp[1][1] = 1
+    // dp[1][0] = 1
+
+    vector<ll> prev(4, 0);
+    // prev[j] = dp[i-1][j]
+    // curr[j] = dp[i][j]
+
+    // Base Case:
+    for (ll i = 0; i <= 2; i++) {
+        prev[i] = 1;
     }
 
-    vll b(n+1);
-
-    vll visited(n+1, 0);
-    // count number of cycle in the permutation and 
-    // store the number of elements in each cycle
-
-    for(ll i=1; i<=n; i++){
-        if(visited[i] == 0){
-            ll j = i;
-            ll count = 0;
-            while(visited[j] == 0){
-                visited[j] = 1;
-                j = a[j];
-                count++;
-            }
-            b[count]++;
-        }
-    }
-    // debug(b);
-
-    ll ans = 0;
-// Process vector `b` until indices [1, n-1] are all zero
-    while (true) {
-        bool has_nonzero = false;
-
-        // Check if any index from [1, n-1] in `b` is nonzero
-        for (ll i = 1; i < n; i++) {
-            if (b[i] > 0) {
-                has_nonzero = true;
-                break;
-            }
-        }
-
-        if (!has_nonzero) break;  // Exit if all are zero
-
-        // Process the vector `b`
-        for (ll i = 1; i < n; i++) {
-            if (b[i] > 0) {
-                b[i]--;
-                for (ll j = i; j < n; j++) {
-                    if (b[j] > 0) {
-                        b[j]--;
-                        ans += i + j;
-                        b[i + j]++;
-                        break;
-                    }
+    // Transition:
+    for (ll i = 2; i <= n; i++) {
+        vector<ll> curr(4, 0);
+        for (ll j = 0; j < 4; j++) {
+            for (ll k = 0; k < 4; k++) {
+                if (j != k) { // Ensure we don't transition to the same vertex
+                    curr[j] = (curr[j] + prev[k]) % MOD;
                 }
-                break;  // Restart processing to avoid invalid state
             }
         }
+        prev = curr;
     }
 
-    cout<<ans<<nline;
-    // debug(ans);
+    // Final Answer:
+    cout << prev[3];
 }
+
+
 
 
 int main(){
@@ -182,7 +162,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

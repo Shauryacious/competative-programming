@@ -114,7 +114,42 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    vector<pair<ll, ll>> v;
+    for(ll i=0; i<n; i++){
+        v.pb({a[i], i+1});
+    }
+    debug(v);
+    sort(all(v));
+    reverse(all(v));
+    
+    debug(v);
+
+    vll b(n);
+    for(ll i=0; i<n; i++){
+        b[v[i].ss-1] = i+1;
+    }
+    debug(b);
+
+    ll count = 0;
+    for(ll i=0; i<n-1; i++){
+        if(abs(b[i]-b[i+1]) == 1){
+            debug(i);
+            count++;
+            while(i<n-1 && abs(b[i]-b[i+1]) == 1){
+                i++;
+            }
+            debug(i);
+        }
+        else{
+            count++;
+        }
+    }
+
+
+    if(abs(b[n-1]-b[n-2]) != 1){
+        count++;
+    }
+    cout<<count<<nline;
 }
 
 

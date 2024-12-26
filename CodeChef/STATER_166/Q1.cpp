@@ -114,7 +114,17 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
-    cout << maxvec(a) << nline;
+    map<ll, vll> m;
+    for(ll i=0; i<n; i++){
+        m[a[i]].pb(i+1);
+    }
+
+    ll sum = 0;
+    for(auto x: m){
+        sum += x.ss.back();
+    }
+
+    cout<<sum<<nline;
 }
 
 

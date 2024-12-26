@@ -113,66 +113,8 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n+1);
-    a.push_back(0);
-    for(ll i=1; i<=n; i++){
-        cin >> a[i];
-    }
-
-    vll b(n+1);
-
-    vll visited(n+1, 0);
-    // count number of cycle in the permutation and 
-    // store the number of elements in each cycle
-
-    for(ll i=1; i<=n; i++){
-        if(visited[i] == 0){
-            ll j = i;
-            ll count = 0;
-            while(visited[j] == 0){
-                visited[j] = 1;
-                j = a[j];
-                count++;
-            }
-            b[count]++;
-        }
-    }
-    // debug(b);
-
-    ll ans = 0;
-// Process vector `b` until indices [1, n-1] are all zero
-    while (true) {
-        bool has_nonzero = false;
-
-        // Check if any index from [1, n-1] in `b` is nonzero
-        for (ll i = 1; i < n; i++) {
-            if (b[i] > 0) {
-                has_nonzero = true;
-                break;
-            }
-        }
-
-        if (!has_nonzero) break;  // Exit if all are zero
-
-        // Process the vector `b`
-        for (ll i = 1; i < n; i++) {
-            if (b[i] > 0) {
-                b[i]--;
-                for (ll j = i; j < n; j++) {
-                    if (b[j] > 0) {
-                        b[j]--;
-                        ans += i + j;
-                        b[i + j]++;
-                        break;
-                    }
-                }
-                break;  // Restart processing to avoid invalid state
-            }
-        }
-    }
-
-    cout<<ans<<nline;
-    // debug(ans);
+    vll a(n); invec(a, n);
+    cout << "Hello World" << nline;
 }
 
 
