@@ -144,6 +144,13 @@ void solve1() {
 // Without the string, the code respresents 
 //    |-> Iterating over all the permutations of a set of numbers
 //        of size n
+
+
+void solve4(){
+
+}
+
+
 void solve2() {
     ll n  = 5;
     auto f = [&](ll idx, ll mask, auto &&F) -> void {

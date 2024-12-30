@@ -1,4 +1,11 @@
 {
+  "C_Cpp.default.compilerPath": "/opt/homebrew/Cellar/gcc/13.2.0/bin/g++-13",
+  "code-runner.executorMap": {
+    "cpp": "cd $dir && /opt/homebrew/Cellar/gcc/13.2.0/bin/g++-13 -O2 -std=c++17 $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+    "python": "python3 -u"
+  },
+  "C_Cpp.intelliSenseEngine": "Default",
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "clang",
   "C_Cpp_Runner.cppCompilerPath": "clang++",
@@ -38,7 +45,10 @@
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [],
-  "C_Cpp_Runner.includeSearch": ["*", "**/*"],
+  "C_Cpp_Runner.includeSearch": [
+    "*",
+    "**/*"
+  ],
   "C_Cpp_Runner.excludeSearch": [
     "**/build",
     "**/build/**",
@@ -52,23 +62,5 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
-  "C_Cpp_Runner.msvcSecureNoWarnings": false,
-  "files.associations": {
-    "__bit_reference": "cpp",
-    "__hash_table": "cpp",
-    "__split_buffer": "cpp",
-    "__tree": "cpp",
-    "array": "cpp",
-    "deque": "cpp",
-    "forward_list": "cpp",
-    "initializer_list": "cpp",
-    "map": "cpp",
-    "set": "cpp",
-    "string": "cpp",
-    "string_view": "cpp",
-    "unordered_map": "cpp",
-    "unordered_set": "cpp",
-    "vector": "cpp"
-  },
-  "C_Cpp.errorSquiggles": "disabled"
+  "C_Cpp_Runner.msvcSecureNoWarnings": false
 }

@@ -1,29 +1,25 @@
 {
   "version": "2.0.0",
   "tasks": [
-      {
-          "label": "compile",
-          "type": "shell",
-          "command": "g++",
-          "args": [
-              "-std=c++17",
-              "-o",
-              "${fileBasenameNoExtension}",
-              "${file}"
-          ],
-          "group": {
-              "kind": "build",
-              "isDefault": false
-          }
-      },
-      {
-          "label": "compile and run",
-          "type": "shell",
-          "command": "g++ -std=c++17 -o ${fileBasenameNoExtension} ${file} && ./${fileBasenameNoExtension} < input.txt > output.txt",
-          "group": {
-              "kind": "build",
-              "isDefault": true
-          }
+    {
+      "label": "compile",
+      "type": "shell",
+      "command": "/opt/homebrew/Cellar/gcc/13.2.0/bin/g++-13",
+      "args": ["-std=c++17", "-O2", "-o", "code", "${file}"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
       }
+    },
+    {
+      "label": "run",
+      "type": "shell",
+      "command": "./code",
+      "args": ["< input.txt > output.txt"],
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      }
+    }
   ]
 }

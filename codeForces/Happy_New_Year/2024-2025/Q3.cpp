@@ -20,12 +20,7 @@
 #include <numeric>
 #include <climits>
 
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace chrono;
-using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -51,9 +46,6 @@ typedef long double lld;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
-
-typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
-// typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -119,10 +111,38 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+ll ans;
+
+void recurr(ll l, ll r, ll k){
+    ll len = r - l + 1;
+    if(len < k){
+        return;
+    }
+
+    if(len%2 == 0){
+        ll mid = (l + r)/2;
+        recurr(l, mid, k);
+        recurr(mid + 1, r, k);
+    } else {
+        ll mid = (l + r)/2;
+        ans += mid;
+        recurr(l, mid-1, k);
+        recurr(mid + 1, r, k);
+    }
+}
+
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    ll n, k; cin>>n>>k;
+    if(k == 1){
+        cout<<n*(n+1)/2<<nline;
+        return;
+    }
+
+    ans = 0;
+    recurr(1, n, k);
+    cout<<ans<<nline;
 }
 
 

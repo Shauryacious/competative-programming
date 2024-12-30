@@ -111,20 +111,86 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+// Precompute results for all digits (0-9) for all m (0 to 200000)
+vector<vector<ll>> precompute(int max_m) {
+    // State:
+    // dp[i][j] = number of digits digit j 
+    // will have after i operations
+    vector<vector<ll>> dp(max_m + 1, vector<ll>(10, 0));
+
+    // Base case:
+    // dp[0][j] = 1 for all j
+    // dp[1][0] = 1 
+    // dp[1][1] = 1 
+    // dp[1][2] = 1
+    // ...
+    // dp[1][9] = 2 (dp[1][0] + dp[1][1])
+
+    for (int j = 0; j < 10; j++) {
+        dp[0][j] = 1;
+    }
+
+    for (int j = 0; j <= 8; j++) {
+        dp[1][j] = 1;
+    }
+    dp[1][9] = 2;   
+
+
+    // Recurrence relation:
+    for(ll i=2; i<=max_m; i++){
+        for(ll j=0; j<=9; j++){
+            if(j == 9){
+                dp[i][j] = (dp[i-1][0] + dp[i-1][1]) % MOD;
+            }
+            else{
+                dp[i][j] = (dp[i-1][j+1]) % MOD;
+            }
+        }
+    }
+
+    return dp;
 }
 
+void solve() {
+    int t;
+    cin >> t;
 
+    vector<pair<ll, ll>> queries(t);
+    ll max_m = 0;
+
+    // Read all queries and find the maximum value of m
+    for (int i = 0; i < t; i++) {
+        cin >> queries[i].first >> queries[i].second;
+        max_m = max(max_m, queries[i].second);
+    }
+
+    // Precompute results
+    vector<vector<ll>> dp = precompute(max_m);
+
+    // Answer each query
+    for (int q = 0; q < t; q++) {
+        ll n = queries[q].first;
+        ll m = queries[q].second;
+
+        string s = to_string(n);
+        ll ans = 0;
+
+        // Calculate the answer using precomputed results
+        for (char c : s) {
+            int digit = c - '0';
+            ans = (ans + dp[m][digit]) % MOD;
+        }
+
+        cout << ans << nline;
+    }
+}
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

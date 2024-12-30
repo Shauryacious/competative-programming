@@ -20,12 +20,7 @@
 #include <numeric>
 #include <climits>
 
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace chrono;
-using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -51,9 +46,6 @@ typedef long double lld;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
-
-typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
-// typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -121,9 +113,54 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    vvll grid(n, vll(n));
+    rep(i, n) {
+        rep(j, n) {
+            cin >> grid[i][j];
+        }
+    }
+
+
+    // 1 2 3 4 5
+    // 3 4 1 2 5
+
+    // 120 possible permutaion in pairs
+
+    vector<vector<ll>> dp(n, vector<ll>((1<<n), -1));
+
+    auto f = [&](ll idx, ll mask, auto &&F) -> int {
+        if(idx == n){
+            return 1;
+        }
+
+        if(dp[idx][mask] != -1){
+            return dp[idx][mask];
+        }
+
+        int ways = 0;
+
+        for(ll i=0; i<n; i++){
+            if((mask & (1<<i)) == 0 && grid[idx][i] == 1){ // if the ith element is not present in the mask & 
+                mask |= (1<<i); // set the ith bit
+
+                ways = (ways + F(idx+1, mask, F)) % MOD;
+
+                mask &= ~(1<<i); // unset the ith bit
+            }
+        }
+
+        return dp[idx][mask] = ways;
+    };
+
+    cout<<f(0, 0, f);
 }
+
+
+// (0, 0) (1, 2) (6, 7)
+// 15
+// 2^15
+
+//  3 + 10 = 13
 
 
 int main(){
@@ -132,7 +169,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

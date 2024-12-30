@@ -125,7 +125,6 @@ void solve() {
     cout << "Hello World" << nline;
 }
 
-
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);

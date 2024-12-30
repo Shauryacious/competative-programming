@@ -20,12 +20,7 @@
 #include <numeric>
 #include <climits>
 
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace chrono;
-using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -51,9 +46,6 @@ typedef long double lld;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
-
-typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
-// typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -120,9 +112,67 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
+    ll n, m; cin>>n>>m;
     vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+
+    // State:
+    // dp[i][j] = number of valid arrays of length i ending with j
+    vvll dp(n, vll(m+1, 0));
+
+
+    // Base case:
+    if(a[0] == 0){
+        for(ll j=1; j<=m; j++){
+            dp[0][j] = 1;
+        }
+    }
+    else{
+        dp[0][a[0]] = 1;
+    }
+
+
+
+    for(ll i=1; i<n; i++){
+        for(ll j=1; j<=m; j++){
+            if(a[i] == 0){
+                dp[i][j] = dp[i-1][j];
+                dp[i][j] %= MOD;
+                if(j+1 <= m){
+                    dp[i][j] += dp[i-1][j+1];
+                    dp[i][j] %= MOD;
+                }
+                if(j-1 >= 1){
+                    dp[i][j] += dp[i-1][j-1];
+                    dp[i][j] %= MOD;
+                }
+            }
+            else{
+                if(j != a[i]){
+                    dp[i][j] = 0;
+                }
+                else{ // j == a[i]
+                    dp[i][j] = dp[i-1][j];
+                    dp[i][j] %= MOD;
+                    if(j+1 <= m){
+                        dp[i][j] += dp[i-1][j+1];
+                        dp[i][j] %= MOD;
+                    }
+                    if(j-1 >= 1){
+                        dp[i][j] += dp[i-1][j-1];
+                        dp[i][j] %= MOD;
+                    }
+                }
+            }
+        }
+    }
+
+
+    if(a[n-1] == 0){
+        cout<<accumulate(all(dp[n-1]), 0LL)%MOD;
+    }
+    else{
+        cout<<dp[n-1][a[n-1]]%MOD;
+    }
 }
 
 
@@ -132,7 +182,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

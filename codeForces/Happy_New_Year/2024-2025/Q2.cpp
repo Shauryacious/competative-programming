@@ -20,12 +20,7 @@
 #include <numeric>
 #include <climits>
 
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace chrono;
-using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -51,9 +46,6 @@ typedef long double lld;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
-
-typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
-// typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -119,11 +111,87 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+class SegmentTree {
+    vector<int> tree;
+    int n;
+
+    void build(const string &s, int node, int start, int end) {
+        if (start == end) {
+            tree[node] = (s[start] == '0') ? 1 : 0;
+        } else {
+            int mid = (start + end) / 2;
+            build(s, 2 * node, start, mid);
+            build(s, 2 * node + 1, mid + 1, end);
+            tree[node] = tree[2 * node] | tree[2 * node + 1];
+        }
+    }
+
+    int query(int node, int start, int end, int l, int r) {
+        if (r < start || end < l) {
+            return 0;
+        }
+        if (l <= start && end <= r) {
+            return tree[node];
+        }
+        int mid = (start + end) / 2;
+        int left = query(2 * node, start, mid, l, r);
+        int right = query(2 * node + 1, mid + 1, end, l, r);
+        return left | right;
+    }
+
+public:
+    SegmentTree(const string &s) {
+        n = s.size();
+        tree.resize(4 * n, 0);
+        build(s, 1, 0, n - 1);
+    }
+
+    bool hasZero(int l, int r) {
+        return query(1, 0, n - 1, l, r);
+    }
+};
+
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    vector<pair<ll, ll>> v(n);  
+    map<ll, ll> mp;
+    for(ll i = 0; i < n; i++) {
+        cin >> v[i].first >> v[i].second;
+        if(v[i].first == v[i].second) {
+            mp[v[i].first]++;
+        }
+    }
+    string s = "";
+    for(ll i = 1; i <= 2 * n; i++) {
+        if(mp.find(i) != mp.end()) {
+            s += '1';
+        } else {
+            s += '0';
+        }
+    }
+    SegmentTree stree(s);
+
+    string ans = "";
+    for(ll i = 0; i < n; i++) {
+        ll l = v[i].first; ll r = v[i].second;
+        if(l == r) {
+            if(mp[l] > 1) {
+                ans += '0';
+            } else {
+                ans += '1';
+            }
+            continue;
+        }
+        if (stree.hasZero(l - 1, r - 1)) {
+            ans += '1';
+        } else {
+            ans += '0';
+        }
+    }
+
+    cout << ans << '\n';
 }
+
 
 
 int main(){

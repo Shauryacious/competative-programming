@@ -1,1 +1,1 @@
-3
+String without spaces: Thisisastringwithspaces.
