@@ -20,12 +20,12 @@
 #include <numeric>
 #include <climits>
 
-// #include<ext/pb_ds/assoc_container.hpp>
-// #include<ext/pb_ds/tree_policy.hpp>
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
 using namespace chrono;
-// using namespace __gnu_pbds;
+using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -51,6 +51,8 @@ typedef long double lld;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
+
+typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds; // find_by_order, order_of_key
 
 // typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
@@ -120,10 +122,62 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    debug(a);
-    cout<<"-------------------"<<nline;
+    ll n; cin>>n;
+    pbds A; // declaration
+
+	// Inserting elements - 1st query
+	A.insert(1);
+	A.insert(10);
+	A.insert(2);
+	A.insert(7);
+	A.insert(2);  // ordered set only contains unique values
+
+	// A contains
+	cout << "A = ";
+	for (auto i : A)
+		cout << i << " ";
+	cout << endl;
+	cout << endl;
+
+	// finding kth element - 4th query
+	cout << "0th element: " << *A.find_by_order(0) << endl;
+	cout << "1st element: " << *A.find_by_order(1) << endl;
+	cout << "2nd element: " << *A.find_by_order(2) << endl;
+	cout << "3rd element: " << *A.find_by_order(3) << endl;
+	cout << endl;
+
+	// finding number of elements smaller than X - 3rd query
+	cout << "No. of elems smaller than 6: " << A.order_of_key(6) << endl; // 2
+	cout << "No. of elems smaller than 11: " << A.order_of_key(11) << endl; // 4
+	cout << "No. of elems smaller than 1: " << A.order_of_key(1) << endl; // 0
+	cout << endl;   
+
+
+	// lower bound -> Lower Bound of X = first element >= X in the set
+	cout << "Lower Bound of 6: " << *A.lower_bound(6) << endl;
+	cout << "Lower Bound of 7: " << *A.lower_bound(7) << endl;
+	cout << "Lower Bound of 2: " << *A.lower_bound(2) << endl;
+	cout << "Lower Bound of 1: " << *A.lower_bound(1) << endl;
+	cout << "Lower Bound of 10: " << *A.lower_bound(10) << endl;
+	cout << endl;
+
+	// Upper bound -> Upper Bound of X = first element > X in the set
+	cout << "Upper Bound of 6: " << *A.upper_bound(6) << endl;
+	cout << "Upper Bound of 7: " << *A.upper_bound(7) << endl;
+	cout << "Upper Bound of 1: " << *A.upper_bound(1) << endl;
+	cout << endl;
+
+	// Remove elements - 2nd query
+	A.erase(1);
+	A.erase(11); // element that is not present is not affected
+
+	// A contains
+	cout << "A = ";
+	for (auto i : A)
+		cout << i << " ";
+	cout << endl;
+
+    debug(n);
 }
 
 int main(){

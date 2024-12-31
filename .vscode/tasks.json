@@ -14,7 +14,7 @@
     {
       "label": "compile and run",
       "type": "shell",
-      "command": "g++ -std=c++17 -o ${fileBasenameNoExtension} ${file} && ./${fileBasenameNoExtension} < input.txt > output.txt",
+      "command": "/opt/homebrew/Cellar/gcc/13.2.0/bin/g++-13 -std=c++17 -O2 -o ${fileBasenameNoExtension} ${file} && ./${fileBasenameNoExtension} < input.txt > output.txt",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -22,3 +22,29 @@
     }
   ]
 }
+
+// {
+//   "version": "2.0.0",
+//   "tasks": [
+//     {
+//       "label": "compile and run",
+//       "type": "shell",
+//       "command": "/bin/bash",
+//       "args": [
+//         "-c",
+//         "/opt/homebrew/Cellar/gcc/13.2.0/bin/g++-13 -std=c++17 -O2 -o ${fileBasenameNoExtension} ${file} 2> ${workspaceFolder}/error.txt && (./${fileBasenameNoExtension} < ${workspaceFolder}/input.txt > ${workspaceFolder}/output.txt) 2>> ${workspaceFolder}/error.txt"
+//       ],
+//       "group": {
+//         "kind": "build",
+//         "isDefault": true
+//       },
+//       "options": {
+//         "cwd": "${fileDirname}"
+//       },
+//       "presentation": {
+//         "reveal": "always",
+//         "panel": "shared"
+//       }
+//     }
+//   ]
+// }
