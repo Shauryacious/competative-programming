@@ -52,7 +52,9 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 
-typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
+typedef tree<int, null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> pbds; // find_by_order, order_of_key
+
+// typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
 
 
@@ -119,73 +121,42 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
-
-//! ARRAY & VECTOR
-// void solve() {
-//     ll n = 15;
-//     vll a = {1, 2, 3, 3, 5, 6, 7, 7, 7, 6, 5, 5, 3, 2, 1}; // Example vector
-
-//     // Sort the vector since lower_bound and upper_bound require sorted data
-//     sort(a.begin(), a.end());
-
-//     cout << "Sorted Vector: ";
-//     for (auto x : a) cout << x << " ";
-//     cout << nline;
-
-//     // Test cases for lower_bound and upper_bound
-//     vector<ll> test_cases = {0, 1, 4, 7, 8, 10}; 
-
-//     cout << "Test Cases for Lower Bound and Upper Bound:" << nline;
-//     for (auto val : test_cases) {
-//         auto lb = lower_bound(a.begin(), a.end(), val) - a.begin();
-//         auto ub = upper_bound(a.begin(), a.end(), val) - a.begin();
-
-//         cout << "Value: " << val << nline;
-//         cout << "Lower Bound Index: " << lb;
-//         if (lb < n) cout << " (Element: " << a[lb] << ")";
-//         else cout << " (Out of Bounds)";
-//         cout << nline;
-
-//         cout << "Upper Bound Index: " << ub;
-//         if (ub < n) cout << " (Element: " << a[ub] << ")";
-//         else cout << " (Out of Bounds)";
-//         cout << nline << nline;
-//     }
-// }
-
-
 void solve() {
-    ll n = 15;
-    set<ll> s = {1, 2, 3, 3, 5, 6, 7, 7, 7, 6, 5, 5, 3, 2, 1}; // Example set
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
+    debug(a);
 
-    cout << "Set Elements: ";
-    for (auto x : s) cout << x << " ";
-    cout << nline;
+    pbds A; // Declaration of ordered set
 
-    // Test cases for lower_bound and upper_bound
-    vector<ll> test_cases = {0, 1, 4, 7, 8, 10}; 
+    ll ans = 0;
 
-    cout << "Test Cases for Lower Bound and Upper Bound:" << nline;
-    for (auto val : test_cases) {
-        auto lb = s.lower_bound(val);
-        auto ub = s.upper_bound(val);
+    map<ll, ll> mp;
+    for (ll i = 0; i < n; i++) {
 
-        cout << "Value: " << val << nline;
-
-        cout << "Lower Bound: ";
-        if (lb != s.end()) cout << *lb;
-        else cout << "(Out of Bounds)";
-        cout << nline;
-
-        cout << "Upper Bound: ";
-        if (ub != s.end()) cout << *ub;
-        else cout << "(Out of Bounds)";
-        cout << nline << nline;
+        ll ele = a[i];
+        mp[ele]++;
+        debug(ele);
+        A.insert(ele);
+        ll len = A.size();
+        ll just_greater_ele = *A.upper_bound(ele);
+        debug(just_greater_ele);
+        ll idx = A.order_of_key(just_greater_ele) + 1;
+        debug(len);
+        debug(idx);
+        ll gr_ele = len - idx - (mp[ele]-1);
+        debug(gr_ele);
+        ans += gr_ele;
+        debug(ans);
+        for(auto x: A){
+            cout<<x<<" ";
+        }
+        cout<<nline;
+        string s = "-------";
+        debug(s);
     }
+
+    cout << ans << nline;
 }
-
-
 
 int main(){
     #ifndef ONLINE_JUDGE
