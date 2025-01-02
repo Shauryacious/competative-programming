@@ -116,16 +116,23 @@ void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
 
-    // dp[i][j][0] = maximum possible score for the first player such that he can choose from the range [i, j]
-    // dp[i][j][1] = maximum possible score for the second player such that he can choose from the range [i, j]
-
-    // Base Case:
-    for(ll i = 0; i < n; i++){
-        dp[i][i][0] = a[i]; // As the first player will choose the only element available
-        dp[i][i][1] = a[i]; // As the second player will choose the only element available
+    // dp[i][j] = maximum possible sum of subsequence from i to j
+    vector<vector<ll>> dp(n, vector<ll>(n, 0));
+    for(ll g=0; g<n; g++){ //g = gap
+        for(ll i=0, j=g; j<n; i++, j++){
+            if(g==0){
+                dp[i][j] = a[i];
+            }else if(g==1){
+                dp[i][j] = max(dp[i][j-1], dp[i+1][j]);
+            }else{
+                ll op1 = a[i] + min(dp[i+2][j], dp[i+1][j-1]);
+                ll op2 = a[j] + min(dp[i+1][j-1], dp[i][j-2]);
+                dp[i][j] = max(op1, op2);
+            }
+        }
     }
 
-    for(ll i = 
+    cout<<dp[0][n-1]<<nline;
 }
 
 

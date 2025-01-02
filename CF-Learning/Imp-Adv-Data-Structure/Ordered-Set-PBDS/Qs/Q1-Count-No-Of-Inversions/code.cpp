@@ -126,7 +126,7 @@ void solve() {
     vll a(n); invec(a, n);
     debug(a);
 
-    pbds A; // Declaration of ordered set
+    pbds A; 
 
     ll ans = 0;
 
