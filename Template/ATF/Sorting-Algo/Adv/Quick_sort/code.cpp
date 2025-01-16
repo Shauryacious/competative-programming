@@ -119,97 +119,64 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, m; cin >> n >> m;
-    string s; cin >> s;
-    ll L = n + m - 1;
-    vector<pair<ll, ll>> path;
-    ll r = 0, c = 0;
-    path.pb({r, c});
-    for (auto ch : s) {
-        if (ch == 'D') r++; else c++;
-        path.pb({r, c});
-    }
-    vector<vector<ll>> grid(n, vector<ll>(m));
-    vector<vector<bool>> onPath(n, vector<bool>(m, false));
-    for (auto &p : path) onPath[p.ff][p.ss] = true;
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cin >> grid[i][j];
+
+
+
+// Function that takes last element as pivot, places the pivot element at
+// its correct position in sorted array, and places all smaller elements
+// to left of pivot and all greater elements to right of pivot.
+int partition(vector<int>& a, int l, int h) {
+    int pivot = a[l];
+    int i = l;
+    int j = h;
+    
+    
+    while(i < j){
+        while(a[i] <= pivot && i <= h-1){
+            i++;
+        }
+        // after the above loop ends, i will point the the ele which is 
+        // greater then the pivot element
+        
+        while(a[j] > pivot && j >= l+1){
+            j--;
+        }
+        // after the abov loop ends, j will point to the ele which is
+        // less than or equal to the pivot element
+        
+        if(i < j){
+            swap(a[i], a[j]);
         }
     }
-    vll fixedRow(n, 0), fixedCol(m, 0);
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            if (!onPath[i][j]) {
-                fixedRow[i] += grid[i][j];
-                fixedCol[j] += grid[i][j];
-            }
-        }
-    }
-    ll V = n + m; vll B(V, 0);
-    for (ll i = 0; i < n; i++)
-        B[i] = -fixedRow[i];
-    for (ll j = 0; j < m; j++)
-        B[n + j] = -fixedCol[j];
-    ll E = L;
-    vector<vector<pair<ll, ll>>> adj(V);
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        ll u = pr.ff, v = n + pr.ss;
-        adj[u].pb({v, i});
-        adj[v].pb({u, i});
-    }
-    vll deg(V, 0);
-    for (ll i = 0; i < V; i++) {
-        deg[i] = adj[i].size();
-    }
-    vector<bool> usedEdge(E, false);
-    vll edgeVal(E, 0);
-    queue<ll> qu;
-    vector<bool> inQueue(V, false), removed(V, false);
-    for (ll i = 0; i < V; i++) {
-        if (deg[i] == 1) {
-            qu.push(i);
-            inQueue[i] = true;
-        }
-    }
-    while (!qu.empty()) {
-        ll u = qu.front();
-        qu.pop();
-        if (removed[u] || deg[u] == 0)
-            continue;
-        ll nei = -1, eid = -1;
-        for (auto &p : adj[u]) {
-            if (!usedEdge[p.ss]) {
-                nei = p.ff;
-                eid = p.ss;
-                break;
-            }
-        }
-        if (eid == -1)
-            continue;
-        edgeVal[eid] = B[u];
-        removed[u] = true;
-        usedEdge[eid] = true;
-        B[nei] -= edgeVal[eid];
-        deg[u]--;
-        deg[nei]--;
-        if (deg[nei] == 1 && !removed[nei] && !inQueue[nei]) {
-            qu.push(nei);
-            inQueue[nei] = true;
-        }
-    }
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        grid[pr.ff][pr.ss] = edgeVal[i];
-    }
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cout << grid[i][j] << (j + 1 == m ? "\n" : " ");
-        }
+    
+    
+    // after the above loop ends, j will point to the correct position of the 
+    // pivot element
+    
+    swap(a[l], a[j]);
+    return j; //the pivot index
+}
+
+void quickSort(vector<int>& a, int l, int h) {
+    if(l < h){
+        int pidx = partition(a, l, h); // partition index
+        quickSort(a, l, pidx-1);
+        quickSort(a, pidx+1, h);
     }
 }
+
+void solve() {
+    ll n; cin >> n;
+    vector<int> a(n);
+    for(ll i=0; i<n; i++) cin>>a[i];
+    
+    quickSort(a, 0, n-1);
+
+    for(auto i: a){
+        cout << i << " ";
+    }
+}
+
 
 int main(){
     #ifndef ONLINE_JUDGE

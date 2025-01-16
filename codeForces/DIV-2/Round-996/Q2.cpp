@@ -120,10 +120,36 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    ll n;
+    cin >> n;
+    vll a(n), b(n);
+    invec(a, n);
+    invec(b, n);
+
+    ll rm = 0; // Total surplus required
+
+    // Process elements where a[i] < b[i]
+    for (int i = 0; i < n; i++) {
+        if (a[i] < b[i]) {
+            ll diff = b[i] - a[i];
+            a[i] += 2 * diff; // Adjust a[i] with double the difference
+            rm += diff;       // Accumulate required surplus
+        }
+    }
+
+    // Validate that a[i] remains valid after adjusting
+    for (int i = 0; i < n; i++) {
+        a[i] -= rm; // Apply surplus reduction
+        if (a[i] < 0 || a[i] < b[i]) { // Check for invalid state
+            cout << "NO" << '\n';
+            return;
+        }
+    }
+
+    cout << "YES" << '\n';
 }
+
+
 
 
 int main(){

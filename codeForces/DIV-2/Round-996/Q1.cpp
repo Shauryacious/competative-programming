@@ -120,9 +120,14 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    ll n, a, b; cin>>n>>a>>b;
+    ll diff = abs(a-b);
+    if(diff%2){
+        cout<<"NO"<<nline;
+    }
+    else{
+        cout<<"YES"<<nline;
+    }
 }
 
 

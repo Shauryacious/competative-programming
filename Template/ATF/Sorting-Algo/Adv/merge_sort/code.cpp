@@ -119,97 +119,70 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, m; cin >> n >> m;
-    string s; cin >> s;
-    ll L = n + m - 1;
-    vector<pair<ll, ll>> path;
-    ll r = 0, c = 0;
-    path.pb({r, c});
-    for (auto ch : s) {
-        if (ch == 'D') r++; else c++;
-        path.pb({r, c});
-    }
-    vector<vector<ll>> grid(n, vector<ll>(m));
-    vector<vector<bool>> onPath(n, vector<bool>(m, false));
-    for (auto &p : path) onPath[p.ff][p.ss] = true;
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cin >> grid[i][j];
+void merge(vector<int>& a, int l, int m, int r) {
+    // arr1 => [l .... m]
+    // arr2 => [m+1 .... r]
+    int left_ptr = l;
+    int right_ptr = m + 1;
+    vector<int> temp;
+
+    // Merge the two subarrays
+    while (left_ptr <= m && right_ptr <= r) {
+        if (a[left_ptr] <= a[right_ptr]) {
+            temp.push_back(a[left_ptr]);
+            left_ptr++;
+        } else {
+            temp.push_back(a[right_ptr]);
+            right_ptr++;
         }
     }
-    vll fixedRow(n, 0), fixedCol(m, 0);
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            if (!onPath[i][j]) {
-                fixedRow[i] += grid[i][j];
-                fixedCol[j] += grid[i][j];
-            }
+
+    // Extra condition to handle remaining elements from the left subarray
+    if (left_ptr > m) {
+        while (right_ptr <= r) {
+            temp.push_back(a[right_ptr]);
+            right_ptr++;
         }
     }
-    ll V = n + m; vll B(V, 0);
-    for (ll i = 0; i < n; i++)
-        B[i] = -fixedRow[i];
-    for (ll j = 0; j < m; j++)
-        B[n + j] = -fixedCol[j];
-    ll E = L;
-    vector<vector<pair<ll, ll>>> adj(V);
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        ll u = pr.ff, v = n + pr.ss;
-        adj[u].pb({v, i});
-        adj[v].pb({u, i});
-    }
-    vll deg(V, 0);
-    for (ll i = 0; i < V; i++) {
-        deg[i] = adj[i].size();
-    }
-    vector<bool> usedEdge(E, false);
-    vll edgeVal(E, 0);
-    queue<ll> qu;
-    vector<bool> inQueue(V, false), removed(V, false);
-    for (ll i = 0; i < V; i++) {
-        if (deg[i] == 1) {
-            qu.push(i);
-            inQueue[i] = true;
+
+    // Extra condition to handle remaining elements from the right subarray
+    if (right_ptr > r) {
+        while (left_ptr <= m) {
+            temp.push_back(a[left_ptr]);
+            left_ptr++;
         }
     }
-    while (!qu.empty()) {
-        ll u = qu.front();
-        qu.pop();
-        if (removed[u] || deg[u] == 0)
-            continue;
-        ll nei = -1, eid = -1;
-        for (auto &p : adj[u]) {
-            if (!usedEdge[p.ss]) {
-                nei = p.ff;
-                eid = p.ss;
-                break;
-            }
-        }
-        if (eid == -1)
-            continue;
-        edgeVal[eid] = B[u];
-        removed[u] = true;
-        usedEdge[eid] = true;
-        B[nei] -= edgeVal[eid];
-        deg[u]--;
-        deg[nei]--;
-        if (deg[nei] == 1 && !removed[nei] && !inQueue[nei]) {
-            qu.push(nei);
-            inQueue[nei] = true;
-        }
-    }
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        grid[pr.ff][pr.ss] = edgeVal[i];
-    }
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cout << grid[i][j] << (j + 1 == m ? "\n" : " ");
-        }
+
+    // Copy sorted elements back into the original array
+    for (int i = l; i <= r; i++) {
+        a[i] = temp[i - l];
     }
 }
+
+void mergeSort(vector<int>& a, int l, int r) {
+    if (l >= r) return; // Base Case
+
+    int m = l + (r - l)/2; 
+    mergeSort(a, l, m);
+    mergeSort(a, m + 1, r);
+
+    merge(a, l, m, r);
+}
+
+void solve() {
+    ll n; cin >> n;
+    vector<int> a(n);
+    for(ll i=0; i<n; i++) cin>>a[i];
+    
+    mergeSort(a, 0, n - 1);
+
+    for(auto i: a){
+        cout << i << " ";
+    }
+}
+
+
+
 
 int main(){
     #ifndef ONLINE_JUDGE

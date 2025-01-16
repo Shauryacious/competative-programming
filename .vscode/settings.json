@@ -4,10 +4,7 @@
   "C_Cpp_Runner.debuggerPath": "lldb",
   "C_Cpp_Runner.cppStandard": "c++17",
   "C_Cpp_Runner.enableWarnings": true,
-  "C_Cpp_Runner.compilerArgs": [
-    "-O2",
-    "-std=c++17"
-  ],
+  "C_Cpp_Runner.compilerArgs": ["-O2", "-std=c++17"],
   "C_Cpp.errorSquiggles": "disabled",
   "files.associations": {
     "__bit_reference": "cpp",
@@ -17,7 +14,22 @@
     "set": "cpp",
     "string": "cpp",
     "vector": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "__split_buffer": "cpp",
+    "__tree": "cpp",
+    "deque": "cpp",
+    "forward_list": "cpp",
+    "initializer_list": "cpp",
+    "list": "cpp",
+    "regex": "cpp",
+    "span": "cpp",
+    "string_view": "cpp",
+    "unordered_map": "cpp",
+    "unordered_set": "cpp",
+    "valarray": "cpp",
+    "format": "cpp",
+    "ranges": "cpp",
+    "stacktrace": "cpp"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cStandard": "",
@@ -52,10 +64,7 @@
   "C_Cpp_Runner.warningsAsError": false,
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [],
-  "C_Cpp_Runner.includeSearch": [
-    "*",
-    "**/*"
-  ],
+  "C_Cpp_Runner.includeSearch": ["*", "**/*"],
   "C_Cpp_Runner.excludeSearch": [
     "**/build",
     "**/build/**",

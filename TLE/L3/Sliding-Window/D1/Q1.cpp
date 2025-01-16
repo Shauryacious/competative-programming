@@ -119,97 +119,48 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+// https://www.youtube.com/watch?v=ASBxWpJJed0
+// https://codeforces.com/problemset/problem/1419/D2
+
+bool f(ll k, vll& a){
+    ll n = a.size();
+    bool can_be_placed = true;
+    ll last = n-1;
+    for(ll i = k-1; i>=0; i--, last--){
+        can_be_placed &= (a[i] < a[last-1] && a[i] < a[last]);
+    }
+    return can_be_placed;
+}
+
 void solve() {
-    ll n, m; cin >> n >> m;
-    string s; cin >> s;
-    ll L = n + m - 1;
-    vector<pair<ll, ll>> path;
-    ll r = 0, c = 0;
-    path.pb({r, c});
-    for (auto ch : s) {
-        if (ch == 'D') r++; else c++;
-        path.pb({r, c});
-    }
-    vector<vector<ll>> grid(n, vector<ll>(m));
-    vector<vector<bool>> onPath(n, vector<bool>(m, false));
-    for (auto &p : path) onPath[p.ff][p.ss] = true;
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cin >> grid[i][j];
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
+    sort(a.begin(), a.end());
+
+    ll lo = 0, hi = (n+2-1)/2 - 1;
+    ll ans = 0;
+    while(lo <= hi){
+        ll mid = lo + (hi - lo) / 2;
+        if(f(mid, a)){
+            ans = mid;
+            lo = mid + 1;
+        }
+        else{
+            hi = mid - 1;
         }
     }
-    vll fixedRow(n, 0), fixedCol(m, 0);
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            if (!onPath[i][j]) {
-                fixedRow[i] += grid[i][j];
-                fixedCol[j] += grid[i][j];
-            }
-        }
-    }
-    ll V = n + m; vll B(V, 0);
-    for (ll i = 0; i < n; i++)
-        B[i] = -fixedRow[i];
-    for (ll j = 0; j < m; j++)
-        B[n + j] = -fixedCol[j];
-    ll E = L;
-    vector<vector<pair<ll, ll>>> adj(V);
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        ll u = pr.ff, v = n + pr.ss;
-        adj[u].pb({v, i});
-        adj[v].pb({u, i});
-    }
-    vll deg(V, 0);
-    for (ll i = 0; i < V; i++) {
-        deg[i] = adj[i].size();
-    }
-    vector<bool> usedEdge(E, false);
-    vll edgeVal(E, 0);
-    queue<ll> qu;
-    vector<bool> inQueue(V, false), removed(V, false);
-    for (ll i = 0; i < V; i++) {
-        if (deg[i] == 1) {
-            qu.push(i);
-            inQueue[i] = true;
-        }
-    }
-    while (!qu.empty()) {
-        ll u = qu.front();
-        qu.pop();
-        if (removed[u] || deg[u] == 0)
-            continue;
-        ll nei = -1, eid = -1;
-        for (auto &p : adj[u]) {
-            if (!usedEdge[p.ss]) {
-                nei = p.ff;
-                eid = p.ss;
-                break;
-            }
-        }
-        if (eid == -1)
-            continue;
-        edgeVal[eid] = B[u];
-        removed[u] = true;
-        usedEdge[eid] = true;
-        B[nei] -= edgeVal[eid];
-        deg[u]--;
-        deg[nei]--;
-        if (deg[nei] == 1 && !removed[nei] && !inQueue[nei]) {
-            qu.push(nei);
-            inQueue[nei] = true;
-        }
-    }
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        grid[pr.ff][pr.ss] = edgeVal[i];
-    }
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cout << grid[i][j] << (j + 1 == m ? "\n" : " ");
+
+    cout << ans << nline;
+    ll k = ans-1;
+    for(ll i=n-1; i>=ans; i--){
+        cout << a[i] << " ";
+        if(k >= 0){
+            cout << a[k] << " ";
+            k--;
         }
     }
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -217,7 +168,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

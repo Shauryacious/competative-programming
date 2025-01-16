@@ -119,107 +119,64 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+bool posone(int k, vector<int>& nums) {
+    int f = 0;
+    unordered_map<int, int> mp;
+    for (int i = 0; i < nums.size(); i++) {
+        mp[nums[i]]++;
+        f = max(f, mp[nums[i]]);
+        if (mp[k] == f) {
+            return true;
+        }
+    }
+
+    mp.clear();
+    f = 0;
+    for (int i = nums.size() - 1; i >= 0; i--) {
+        mp[nums[i]]++;
+        f = max(f, mp[nums[i]]);
+        if (mp[k] == f) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void solve() {
-    ll n, m; cin >> n >> m;
-    string s; cin >> s;
-    ll L = n + m - 1;
-    vector<pair<ll, ll>> path;
-    ll r = 0, c = 0;
-    path.pb({r, c});
-    for (auto ch : s) {
-        if (ch == 'D') r++; else c++;
-        path.pb({r, c});
-    }
-    vector<vector<ll>> grid(n, vector<ll>(m));
-    vector<vector<bool>> onPath(n, vector<bool>(m, false));
-    for (auto &p : path) onPath[p.ff][p.ss] = true;
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cin >> grid[i][j];
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, k;
+        cin >> n >> k;
+        vector<int> nums;
+        for (int i = 0; i < n; i++) {
+            int p;
+            cin >> p;
+            nums.push_back(p);
         }
-    }
-    vll fixedRow(n, 0), fixedCol(m, 0);
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            if (!onPath[i][j]) {
-                fixedRow[i] += grid[i][j];
-                fixedCol[j] += grid[i][j];
-            }
+
+        unordered_map<int, int> mp;
+        for (int i = 0; i < n; i++) {
+            mp[nums[i]]++;
         }
-    }
-    ll V = n + m; vll B(V, 0);
-    for (ll i = 0; i < n; i++)
-        B[i] = -fixedRow[i];
-    for (ll j = 0; j < m; j++)
-        B[n + j] = -fixedCol[j];
-    ll E = L;
-    vector<vector<pair<ll, ll>>> adj(V);
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        ll u = pr.ff, v = n + pr.ss;
-        adj[u].pb({v, i});
-        adj[v].pb({u, i});
-    }
-    vll deg(V, 0);
-    for (ll i = 0; i < V; i++) {
-        deg[i] = adj[i].size();
-    }
-    vector<bool> usedEdge(E, false);
-    vll edgeVal(E, 0);
-    queue<ll> qu;
-    vector<bool> inQueue(V, false), removed(V, false);
-    for (ll i = 0; i < V; i++) {
-        if (deg[i] == 1) {
-            qu.push(i);
-            inQueue[i] = true;
+
+        int f = 0;
+        for (auto it : mp) {
+            f = max(f, it.second);
         }
-    }
-    while (!qu.empty()) {
-        ll u = qu.front();
-        qu.pop();
-        if (removed[u] || deg[u] == 0)
-            continue;
-        ll nei = -1, eid = -1;
-        for (auto &p : adj[u]) {
-            if (!usedEdge[p.ss]) {
-                nei = p.ff;
-                eid = p.ss;
-                break;
-            }
-        }
-        if (eid == -1)
-            continue;
-        edgeVal[eid] = B[u];
-        removed[u] = true;
-        usedEdge[eid] = true;
-        B[nei] -= edgeVal[eid];
-        deg[u]--;
-        deg[nei]--;
-        if (deg[nei] == 1 && !removed[nei] && !inQueue[nei]) {
-            qu.push(nei);
-            inQueue[nei] = true;
-        }
-    }
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        grid[pr.ff][pr.ss] = edgeVal[i];
-    }
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cout << grid[i][j] << (j + 1 == m ? "\n" : " ");
+
+        if ((mp.size() == 1 && mp.find(k) != mp.end()) || mp[k] == f) {
+            cout << 0 << endl;
+        } else if (posone(k, nums)) {
+            cout << 1 << endl;
+        } else {
+            cout << 2 << endl;
         }
     }
 }
 
-int main(){
-    #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr);
-    #endif
-    fastio();
-    ll t = 1; 
-    cin >> t;
-    while(t--){
-        solve();
-    }
+int main() {
+    solve();
     return 0;
 }

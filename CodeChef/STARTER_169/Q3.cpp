@@ -119,107 +119,67 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, m; cin >> n >> m;
-    string s; cin >> s;
-    ll L = n + m - 1;
-    vector<pair<ll, ll>> path;
-    ll r = 0, c = 0;
-    path.pb({r, c});
-    for (auto ch : s) {
-        if (ch == 'D') r++; else c++;
-        path.pb({r, c});
-    }
-    vector<vector<ll>> grid(n, vector<ll>(m));
-    vector<vector<bool>> onPath(n, vector<bool>(m, false));
-    for (auto &p : path) onPath[p.ff][p.ss] = true;
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cin >> grid[i][j];
-        }
-    }
-    vll fixedRow(n, 0), fixedCol(m, 0);
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            if (!onPath[i][j]) {
-                fixedRow[i] += grid[i][j];
-                fixedCol[j] += grid[i][j];
+
+bool isValid(const vll &pos, const vll &neg, ll maxSum) {
+    ll p = 0, n = 0, sum = 0, mx = 0;
+    while (p < pos.size() || n < neg.size()) {
+        while (sum + (p < pos.size() ? pos[p] : 0) > maxSum) {
+            if (n < neg.size()) {
+                sum += neg[n];
+                mx = max(mx, sum);
+                n++;
+            } else {
+                return false;
             }
+            sum = max(0LL, sum);
+        }
+        if (p < pos.size()) {
+            sum += pos[p];
+            mx = max(mx, sum);
+            p++;
+        } else if (n < neg.size()) {
+            sum += neg[n];
+            mx = max(mx, sum);
+            n++;
+            sum = max(0LL, sum);
         }
     }
-    ll V = n + m; vll B(V, 0);
-    for (ll i = 0; i < n; i++)
-        B[i] = -fixedRow[i];
-    for (ll j = 0; j < m; j++)
-        B[n + j] = -fixedCol[j];
-    ll E = L;
-    vector<vector<pair<ll, ll>>> adj(V);
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        ll u = pr.ff, v = n + pr.ss;
-        adj[u].pb({v, i});
-        adj[v].pb({u, i});
-    }
-    vll deg(V, 0);
-    for (ll i = 0; i < V; i++) {
-        deg[i] = adj[i].size();
-    }
-    vector<bool> usedEdge(E, false);
-    vll edgeVal(E, 0);
-    queue<ll> qu;
-    vector<bool> inQueue(V, false), removed(V, false);
-    for (ll i = 0; i < V; i++) {
-        if (deg[i] == 1) {
-            qu.push(i);
-            inQueue[i] = true;
-        }
-    }
-    while (!qu.empty()) {
-        ll u = qu.front();
-        qu.pop();
-        if (removed[u] || deg[u] == 0)
-            continue;
-        ll nei = -1, eid = -1;
-        for (auto &p : adj[u]) {
-            if (!usedEdge[p.ss]) {
-                nei = p.ff;
-                eid = p.ss;
-                break;
-            }
-        }
-        if (eid == -1)
-            continue;
-        edgeVal[eid] = B[u];
-        removed[u] = true;
-        usedEdge[eid] = true;
-        B[nei] -= edgeVal[eid];
-        deg[u]--;
-        deg[nei]--;
-        if (deg[nei] == 1 && !removed[nei] && !inQueue[nei]) {
-            qu.push(nei);
-            inQueue[nei] = true;
-        }
-    }
-    for (ll i = 0; i < L; i++) {
-        auto pr = path[i];
-        grid[pr.ff][pr.ss] = edgeVal[i];
-    }
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            cout << grid[i][j] << (j + 1 == m ? "\n" : " ");
-        }
-    }
+    return mx <= maxSum;
 }
 
-int main(){
+void solve() {
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
+    vll pos, neg;
+    for (ll i = 0; i < n; i++) {
+        if (a[i] >= 0) pos.pb(a[i]);
+        else neg.pb(a[i]);
+    }
+    if (pos.empty()) {
+        cout << 0 << "\n";
+        return;
+    }
+    ll lo = *max_element(pos.begin(), pos.end());
+    ll hi = accumulate(pos.begin(), pos.end(), 0LL);
+    ll res = hi;
+    while (lo <= hi) {
+        ll mid = lo + (hi - lo) / 2;
+        if (isValid(pos, neg, mid)) {
+            res = mid;
+            hi = mid - 1;
+        } else {
+            lo = mid + 1;
+        }
+    }
+    cout << res << "\n";
+}
+
+int main() {
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    ll t = 1; 
-    cin >> t;
-    while(t--){
-        solve();
-    }
+    ll t; cin >> t;
+    while (t--) solve();
     return 0;
 }
