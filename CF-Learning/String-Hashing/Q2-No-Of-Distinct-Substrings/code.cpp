@@ -119,21 +119,74 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
+struct pair_hash {
+    template <class T1, class T2>
+    size_t operator()(const pair<T1, T2>& p) const {
+        auto h1 = hash<T1>{}(p.first);
+        auto h2 = hash<T2>{}(p.second);
+        return h1 ^ (h2 << 1); // Combine the two hashes
+    }
+};
+
+class Hash {
+    const ll M = 1e9 + 7;
+    const ll B1 = 5689;
+    const ll B2 = 1987;
     
-    for(ll i=0; i<n; i++){
-        for(ll j=0; j<n-1; j++){
-            if(a[j] > a[j+1]){
-                swap(a[j], a[j+1]);
-            }
+    vector<pair<ll, ll>> hash;
+    vector<pair<ll, ll>> Bpower;
+    
+public:
+    Hash(string s) {
+        int n = s.length();
+        hash.assign(n+1, {0, 0});
+        Bpower.assign(n+1, {1, 1});
+        
+        for (ll i = 1; i <= n; i++) {
+            char ch = s[i-1];
+            ll curr_val = ch - 'a' + 1;
+            
+            hash[i] = {
+                (((hash[i-1].ff * B1) % M) + curr_val) % M,
+                (((hash[i-1].ss * B2) % M) + curr_val) % M
+            };
+            
+            Bpower[i] = {
+                (Bpower[i-1].ff * B1) % M,
+                (Bpower[i-1].ss * B2) % M
+            };
         }
     }
-
-    for(auto i: a){
-        cout << i << " ";
+    
+    pair<ll, ll> get(ll l, ll r) {
+        l++; r++;
+        ll len = r - l + 1;
+        
+        ll hash1 = ((hash[r].ff - (Bpower[len].ff * hash[l-1].ff) % M) + M) % M;
+        ll hash2 = ((hash[r].ss - (Bpower[len].ss * hash[l-1].ss) % M) + M) % M;
+        
+        return {hash1, hash2};
     }
+};
+
+int countDistinctSubstring(string s) {
+    int n = s.length();
+    Hash h(s);
+    
+    unordered_set<pair<ll, ll>, pair_hash> st;
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = i; j < n; j++) {
+            st.insert(h.get(i, j));
+        }
+    }
+    
+    return st.size() + 1;
+}
+
+
+void solve() {
+
 }
 
 
@@ -143,7 +196,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

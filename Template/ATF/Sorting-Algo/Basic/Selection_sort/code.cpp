@@ -119,10 +119,33 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+void selection_sort(vector<int>& a){
+    int n = a.size();
+
+
+    for(int i=0; i<n-1; i++){
+        int minn = INT_MAX;
+        int minidx = -1;
+
+        for(int j=i; j<n; j++){
+            if(a[j] < minn){
+                minn = a[j];
+                minidx = j;
+            }
+        }
+        
+        swap(a[i], a[minidx]);
+    }
+}
+
+
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    vector<int> a(n); 
+    for(int i=0; i<n; i++) cin>>a[i];
+    
+    selection_sort(a);
+    for(auto x : a) cout<<x<<" ";
 }
 
 

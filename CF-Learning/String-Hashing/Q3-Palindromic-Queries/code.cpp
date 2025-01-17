@@ -119,22 +119,87 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    
-    for(ll i=0; i<n; i++){
-        for(ll j=0; j<n-1; j++){
-            if(a[j] > a[j+1]){
-                swap(a[j], a[j+1]);
-            }
+class Hash{
+    const ll M = 1e9 + 7;
+    const ll B1 = 5689;
+    const ll B2 = 1987;
+
+    vector<pair<ll, ll>> hash;
+    vector<pair<ll, ll>> Bpower;
+
+public:
+    Hash(string s){
+        int n = s.size();
+        // we will maintain a 1 based indexing
+        hash.assign(n + 1, {0, 0});
+        Bpower.assign(n + 1, {1, 1});
+
+        for(ll i=1; i<=n; i++){
+            char ch = s[i - 1];
+            ll curr_val = ch - 'a' + 1;
+
+            hash[i] = {
+                (hash[i - 1].ff * B1 + curr_val) % M,
+                (hash[i - 1].ss * B2 + curr_val) % M
+            };
+
+            Bpower[i] = {
+                (Bpower[i - 1].ff * B1) % M,
+                (Bpower[i - 1].ss * B2) % M
+            };
         }
     }
 
-    for(auto i: a){
-        cout << i << " ";
+    pair<ll, ll> get(ll l, ll r){
+        l++; r++; // to make it 1 based indexing
+        ll len = r - l + 1;
+
+        ll hash1 = (hash[r].ff - (hash[l - 1].ff * Bpower[len].ff) % M + M) % M; //modular sub
+        ll hash2 = (hash[r].ss - (hash[l - 1].ss * Bpower[len].ss) % M + M) % M; //modular sub
+
+        return {hash1, hash2};
+    }
+
+};
+
+
+void solve() {
+    string s; cin>>s;
+    ll n = s.length();
+    Hash h(s);
+
+    string s_rev = s;
+    reverse(all(s_rev));
+
+    Hash h_rev(s_rev);
+
+    ll q; cin>>q;
+    while(q--){
+        ll l, r; cin>>l>>r;
+        ll l_rev = n-r-1;
+        ll r_rev = n-l-1;
+
+        if(h.get(l, r) == h_rev.get(l_rev, r_rev)){
+            cout<<"YES"<<nline;
+        }
+        else{
+            cout<<"NO"<<nline;
+        }
     }
 }
+
+
+// 012345678
+// abbabbaaa
+// i  j
+
+
+// n = 9
+// i_new = n-j-1
+// j_new = n-i-1
+
+// 012345678
+// aaabbabba
 
 
 int main(){
@@ -143,7 +208,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }
