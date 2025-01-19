@@ -120,21 +120,9 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin>>n>>m;
-    vector<pair<ll, ll>> v(n);
-    for(ll i=0; i<n; i++){
-        cin>>v[i].ff>>v[i].ss;
-    }
-
-    ll x = m, y = m;
-    for(ll i=1; i<n; i++){
-        x += v[i].ss;
-        y += v[i].ff;
-    }
-
-    ll sum = 2*x + 2*y;
-    cout<<sum<<nline;
-
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
+    cout << "Hello World" << nline;
 }
 
 

@@ -118,23 +118,98 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
+class Hash {
+    const ll M = 1e9 + 7;
+    const ll B = 5689;
+
+    vector<ll> hash;
+    vector<ll> Bpower;
+
+public:
+    Hash(string s) {
+        int n = s.size();
+        // we will maintain a 1 based indexing
+        hash.assign(n + 1, 0);
+        Bpower.assign(n + 1, 1);
+
+        for (ll i = 1; i <= n; i++) {
+            char ch = s[i - 1];
+            ll curr_val = ch - 'a' + 1;
+
+            hash[i] = (hash[i - 1] * B + curr_val) % M;
+            Bpower[i] = (Bpower[i - 1] * B) % M;
+        }
+    }
+
+    ll get(ll l, ll r) {
+        l++; r++; // to make it 1 based indexing
+        ll len = r - l + 1;
+
+        ll hash_val = (hash[r] - (hash[l - 1] * Bpower[len]) % M + M) % M; // modular sub
+
+        return hash_val;
+    }
+};
+
+bool f(ll len, Hash& h, string s){
+    ll n = s.size();
+    ll i=1, j=1;
+    while(j < n-1){
+        if(j-i+1 == len){
+            if(h.get(i, j) == h.get(0, len-1)){
+                return true;
+            }
+            i++;
+        }
+        j++;
+    }
+    return false;
+}
+
 
 void solve() {
-    ll n, m; cin>>n>>m;
-    vector<pair<ll, ll>> v(n);
-    for(ll i=0; i<n; i++){
-        cin>>v[i].ff>>v[i].ss;
+    string s; cin>>s;
+    ll n = s.size();
+    Hash h(s);
+
+    vector<ll> v;
+
+    ll l1 = 0, r1 = 0;
+    ll l2 = n-1, r2 = n-1;
+    for(ll k = 1; k <= n-2; k++){
+        if(h.get(l1, r1) == h.get(l2, r2)){
+            v.pb(r1-l1+1);
+        }
+        r1++;
+        l2--;
+    }   
+
+    debug(v);
+
+    if(v.size() == 0){
+        cout<<"Just a legend"<<nline;
+        return;
     }
 
-    ll x = m, y = m;
-    for(ll i=1; i<n; i++){
-        x += v[i].ss;
-        y += v[i].ff;
+    ll ans = 0;
+    ll lo = 0; ll hi = v.size()-1;
+    while(lo <= hi){
+        ll mid = lo + ((hi-lo)>>1);
+        if(f(v[mid], h, s)){
+            ans = v[mid];
+            lo = mid+1;
+        }
+        else{
+            hi = mid-1;
+        }
     }
 
-    ll sum = 2*x + 2*y;
-    cout<<sum<<nline;
+    if(ans == 0){
+        cout<<"Just a legend"<<nline;
+        return;
+    }
 
+    cout<<s.substr(0, ans)<<nline;
 }
 
 
@@ -144,7 +219,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

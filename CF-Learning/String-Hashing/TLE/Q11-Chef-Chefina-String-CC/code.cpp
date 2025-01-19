@@ -118,22 +118,56 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
+class Hash {
+    const ll M = 1e9 + 7;
+    const ll B = 5689;
+
+    vector<ll> hash;
+    vector<ll> Bpower;
+
+public:
+    Hash(string s) {
+        int n = s.size();
+        // we will maintain a 1 based indexing
+        hash.assign(n + 1, 0);
+        Bpower.assign(n + 1, 1);
+
+        for (ll i = 1; i <= n; i++) {
+            char ch = s[i - 1];
+            ll curr_val = ch - 'a' + 1;
+
+            hash[i] = (hash[i - 1] * B + curr_val) % M;
+            Bpower[i] = (Bpower[i - 1] * B) % M;
+        }
+    }
+
+    ll get(ll l, ll r) {
+        l++; r++; // to make it 1 based indexing
+        ll len = r - l + 1;
+
+        ll hash_val = (hash[r] - (hash[l - 1] * Bpower[len]) % M + M) % M; // modular sub
+
+        return hash_val;
+    }
+};
+
 
 void solve() {
-    ll n, m; cin>>n>>m;
-    vector<pair<ll, ll>> v(n);
-    for(ll i=0; i<n; i++){
-        cin>>v[i].ff>>v[i].ss;
-    }
+    string s; cin>>s;
+    ll n; cin>>n;
 
-    ll x = m, y = m;
-    for(ll i=1; i<n; i++){
-        x += v[i].ss;
-        y += v[i].ff;
+    Hash h(s);
+    ll l = 0, r = 0;
+    map<ll, ll> m;
+    for(ll len=1; len <= n/4; len++){
+        ll i = 0, j = len-1;
+        while(j < n){
+            ll hash_val = h.get(i, j);
+            m[hash_val]++;
+            i += len;
+            j += len;
+        }
     }
-
-    ll sum = 2*x + 2*y;
-    cout<<sum<<nline;
 
 }
 

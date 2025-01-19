@@ -2,7 +2,7 @@
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Codechef: https://www.codechef.com/users/shauryacious27
-
+ 
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -19,17 +19,17 @@
 #include <bitset>
 #include <numeric>
 #include <climits>
-
+ 
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
-
+ 
 using namespace std;
 using namespace chrono;
 using namespace __gnu_pbds;
-
+ 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
-
+ 
 // Define Constants
 #define MOD 1000000007
 #define MOD1 998244353
@@ -43,7 +43,7 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-
+ 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
@@ -51,20 +51,20 @@ typedef long double lld;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
-
+ 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
-
-
+ 
+ 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 #ifndef ONLINE_JUDGE
     #define debug(x) cerr << #x << " = "; _print(x); cerr << endl;
 #else
     #define debug(x)
 #endif
-
+ 
 // DEEBUG
-
+ 
 void _print(ll t) {cerr << t;}
 void _print(int t) {cerr << t;}
 void _print(string t) {cerr << t;}
@@ -72,7 +72,7 @@ void _print(char t) {cerr << t;}
 void _print(lld t) {cerr << t;}
 void _print(double t) {cerr << t;}
 void _print(ull t) {cerr << t;}
-
+ 
 template <class T, class V> void _print(pair <T, V> p);
 template <class T> void _print(vector <T> v);
 template <class T> void _print(set <T> v);
@@ -107,8 +107,8 @@ ll min_ele(vector<ll> v) {return *min_element(v.begin(), v.end());}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; i++) { if (isPrime[i] == 1) {for (ll j = i * i; j <= n; j += i) { isPrime[j] = 0;}}}vector<ll> primes;for (ll i = 2; i <= n; i++) {if (isPrime[i]) {primes.push_back(i);}}return primes;}
 /*---------------------------------------------------------------------------------------------------------------------------*/
-
-
+ 
+ 
 // Macros
 #define all(x) (x).begin(), (x).end()
 #define rep(i, j) for (ll i = 0; i < j; i++)
@@ -118,33 +118,137 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
-
-void solve() {
-    ll n, m; cin>>n>>m;
-    vector<pair<ll, ll>> v(n);
-    for(ll i=0; i<n; i++){
-        cin>>v[i].ff>>v[i].ss;
+ 
+class Hash{
+    const ll M = 1e9 + 7;
+    const ll B1 = 5689;
+    const ll B2 = 1987;
+ 
+    vector<pair<ll, ll>> hash;
+    vector<pair<ll, ll>> Bpower;
+ 
+public:
+    Hash(string s){
+        int n = s.size();
+        // we will maintain a 1 based indexing
+        hash.assign(n + 1, {0, 0});
+        Bpower.assign(n + 1, {1, 1});
+ 
+        for(ll i=1; i<=n; i++){
+            char ch = s[i - 1];
+            ll curr_val = ch - 'a' + 1;
+ 
+            hash[i] = {
+                (hash[i - 1].ff * B1 + curr_val) % M,
+                (hash[i - 1].ss * B2 + curr_val) % M
+            };
+ 
+            Bpower[i] = {
+                (Bpower[i - 1].ff * B1) % M,
+                (Bpower[i - 1].ss * B2) % M
+            };
+        }
     }
-
-    ll x = m, y = m;
-    for(ll i=1; i<n; i++){
-        x += v[i].ss;
-        y += v[i].ff;
+ 
+    pair<ll, ll> get(ll l, ll r){
+        l++; r++; // to make it 1 based indexing
+        ll len = r - l + 1;
+ 
+        ll hash1 = (hash[r].ff - (hash[l - 1].ff * Bpower[len].ff) % M + M) % M; //modular sub
+        ll hash2 = (hash[r].ss - (hash[l - 1].ss * Bpower[len].ss) % M + M) % M; //modular sub
+ 
+        return {hash1, hash2};
     }
+ 
+};
 
-    ll sum = 2*x + 2*y;
-    cout<<sum<<nline;
-
+struct pair_hash{
+  template <class T1, class T2>
+  size_t operator()(const pair<T1, T2> &p) const
+  {
+    auto hash1 = hash<T1>{}(p.first);
+    auto hash2 = hash<T2>{}(p.second);
+    return hash1 ^ (hash2 << 1); 
+  }
+};
+ 
+bool f(ll len, string s, Hash& h){
+    ll n = s.length();
+    unordered_map<pair<ll, ll>, ll, pair_hash> mp;
+ 
+    ll i = 0, j = 0;
+    while(j < n){
+        if(j-i+1 == len){
+            pair<ll, ll> hash = h.get(i, j);
+            mp[hash]++;
+            if(mp[hash] == 2) return true;
+ 
+            i++;
+        }
+        j++;
+    }
+ 
+    return false;
 }
-
-
+ 
+ 
+void solve() {
+    string s; cin>>s;
+    ll n = s.length();
+    if (n == 0){
+        cout<<"-1"<<nline;
+        return;
+    }
+ 
+    Hash h(s);
+ 
+    ll lo = 1, hi = n;
+    ll ans = 0;
+    while(lo <= hi){
+        ll mid = lo + ((hi-lo)>>1);
+ 
+        if(f(mid, s, h)){
+            ans = mid;
+            lo = mid+1;
+        }
+        else{
+            hi = mid-1;
+        }
+    }
+ 
+    if (ans == 0){
+        cout<<"-1"<<nline;
+        return;
+    }
+ 
+    unordered_map<pair<ll, ll>, ll, pair_hash> mp;
+ 
+    ll len = ans;
+    ll i = 0, j = 0;
+    while(j < n){
+        if(j-i+1 == len){
+            pair<ll, ll> hash = h.get(i, j);
+            mp[hash]++;
+            if(mp[hash] == 2) {
+                cout<<s.substr(i, len)<<nline;
+                return;
+            }
+ 
+            i++;
+        }
+        j++;
+    }
+ 
+    cout<<"-1"<<nline;
+}
+ 
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

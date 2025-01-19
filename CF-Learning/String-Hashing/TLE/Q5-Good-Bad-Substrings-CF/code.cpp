@@ -119,24 +119,120 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+class Hash{
+    const ll M = 1e9 + 7;
+    const ll B1 = 5689;
+    const ll B2 = 1987;
+
+    vector<pair<ll, ll>> hash;
+    vector<pair<ll, ll>> Bpower;
+
+public:
+    Hash(string s){
+        int n = s.size();
+        // we will maintain a 1 based indexing
+        hash.assign(n + 1, {0, 0});
+        Bpower.assign(n + 1, {1, 1});
+
+        for(ll i=1; i<=n; i++){
+            char ch = s[i - 1];
+            ll curr_val = ch - 'a' + 1;
+
+            hash[i] = {
+                (hash[i - 1].ff * B1 + curr_val) % M,
+                (hash[i - 1].ss * B2 + curr_val) % M
+            };
+
+            Bpower[i] = {
+                (Bpower[i - 1].ff * B1) % M,
+                (Bpower[i - 1].ss * B2) % M
+            };
+        }
+    }
+
+    pair<ll, ll> get(ll l, ll r){
+        l++; r++; // to make it 1 based indexing
+        ll len = r - l + 1;
+
+        ll hash1 = (hash[r].ff - (hash[l - 1].ff * Bpower[len].ff) % M + M) % M; //modular sub
+        ll hash2 = (hash[r].ss - (hash[l - 1].ss * Bpower[len].ss) % M + M) % M; //modular sub
+
+        return {hash1, hash2};
+    }
+
+};
+
+
 void solve() {
-    ll n, m; cin>>n>>m;
-    vector<pair<ll, ll>> v(n);
+    string s; cin>>s;
+    string b; cin>>b;
+    ll k; cin>>k;
+
+    ll n = s.size();
+
+    map<ll, ll> bad; 
+    for(int i=0; i<26; i++){
+        char ch = b[i];
+        char alpha = 'a' + i;
+        if(ch == '0'){
+            bad[alpha]++;
+        }
+        else{
+            bad[alpha] = 0;
+        }
+    }
+
+    vll prefix(n+1, 0);
+
+    for(int i=0; i<n; i++){
+        char ch = s[i];
+        if(bad[ch] > 0){
+            prefix[i+1] = prefix[i] + 1;
+        }
+        else{
+            prefix[i+1] = prefix[i];
+        }
+    }
+
+    Hash h(s);
+
+
+    vector<pair<ll, ll>> v;
+
     for(ll i=0; i<n; i++){
-        cin>>v[i].ff>>v[i].ss;
+        for(ll j=i; j<n; j++){
+            ll l = i, r = j;
+            ll bad_chars = prefix[(j+1)] - prefix[(i+1) - 1];
+            if(bad_chars <= k){
+                v.pb(h.get(i, j));
+            }
+            else{
+                break;
+            }
+        }
     }
 
-    ll x = m, y = m;
-    for(ll i=1; i<n; i++){
-        x += v[i].ss;
-        y += v[i].ff;
+    sort(all(v));
+
+    ll unique = 0;
+
+    debug(v);
+
+    for( ll i=0; i<v.size(); i++){
+        debug(i);
+        pair<ll, ll> curr = v[i];
+        debug(curr);
+        while(i < v.size() && v[i].ff == curr.ff && v[i].ss == curr.ss){
+            i++;
+        }
+        i--;
+        unique++;
     }
 
-    ll sum = 2*x + 2*y;
-    cout<<sum<<nline;
+    cout<<unique<<nline;
 
+    
 }
-
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -144,7 +240,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

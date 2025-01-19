@@ -119,22 +119,46 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+class Solution {
+public:
+    long long minCost(vector<int>& arr, vector<int>& brr, long long k) {
+        long long ans = 0;
+        if(arr == brr) return 0;
+        if(is_sorted(arr.begin(), arr.end()) && is_sorted(brr.begin(), brr.end())){
+            if(arr == brr) return ans;
+
+            for(int i = 0; i < arr.size(); i++){
+                ans += abs(arr[i] - brr[i]);
+            }
+            return ans;
+        }
+        reverse(arr.begin(), arr.end());
+        reverse(brr.begin(), brr.end());
+        if(is_sorted(arr.begin(), arr.end()) && is_sorted(brr.begin(), brr.end())){
+            if(arr == brr) return ans;
+
+            for(int i = 0; i < arr.size(); i++){
+                ans += abs(arr[i] - brr[i]);
+            }
+            return ans;
+        }
+
+        sort(arr.begin(), arr.end());
+        sort(brr.begin(), brr.end());
+        ans += k;
+        if(arr == brr) return ans;
+
+        for(int i = 0; i < arr.size(); i++){
+            ans += abs(arr[i] - brr[i]);
+        }
+        return ans;
+    }
+};
+
 void solve() {
-    ll n, m; cin>>n>>m;
-    vector<pair<ll, ll>> v(n);
-    for(ll i=0; i<n; i++){
-        cin>>v[i].ff>>v[i].ss;
-    }
-
-    ll x = m, y = m;
-    for(ll i=1; i<n; i++){
-        x += v[i].ss;
-        y += v[i].ff;
-    }
-
-    ll sum = 2*x + 2*y;
-    cout<<sum<<nline;
-
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
+    cout << "Hello World" << nline;
 }
 
 
