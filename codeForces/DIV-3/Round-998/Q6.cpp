@@ -119,72 +119,45 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+struct Node{
+    vector<ll> childrens;
+    ll strings_ending_here;
+    ll strings_going_below;
+    Node() {
+        childrens = vector<ll>(26, -1);
+        strings_ending_here = 0;
+        strings_going_below = 0;
+    }
+};
+
+struct Trie{
+    vector<Node> tries;
+    ll size_of_trie = 0;
+
+    Trie() {
+        tries.emplace_back();
+        size_of_trie++;
+    }
+
+    void add_string(string s) {
+        ll node = 0;
+        for (char ch : s) {
+            ll c = ch - 'a';
+            if (tries[node].childrens[c] == -1) {
+                tries[node].childrens[c] = tries.size();
+                tries.emplace_back();
+            }
+            node = tries[node].childrens[c];
+            tries[node].strings_going_below++;
+        }
+        tries[node].strings_ending_here++;
+    }
+}
+
+
+
 void solve() {
-    ll n, m;
-    cin >> n >> m;
 
-    // Reading the matrix and sorting each row
-    vector<vector<ll>> nums;
-    for (ll i = 0; i < n; i++) {
-        vector<ll> temp;
-        for (ll j = 0; j < m; j++) {
-            ll p;
-            cin >> p;
-            temp.push_back(p);
-        }
-        sort(temp.begin(), temp.end()); // Sort each row
-        nums.push_back(temp);
-    }
-
-    // Create vector of pairs {smallest element, row index} and reverse rows
-    vector<pair<ll, ll>> v;
-    for (ll i = 0; i < n; i++) {
-        v.push_back({nums[i][0], i});
-        reverse(nums[i].begin(), nums[i].end()); // Reverse row for easier access to largest remaining elements
-    }
-
-    // Sort rows based on their smallest element
-    sort(v.begin(), v.end());
-
-    // Create a permutation array based on sorted order of rows
-    vector<ll> perm;
-    for (ll i = 0; i < v.size(); i++) {
-        perm.push_back(v[i].second);
-    }
-
-    // Validation process
-    bool isValid = true;
-    vector<ll> check;
-    check.push_back(-1); // Initialize with a sentinel value
-
-    ll i = 0;
-    ll len = perm.size();
-    ll d = m * n; // Total number of elements
-
-    while (check.size() < d + 1) {
-        ll index = i % len;
-        ll e = perm[index];
-        
-        if (!nums[e].empty() && check.back() < nums[e].back()) {
-            check.push_back(nums[e].back());
-            nums[e].pop_back();
-        } else {
-            isValid = false;
-            break;
-        }
-        i++;
-    }
-
-    // Output the result
-    if (isValid) {
-        for (ll i = 0; i < perm.size(); i++) {
-            cout << perm[i] + 1 << " "; // Output in 1-based indexing
-        }
-    } else {
-        cout << -1;
-    }
-
-    cout << endl;
 }
 
 

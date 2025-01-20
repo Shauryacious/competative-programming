@@ -120,9 +120,31 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
+    ll n, k; cin>>n>>k;
     vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+
+    unordered_map<ll, ll> m;
+    for(ll i = 0; i < n; i++){
+        m[a[i]]++;
+    }
+
+    ll i = 1, j = k-1;
+    ll count = 0;
+    while(i <= j){
+        if(i == j){
+            count += m[i]/2;
+            i++;
+            j--;
+            continue;
+        }
+        if(m[i] > 0 && m[j] > 0){
+            count += min(m[i], m[j]);
+        }
+        i++;
+        j--;
+    }
+
+    cout<<count<<nline;
 }
 
 

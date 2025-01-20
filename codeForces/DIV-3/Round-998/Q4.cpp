@@ -122,7 +122,17 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    for(ll i=0; i<n-1; i++){
+        ll mn = min(a[i], a[i+1]);
+        a[i] -= mn;
+        a[i+1] -= mn;
+    }
+
+    if(is_sorted(all(a))){
+        cout << "YES" << nline;
+    } else {
+        cout << "NO" << nline;
+    }
 }
 
 

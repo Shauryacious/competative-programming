@@ -1,8 +1,3 @@
-// Author : Shaurya Agrawal
-// Linkedin: https://www.linkedin.com/in/shauryacious/
-// Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious27
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -119,74 +114,78 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+class TrieNode{
+public:
+    bool isSpecial;
+    vector<TrieNode*> children;
+    TrieNode(){
+        isSpecial = false;
+        children.assign(2, NULL);
+    }
+
+};
+
+class Trie{
+public:
+    TrieNode* root;
+    Trie(){
+        root = new TrieNode();
+    }
+
+    void insert(int num){
+        TrieNode* curr = root;
+        for(int i=31; i>=0; i--){
+            int bit = (((1<<i) & num) > 0) ? 1 : 0;
+            if(curr->children[bit] == NULL){
+                curr->children[bit] = new TrieNode();
+            }
+            curr = curr->children[bit];
+        }
+        curr->isSpecial = true;
+    }
+
+    int findMaxXor(int num){
+        TrieNode* curr = root;
+        int mx = 0; // max xor candidate
+        for(int i=31; i>=0; i--){
+            int bit = (((1<<i) & num) > 0) ? 1 : 0;
+            int oppobit = bit^1^0; // 1^1 = 0 and 0^1 = 1
+            if(curr->children[oppobit] != NULL){
+                if(oppobit == 1){
+                    mx |= (1<<i);
+                }
+                curr = curr->children[oppobit];
+            } else {
+                if(bit == 1){
+                    mx |= (1<<i);
+                }
+                curr = curr->children[bit];
+            }
+        }
+        return mx ^ num;
+    }
+    
+};
+
+class Solution {
+public:
+    int findMaximumXOR(vector<int>& nums) {
+        Trie* t = new Trie();
+        for(int num : nums){
+            t->insert(num);
+        }
+        int ans = 0;
+        for(int num : nums){
+            ans = max(ans, t->findMaxXor(num));
+        }
+        return ans;
+    }
+};
+
 void solve() {
-    ll n, m;
-    cin >> n >> m;
+    string s; cin>>s;
 
-    // Reading the matrix and sorting each row
-    vector<vector<ll>> nums;
-    for (ll i = 0; i < n; i++) {
-        vector<ll> temp;
-        for (ll j = 0; j < m; j++) {
-            ll p;
-            cin >> p;
-            temp.push_back(p);
-        }
-        sort(temp.begin(), temp.end()); // Sort each row
-        nums.push_back(temp);
-    }
-
-    // Create vector of pairs {smallest element, row index} and reverse rows
-    vector<pair<ll, ll>> v;
-    for (ll i = 0; i < n; i++) {
-        v.push_back({nums[i][0], i});
-        reverse(nums[i].begin(), nums[i].end()); // Reverse row for easier access to largest remaining elements
-    }
-
-    // Sort rows based on their smallest element
-    sort(v.begin(), v.end());
-
-    // Create a permutation array based on sorted order of rows
-    vector<ll> perm;
-    for (ll i = 0; i < v.size(); i++) {
-        perm.push_back(v[i].second);
-    }
-
-    // Validation process
-    bool isValid = true;
-    vector<ll> check;
-    check.push_back(-1); // Initialize with a sentinel value
-
-    ll i = 0;
-    ll len = perm.size();
-    ll d = m * n; // Total number of elements
-
-    while (check.size() < d + 1) {
-        ll index = i % len;
-        ll e = perm[index];
-        
-        if (!nums[e].empty() && check.back() < nums[e].back()) {
-            check.push_back(nums[e].back());
-            nums[e].pop_back();
-        } else {
-            isValid = false;
-            break;
-        }
-        i++;
-    }
-
-    // Output the result
-    if (isValid) {
-        for (ll i = 0; i < perm.size(); i++) {
-            cout << perm[i] + 1 << " "; // Output in 1-based indexing
-        }
-    } else {
-        cout << -1;
-    }
-
-    cout << endl;
 }
-
 
 int main(){
     #ifndef ONLINE_JUDGE

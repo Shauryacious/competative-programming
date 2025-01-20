@@ -1,0 +1,5 @@
+s = a
+s = abcdfdcecba
+s = abbaxyzyx
+s = codeforces
+s = acbba

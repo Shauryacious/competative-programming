@@ -119,72 +119,111 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, m;
-    cin >> n >> m;
+class Hash {
+    const ll M = 1e9 + 7;
+    const ll B = 5689;
 
-    // Reading the matrix and sorting each row
-    vector<vector<ll>> nums;
-    for (ll i = 0; i < n; i++) {
-        vector<ll> temp;
-        for (ll j = 0; j < m; j++) {
-            ll p;
-            cin >> p;
-            temp.push_back(p);
+    vector<ll> hash;
+    vector<ll> Bpower;
+
+public:
+    Hash(string s) {
+        int n = s.size();
+        // we will maintain a 1 based indexing
+        hash.assign(n + 1, 0);
+        Bpower.assign(n + 1, 1);
+
+        for (ll i = 1; i <= n; i++) {
+            char ch = s[i - 1];
+            ll curr_val = ch - 'a' + 1;
+
+            hash[i] = (hash[i - 1] * B + curr_val) % M;
+            Bpower[i] = (Bpower[i - 1] * B) % M;
         }
-        sort(temp.begin(), temp.end()); // Sort each row
-        nums.push_back(temp);
     }
 
-    // Create vector of pairs {smallest element, row index} and reverse rows
-    vector<pair<ll, ll>> v;
-    for (ll i = 0; i < n; i++) {
-        v.push_back({nums[i][0], i});
-        reverse(nums[i].begin(), nums[i].end()); // Reverse row for easier access to largest remaining elements
+    ll get(ll l, ll r) {
+        l++; r++; // to make it 1 based indexing
+        ll len = r - l + 1;
+
+        ll hash_val = (hash[r] - (hash[l - 1] * Bpower[len]) % M + M) % M; // modular sub
+
+        return hash_val;
+    }
+};
+
+string get_longest_palindromic_prefix(string s) {
+    ll n = s.size();
+    string srev = s;
+    reverse(all(srev)); // Reverse the string for comparison
+
+    Hash h(s);
+    Hash hrev(srev);
+
+    ll l1 = 0, r1 = 0;
+    ll l2 = n - 1, r2 = n - 1;
+
+    ll ans = 0;
+
+    while (r1 < n && l2 >= 0) {
+        ll hash1 = h.get(l1, r1);
+        ll hash2 = hrev.get(l2, r2);
+
+        ll len = r1 - l1 + 1;
+
+        if (hash1 == hash2) {
+            ans = max(ans, len);
+        }
+
+        // Update the pointers to progress the loop
+        r1++; // Move the end of the first substring forward
+        l2--; // Move the start of the reversed substring backward
     }
 
-    // Sort rows based on their smallest element
-    sort(v.begin(), v.end());
+    return s.substr(0, ans);
+}
 
-    // Create a permutation array based on sorted order of rows
-    vector<ll> perm;
-    for (ll i = 0; i < v.size(); i++) {
-        perm.push_back(v[i].second);
-    }
+void solve() {
+    string s;
+    cin >> s;
+    debug(s);
+    ll n = s.size();
+    ll i = 0, j = n - 1;
 
-    // Validation process
-    bool isValid = true;
-    vector<ll> check;
-    check.push_back(-1); // Initialize with a sentinel value
-
-    ll i = 0;
-    ll len = perm.size();
-    ll d = m * n; // Total number of elements
-
-    while (check.size() < d + 1) {
-        ll index = i % len;
-        ll e = perm[index];
-        
-        if (!nums[e].empty() && check.back() < nums[e].back()) {
-            check.push_back(nums[e].back());
-            nums[e].pop_back();
-        } else {
-            isValid = false;
+    // Find the longest palindromic prefix and suffix
+    while (i < j) {
+        if (s[i] != s[j]) {
             break;
         }
         i++;
+        j--;
     }
 
-    // Output the result
-    if (isValid) {
-        for (ll i = 0; i < perm.size(); i++) {
-            cout << perm[i] + 1 << " "; // Output in 1-based indexing
-        }
-    } else {
-        cout << -1;
+    if (i >= j) {
+        cout << s << nline; // If the entire string is a palindrome
+        return;
     }
 
-    cout << endl;
+    string s1 = s.substr(0, i); // Prefix palindrome
+    string s3 = s1;
+    reverse(all(s3)); // Reverse of the prefix
+
+    ll len = j - i + 1;
+    string temp = s.substr(i, len);
+
+    // Get the longest palindromic prefix from the remaining middle part
+    string str = get_longest_palindromic_prefix(temp);
+
+    string temp2 = temp;
+    reverse(all(temp2)); // Reverse the middle part
+
+    string str2 = get_longest_palindromic_prefix(temp2);
+
+    // Choose the longer palindromic substring
+    string s2 = (str.size() > str2.size()) ? str : str2;
+
+    // Combine the prefix, the middle part, and the suffix
+    cout << s1 + s2 + s3 << nline;
 }
 
 

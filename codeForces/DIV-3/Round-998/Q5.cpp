@@ -119,11 +119,78 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+struct DSU {
+    ll size; // Number of elements
+    vector<ll> parent, rank;
+
+    explicit DSU(ll size) : size(size), parent(size + 1), rank(size + 1, 0) {
+        for (ll i = 1; i <= size; i++) {
+            parent[i] = i; // Initialize each element as its own parent
+        }
+    }
+
+    int find_set(ll node) {
+        if (parent[node] == node) return node;
+        return parent[node] = find_set(parent[node]); // Path compression
+    }
+
+    void union_set(ll u, ll v) {
+        u = find_set(u);
+        v = find_set(v);
+        if (u != v) {
+            if (rank[u] < rank[v]) swap(u, v); // Ensure u is the larger tree
+            parent[v] = u; // Merge v into u
+            if (rank[u] == rank[v]) rank[u]++; // Increase rank if same
+        }
+    }
+};
+
+
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    ll n, m1, m2; 
+    cin >> n >> m1 >> m2;
+
+    vector<pair<ll, ll>> edge_f(m1);
+    for (ll i = 0; i < m1; i++) {
+        cin >> edge_f[i].first >> edge_f[i].second;
+    }
+
+    DSU dsu_main(n);
+    for (ll i = 0; i < m2; i++) {
+        ll u, v; 
+        cin >> u >> v;
+        dsu_main.union_set(u, v);
+    }
+
+    DSU dsu_f_alt(n);
+    ll rem_count = 0;
+    for (auto& e : edge_f) {
+        ll u = e.first, v = e.second;
+        if (dsu_main.find_set(u) != dsu_main.find_set(v)) {
+            rem_count++;
+        } else {
+            dsu_f_alt.union_set(u, v);
+        }
+    }
+
+    map<ll, set<ll>> leader_grp;
+
+    for (ll v = 1; v <= n; v++) {
+        ll cl = dsu_main.find_set(v);
+        ll ld = dsu_f_alt.find_set(v);
+        leader_grp[cl].insert(ld);
+    }
+
+    ll req_ops = 0;
+    for (auto& grp : leader_grp) {
+        ll size_grp = (ll)grp.second.size();
+        req_ops += (size_grp - 1);
+    }
+
+    cout << rem_count + req_ops << "\n";
 }
+
 
 
 int main(){
