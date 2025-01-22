@@ -46,6 +46,7 @@ using namespace __gnu_pbds;
 
 
 
+
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
@@ -119,8 +120,10 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
-#define maxvec(v) *max_element(v.begin(), v.end())
-#define minvec(v) *min_element(v.begin(), v.end())
+#define MAX(x) *max_element(all(x))
+#define MIN(x) *min_element(all(x))
+#define SUM(x) accumulate(all(x), 0LL)
+#define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
