@@ -1,5 +1,6 @@
-a
-abcdfdcba
-xyzyx
-s
-abba
+1
+3
+6
+3
+11
+8

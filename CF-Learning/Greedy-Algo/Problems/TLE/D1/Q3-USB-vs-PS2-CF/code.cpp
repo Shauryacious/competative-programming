@@ -1,3 +1,8 @@
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious27
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -114,72 +119,81 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-class TrieNode {
-public:
-    bool isSpecial;
-    TrieNode* children[26];
-    vector<int> strings; // index of strings which passes through this node
-    TrieNode() {
-        isSpecial = false;
-        for(int i=0; i<26; i++){
-            children[i] = NULL;
-        }
-    }
-};
-
-class Trie{
-public:
-    TrieNode* root;
-    Trie(){
-        root = new TrieNode();
-    }
-
-    void insert(string s, int idx){
-        TrieNode* curr = root;
-        for(char ch : s){
-            int i = ch - 'a';
-            if(curr->children[i] == NULL){
-                curr->children[i] = new TrieNode();
-            }
-            curr->strings.push_back(idx);
-            curr = curr->children[i];
-        }
-        curr->strings.push_back(idx);
-        curr->isSpecial = true;
-    }
-
-    vector<vector<string>> displayContactsHelper(string word, vector<strings>& contacts){
-        vector<vector<string>> ans;
-        TrieNode* curr = root;
-        for(char ch : word){
-            int i = ch - 'a';
-            if(curr->children[i] != NULL){
-                for(auto strs : curr->children[i]->strings){
-                    ans.push_back(contacts[strs]);
-                }                           
-            }
-        }
-        
-    }
-
-}
-
-class Solution{
-public:
-    vector<vector<string>> displayContacts(int n, string contact[], string s){
-        vector<string> contacts(contact, contact + n);
-    }
-};
-
-
-// https://www.youtube.com/watch?v=WafalqRuXJs
-// https://www.geeksforgeeks.org/problems/phone-directory4628/1
+// https://codeforces.com/problemset/problem/1348/A
+// https://www.youtube.com/watch?v=UqKD3InMf08
 
 
 void solve() {
-    string s; cin>>s;
+    ll a, b, c; cin>>a>>b>>c;
+    ll a1 = a, b1 = b, c1 = c;
+    ll m; cin>>m;
+    vll usb;
+    vll ps2;
+    for(ll i=0; i<m; i++){
+        ll x; cin>>x;
+        string s; cin>>s;
+        if(s == "USB"){
+            usb.pb(x);
+        }else{
+            ps2.pb(x);
+        }
+    }
 
+
+    sort(all(usb));
+    sort(all(ps2));
+    debug(usb);
+    debug(ps2);
+
+    ll cost = 0;
+    ll usbi = 0;
+    for(ll i=0; i<sz(usb); i++){
+        if(a > 0){
+            a--;
+            cost += usb[i];
+        }
+        else{
+            break;
+        }
+        usbi = i+1;
+    }
+    debug(cost);
+
+    ll ps2i = 0;
+    for(ll i=0; i<sz(ps2); i++){
+        if(b > 0){
+            b--;
+            cost += ps2[i];
+        }
+        else{
+            break;
+        }
+        ps2i = i+1;
+    }
+    debug(cost);
+
+    debug(usbi);
+    debug(ps2i);
+
+    for(ll i=usbi; i<sz(usb); i++){
+        if(c > 0){
+            c--;
+            cost += usb[i];
+        }
+    }
+    debug(cost);
+
+    for(ll i=ps2i; i<sz(ps2); i++){
+        if(c > 0){
+            c--;
+            cost += ps2[i];
+        }
+    }
+    debug(cost);
+
+    cout<<(a1-a+b1-b+c1-c)<<" "<<cost<<nline;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -187,7 +201,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

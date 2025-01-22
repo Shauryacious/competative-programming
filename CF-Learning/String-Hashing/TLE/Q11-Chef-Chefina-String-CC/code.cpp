@@ -151,26 +151,44 @@ public:
     }
 };
 
+// https://www.codechef.com/problems/CHEFSHIP
 
 void solve() {
-    string s; cin>>s;
-    ll n; cin>>n;
+    string s; cin >> s;
+    ll n = s.size();
+    ll st = 0, en = n - 1;
 
-    Hash h(s);
-    ll l = 0, r = 0;
-    map<ll, ll> m;
-    for(ll len=1; len <= n/4; len++){
-        ll i = 0, j = len-1;
-        while(j < n){
-            ll hash_val = h.get(i, j);
-            m[hash_val]++;
-            i += len;
-            j += len;
+    Hash h(s); 
+
+    ll count = 0;
+
+    for (ll partition = 2; partition < n; partition += 2) {
+        ll s1 = st, e1 = partition - 1;
+        ll s2 = partition, e2 = n - 1;
+
+        // Left half of first segment
+        ll l1 = s1, r1 = e1 / 2; 
+        // Right half of first segment
+        ll l2 = e1 / 2 + 1, r2 = e1;
+
+        // Left half of second segment
+        ll l3 = s2, r3 = (s2 + e2) / 2; 
+        // Right half of second segment
+        ll l4 = (s2 + e2) / 2 + 1, r4 = e2;
+
+        debug(l1); debug(r1); 
+        debug(l2); debug(r2);
+        debug(l3); debug(r3);
+        debug(l4); debug(r4);
+
+
+        if (h.get(l1, r1) == h.get(l2, r2) && h.get(l3, r3) == h.get(l4, r4)) {
+            count++;
         }
     }
 
+    cout << count << nline;
 }
-
 
 int main(){
     #ifndef ONLINE_JUDGE

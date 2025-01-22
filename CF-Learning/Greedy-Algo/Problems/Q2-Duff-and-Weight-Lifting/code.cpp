@@ -1,3 +1,8 @@
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious27
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -114,72 +119,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-class TrieNode {
-public:
-    bool isSpecial;
-    TrieNode* children[26];
-    vector<int> strings; // index of strings which passes through this node
-    TrieNode() {
-        isSpecial = false;
-        for(int i=0; i<26; i++){
-            children[i] = NULL;
-        }
-    }
-};
-
-class Trie{
-public:
-    TrieNode* root;
-    Trie(){
-        root = new TrieNode();
-    }
-
-    void insert(string s, int idx){
-        TrieNode* curr = root;
-        for(char ch : s){
-            int i = ch - 'a';
-            if(curr->children[i] == NULL){
-                curr->children[i] = new TrieNode();
-            }
-            curr->strings.push_back(idx);
-            curr = curr->children[i];
-        }
-        curr->strings.push_back(idx);
-        curr->isSpecial = true;
-    }
-
-    vector<vector<string>> displayContactsHelper(string word, vector<strings>& contacts){
-        vector<vector<string>> ans;
-        TrieNode* curr = root;
-        for(char ch : word){
-            int i = ch - 'a';
-            if(curr->children[i] != NULL){
-                for(auto strs : curr->children[i]->strings){
-                    ans.push_back(contacts[strs]);
-                }                           
-            }
-        }
-        
-    }
-
-}
-
-class Solution{
-public:
-    vector<vector<string>> displayContacts(int n, string contact[], string s){
-        vector<string> contacts(contact, contact + n);
-    }
-};
-
-
-// https://www.youtube.com/watch?v=WafalqRuXJs
-// https://www.geeksforgeeks.org/problems/phone-directory4628/1
-
+// https://codeforces.com/problemset/problem/587/A
 
 void solve() {
-    string s; cin>>s;
+    ll n; cin>>n; 
+    vll a(n); invec(a, n);
 
+    const ll N = 1e7;
+    vll freq(N, 0);
+
+    for(auto x : a){
+        freq[x]++;
+    }
+
+    ll ans = 0;
+    for(ll i=0; i<N; i++){
+        freq[i+1] += freq[i]/2;
+        freq[i] &= 1; // freq[i] = freq[i] % 2
+        ans += freq[i];
+    }
+
+    cout<<ans<<nline;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -187,7 +149,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

@@ -1,3 +1,8 @@
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious27
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -39,13 +44,17 @@ using namespace __gnu_pbds;
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
 
+
+
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
+typedef pair<ll, ll> pll;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
+typedef vector<pll> vpll;
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
@@ -114,72 +123,48 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-class TrieNode {
-public:
-    bool isSpecial;
-    TrieNode* children[26];
-    vector<int> strings; // index of strings which passes through this node
-    TrieNode() {
-        isSpecial = false;
-        for(int i=0; i<26; i++){
-            children[i] = NULL;
-        }
-    }
-};
-
-class Trie{
-public:
-    TrieNode* root;
-    Trie(){
-        root = new TrieNode();
-    }
-
-    void insert(string s, int idx){
-        TrieNode* curr = root;
-        for(char ch : s){
-            int i = ch - 'a';
-            if(curr->children[i] == NULL){
-                curr->children[i] = new TrieNode();
-            }
-            curr->strings.push_back(idx);
-            curr = curr->children[i];
-        }
-        curr->strings.push_back(idx);
-        curr->isSpecial = true;
-    }
-
-    vector<vector<string>> displayContactsHelper(string word, vector<strings>& contacts){
-        vector<vector<string>> ans;
-        TrieNode* curr = root;
-        for(char ch : word){
-            int i = ch - 'a';
-            if(curr->children[i] != NULL){
-                for(auto strs : curr->children[i]->strings){
-                    ans.push_back(contacts[strs]);
-                }                           
-            }
-        }
-        
-    }
-
-}
-
-class Solution{
-public:
-    vector<vector<string>> displayContacts(int n, string contact[], string s){
-        vector<string> contacts(contact, contact + n);
-    }
-};
-
-
-// https://www.youtube.com/watch?v=WafalqRuXJs
-// https://www.geeksforgeeks.org/problems/phone-directory4628/1
+// https://codeforces.com/problemset/problem/1348/A
+// https://www.youtube.com/watch?v=UqKD3InMf08
 
 
 void solve() {
-    string s; cin>>s;
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
+    vll freq(n+1, 0);
+    for(ll i=0; i<n; i++){
+        freq[a[i]]++;
+    }
 
+    vpll b;
+    for(ll i=1; i<=n; i++){
+        if(freq[i] > 0){
+            b.pb({freq[i], i});
+        }
+    }
+
+    sort(b.begin(), b.end(), greater<pll>());
+    debug(b);
+    ll curr = b[0].ff;
+    ll ans = curr;
+    ll i = 1;
+    while(i < sz(b)){
+        if(curr == 0){
+            break;
+        }
+        if(b[i].ff >= curr){
+            ans += curr-1;
+            curr--;
+        }
+        else if(b[i].ff < curr){
+            ans += b[i].ff;
+            curr = b[i].ff;
+        }
+        i++;
+    }
+
+    cout<<ans<<nline;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE

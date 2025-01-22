@@ -176,6 +176,9 @@ public:
     }
 };
 
+// https://www.youtube.com/watch?v=0Y8gwLiQbeE
+// https://leetcode.com/problems/implement-trie-prefix-tree/description/
+
 void solve() {
     string s; cin>>s;
 

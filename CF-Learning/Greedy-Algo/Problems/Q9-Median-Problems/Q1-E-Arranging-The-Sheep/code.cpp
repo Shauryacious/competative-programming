@@ -1,3 +1,8 @@
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious27
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -114,72 +119,46 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-class TrieNode {
-public:
-    bool isSpecial;
-    TrieNode* children[26];
-    vector<int> strings; // index of strings which passes through this node
-    TrieNode() {
-        isSpecial = false;
-        for(int i=0; i<26; i++){
-            children[i] = NULL;
-        }
-    }
-};
-
-class Trie{
-public:
-    TrieNode* root;
-    Trie(){
-        root = new TrieNode();
-    }
-
-    void insert(string s, int idx){
-        TrieNode* curr = root;
-        for(char ch : s){
-            int i = ch - 'a';
-            if(curr->children[i] == NULL){
-                curr->children[i] = new TrieNode();
-            }
-            curr->strings.push_back(idx);
-            curr = curr->children[i];
-        }
-        curr->strings.push_back(idx);
-        curr->isSpecial = true;
-    }
-
-    vector<vector<string>> displayContactsHelper(string word, vector<strings>& contacts){
-        vector<vector<string>> ans;
-        TrieNode* curr = root;
-        for(char ch : word){
-            int i = ch - 'a';
-            if(curr->children[i] != NULL){
-                for(auto strs : curr->children[i]->strings){
-                    ans.push_back(contacts[strs]);
-                }                           
-            }
-        }
-        
-    }
-
-}
-
-class Solution{
-public:
-    vector<vector<string>> displayContacts(int n, string contact[], string s){
-        vector<string> contacts(contact, contact + n);
-    }
-};
-
-
-// https://www.youtube.com/watch?v=WafalqRuXJs
-// https://www.geeksforgeeks.org/problems/phone-directory4628/1
-
+// https://codeforces.com/contest/1520/problem/E
 
 void solve() {
-    string s; cin>>s;
+    ll n; cin >> n;
+    string s; cin>> s;
+    ll count = 0;
+    for(auto x : s){
+        if(x == '*'){
+            count++;
+        }
+    }
 
+    ll i = 0, j = n-1;
+    ll ans = 0;
+    while(i <= j){
+        while(i <= j && s[i] != '*'){
+            i++;
+        }
+        while(i <= j && s[j] != '*'){
+            j--;
+        }
+
+        ll curr_dist = j - i + 1;
+        ll real_dist = count;
+
+        ans += (curr_dist - real_dist);
+        count -= 2;
+        i++;
+        j--;
+    }
+
+    cout<<ans<<nline;
 }
+
+
+// 0123456789
+// *..*..**.*
+
+// 0123456789
+// *..*..**..
 
 int main(){
     #ifndef ONLINE_JUDGE

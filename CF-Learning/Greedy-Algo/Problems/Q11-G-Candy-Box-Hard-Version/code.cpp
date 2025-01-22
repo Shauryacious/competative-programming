@@ -1,3 +1,8 @@
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious27
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -13,8 +18,14 @@
 #include <stack>
 #include <bitset>
 #include <numeric>
+#include <climits>
+
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
+using namespace chrono;
+using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -32,14 +43,21 @@ using namespace std;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define all(x) (x).begin(), (x).end()
+
+
 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
-typedef vector<int> vi;
+typedef pair<ll, ll> pll;
 typedef vector<ll> vll;
+typedef vector<vll> vvll;
+typedef vector<string> vs;
+typedef vector<pll> vpll;
+
+typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
+// typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -88,86 +106,103 @@ void google(int t) {cout << "Case #" << t << ": ";}
 vector<ll> sieve(int n) {int*arr = new int[n + 1](); vector<ll> vect; for (int i = 2; i <= n; i++)if (arr[i] == 0) {vect.push_back(i); for (int j = 2 * i; j <= n; j += i)arr[j] = 1;} return vect;}
 ll phin(ll n) {ll number = n; if (n % 2 == 0) {number /= 2; while (n % 2 == 0) n /= 2;} for (ll i = 3; i <= sqrt(n); i += 2) {if (n % i == 0) {while (n % i == 0)n /= i; number = (number / i * (i - 1));}} if (n > 1)number = (number / n * (n - 1)) ; return number;} //O(sqrt(N))
 ll getRandomNumber(ll l, ll r) {return uniform_int_distribution<ll>(l, r)(rng);} 
+ll max_ele(vector<ll> v) {return *max_element(v.begin(), v.end());}
+ll min_ele(vector<ll> v) {return *min_element(v.begin(), v.end());}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; i++) { if (isPrime[i] == 1) {for (ll j = i * i; j <= n; j += i) { isPrime[j] = 0;}}}vector<ll> primes;for (ll i = 2; i <= n; i++) {if (isPrime[i]) {primes.push_back(i);}}return primes;}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
 // Macros
-#define rep(i, j) for (int i = 0; i < j; i++)
-#define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
-#define sumvec(v) accumulate(v.begin(), v.end(), 0)
+#define all(x) (x).begin(), (x).end()
+#define rep(i, j) for (ll i = 0; i < j; i++)
+#define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
 #define maxvec(v) *max_element(v.begin(), v.end())
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+// https://codeforces.com/problemset/problem/1348/A
+// https://www.youtube.com/watch?v=UqKD3InMf08
 
 
-class Solution {
-public:
-    long long minNumberOfSeconds(int h, vector<int>& a) {
-        int n = a.size();
-        sort(a.begin(), a.end());
-        
-        long long x = h / n;
-        debug(x);
-        long long bal = h - (x * n);
-
-
-        long long ans = 0;
-        for(auto w : a) {
-
-            debug(bal);
-            long long temp = 0;
-            if(bal > 0) {
-                ll k = x + 1;
-                for(long long i = 1; i <= k; i++) {
-                    temp += (w * i); 
-                }
-                bal--;  
-                debug(temp);
-            }
-            else {
-                debug(x);
-                for(long long i = 1; i <= x; i++) {
-                    temp += (w * i);  
-                }
-                debug(temp);
-            }
-            ans = max(ans, temp);  
-        }
-        
-        return ans;
-    }
-};
-
-void solve() {
-    int h, n;
-    cin >> h >> n;
-    vector<int> a(n);
-    for(int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
+ll solve2(vll a){ 
+    ll n = sz(a);
+    debug(n);
+    debug(a);
     
-    Solution sol;
-    cout << sol.minNumberOfSeconds(h, a) << "\n";
+    // Find the maximum value in 'a' to correctly size the 'freq' array
+    ll max_val = *max_element(a.begin(), a.end()); // Bug fix: Determine the actual range of values in 'a'
+    
+    vll freq(max_val + 1, 0); // Adjust the size of 'freq' to handle the maximum value in 'a'
+    for(ll i=0; i<n; i++){
+        freq[a[i]]++;
+    }
+
+    vpll b;
+    for(ll i=1; i<=max_val; i++){ // Iterate up to 'max_val' instead of 'n'
+        if(freq[i] > 0){
+            b.pb({freq[i], i});
+        }
+    }
+
+    sort(b.begin(), b.end(), greater<pll>());
+    debug(b);
+    ll curr = b[0].ff;
+    ll ans = curr;
+    ll i = 1;
+    while(i < sz(b)){
+        if(curr == 0){
+            break;
+        }
+        if(b[i].ff >= curr){
+            ans += curr - 1;
+            curr--;
+        }
+        else if(b[i].ff < curr){
+            ans += b[i].ff;
+            curr = b[i].ff;
+        }
+        i++;
+    }
+
+    return ans;
 }
 
-int main() {
+void solve() {
+    ll n; cin>>n;
+    debug(n);
+    vll a(n); 
+    vpll b(n);
+    vll c;
+
+    for(ll i=0; i<n; i++){
+        ll x; cin>>x; ll k; cin>>k;
+        a[i] = x;
+        b[i] = {x, k};
+        if(k == 1){
+            c.pb(x);
+        }
+    }
+    debug(a);
+    debug(b);
+    debug(c);
+
+    cout<<solve2(a)<<" "<<solve2(c)<<nline;
+} 
+
+
+
+int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-
-    ll t;
+    fastio();
+    ll t = 1; 
     cin >> t;
-    while(t--) {
+    while(t--){
         solve();
     }
-    
     return 0;
 }
-

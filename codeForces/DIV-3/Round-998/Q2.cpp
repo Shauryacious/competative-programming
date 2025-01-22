@@ -44,13 +44,17 @@ using namespace __gnu_pbds;
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
 
+
+
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
+typedef pair<ll, ll> pll;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
+typedef vector<pll> vpll;
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
@@ -120,71 +124,60 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m;
-    cin >> n >> m;
+    ll n, l, r; cin >> n >> l >> r;
+    vll a(n); invec(a, n);
+    vll b;
+    for (ll i = l - 1; i < r; i++) {
+        b.pb(a[i]);
+    }
+    sortvec(b);
+    reverse(all(b));
 
-    // Reading the matrix and sorting each row
-    vector<vector<ll>> nums;
-    for (ll i = 0; i < n; i++) {
-        vector<ll> temp;
-        for (ll j = 0; j < m; j++) {
-            ll p;
-            cin >> p;
-            temp.push_back(p);
-        }
-        sort(temp.begin(), temp.end()); // Sort each row
-        nums.push_back(temp);
+    vll pre, suf;
+    for (ll i = 0; i < l - 1; i++) {
+        pre.pb(a[i]);
+    }
+    for (ll i = r; i < n; i++) {
+        suf.pb(a[i]);
     }
 
-    // Create vector of pairs {smallest element, row index} and reverse rows
-    vector<pair<ll, ll>> v;
-    for (ll i = 0; i < n; i++) {
-        v.push_back({nums[i][0], i});
-        reverse(nums[i].begin(), nums[i].end()); // Reverse row for easier access to largest remaining elements
-    }
+    sortvec(pre);
+    sortvec(suf);
 
-    // Sort rows based on their smallest element
-    sort(v.begin(), v.end());
-
-    // Create a permutation array based on sorted order of rows
-    vector<ll> perm;
-    for (ll i = 0; i < v.size(); i++) {
-        perm.push_back(v[i].second);
-    }
-
-    // Validation process
-    bool isValid = true;
-    vector<ll> check;
-    check.push_back(-1); // Initialize with a sentinel value
-
-    ll i = 0;
-    ll len = perm.size();
-    ll d = m * n; // Total number of elements
-
-    while (check.size() < d + 1) {
-        ll index = i % len;
-        ll e = perm[index];
-        
-        if (!nums[e].empty() && check.back() < nums[e].back()) {
-            check.push_back(nums[e].back());
-            nums[e].pop_back();
+    ll prei = 0, countpre = 0;
+    for (ll i = 0; i < sz(b) && prei < sz(pre); i++) {
+        if (pre[prei] < b[i]) {
+            prei++;
+            countpre++;
         } else {
-            isValid = false;
             break;
         }
-        i++;
     }
 
-    // Output the result
-    if (isValid) {
-        for (ll i = 0; i < perm.size(); i++) {
-            cout << perm[i] + 1 << " "; // Output in 1-based indexing
+    ll sufi = 0, countsuf = 0;
+    for (ll i = 0; i < sz(b) && sufi < sz(suf); i++) {
+        if (suf[sufi] < b[i]) {
+            sufi++;
+            countsuf++;
+        } else {
+            break;
+        }
+    }
+
+    ll ans = max(countpre, countsuf);
+
+    if (ans == countpre) {
+        for (ll i = 0; i < countpre; i++) {
+            swap(pre[i], b[i]);
         }
     } else {
-        cout << -1;
+        for (ll i = 0; i < countsuf; i++) {
+            swap(suf[i], b[i]);
+        }
     }
 
-    cout << endl;
+    ll summ = accumulate(all(b), 0LL); // Ensure accumulate is summing with 0LL for large values
+    cout << summ << nline;
 }
 
 

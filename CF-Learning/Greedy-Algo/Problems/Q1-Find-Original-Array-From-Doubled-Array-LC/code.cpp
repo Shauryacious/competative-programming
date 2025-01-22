@@ -1,3 +1,8 @@
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious27
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -114,70 +119,60 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-class TrieNode {
+// https://leetcode.com/problems/find-original-array-from-doubled-array
+class Solution {
 public:
-    bool isSpecial;
-    TrieNode* children[26];
-    vector<int> strings; // index of strings which passes through this node
-    TrieNode() {
-        isSpecial = false;
-        for(int i=0; i<26; i++){
-            children[i] = NULL;
+    vector<int> findOriginalArray(vector<int>& changed) {
+        if(changed.size() % 2 != 0){
+            return {};
         }
-    }
-};
-
-class Trie{
-public:
-    TrieNode* root;
-    Trie(){
-        root = new TrieNode();
-    }
-
-    void insert(string s, int idx){
-        TrieNode* curr = root;
-        for(char ch : s){
-            int i = ch - 'a';
-            if(curr->children[i] == NULL){
-                curr->children[i] = new TrieNode();
-            }
-            curr->strings.push_back(idx);
-            curr = curr->children[i];
-        }
-        curr->strings.push_back(idx);
-        curr->isSpecial = true;
-    }
-
-    vector<vector<string>> displayContactsHelper(string word, vector<strings>& contacts){
-        vector<vector<string>> ans;
-        TrieNode* curr = root;
-        for(char ch : word){
-            int i = ch - 'a';
-            if(curr->children[i] != NULL){
-                for(auto strs : curr->children[i]->strings){
-                    ans.push_back(contacts[strs]);
-                }                           
+        multiset<int> pos;
+        multiset<int> neg;
+        int count0 = 0;
+        for(auto x : changed){
+            if(x == 0){
+                count0++;
+            }else if(x > 0){
+                pos.insert(x);
+            }else{
+                neg.insert(x);
             }
         }
-        
-    }
 
-}
+        vector<int> ans;
+        if(count0 % 2 != 0){
+            return {};
+        }
+        count0 /= 2;
+        while(count0--){
+            ans.push_back(0);
+        }
 
-class Solution{
-public:
-    vector<vector<string>> displayContacts(int n, string contact[], string s){
-        vector<string> contacts(contact, contact + n);
+        while(!pos.empty()){
+            int x = *pos.begin();
+            pos.erase(pos.find(x)); // to erase only the first occurence
+            if(pos.find(2*x) == pos.end()){
+                return {};
+            }
+            pos.erase(pos.find(2*x));
+            ans.push_back(x);
+        }
+
+        while(!neg.empty()){
+            int x = *neg.begin();
+            neg.erase(neg.find(x));
+            if(neg.find(x/2) == neg.end()){
+                return {};
+            }
+            neg.erase(neg.find(x/2));
+            ans.push_back(x/2);
+        }
+
+        return ans;
     }
 };
-
-
-// https://www.youtube.com/watch?v=WafalqRuXJs
-// https://www.geeksforgeeks.org/problems/phone-directory4628/1
-
 
 void solve() {
-    string s; cin>>s;
 
 }
 
