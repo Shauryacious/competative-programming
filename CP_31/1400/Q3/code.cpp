@@ -3,22 +3,7 @@
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Codechef: https://www.codechef.com/users/shauryacious27
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <chrono>
-#include <random>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <unordered_set>
-#include <cmath>
-#include <queue>
-#include <stack>
-#include <bitset>
-#include <numeric>
-#include <climits>
+#include <bits/stdc++.h>
 
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
@@ -126,21 +111,55 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+bool f(ll m, vpll a) {
+    ll xl = 0, xr = 0;
+    for (auto p : a) {
+        ll l = p.ff, r = p.ss;
+        if (xr < l) { // on the left
+            if (xr + m < l) {
+                return false;
+            } else {
+                xl = l;
+                xr = min(r, l + m);
+            }
+        } else if (xl > r) { // on the right
+            if (xl - m > r) {
+                return false;
+            } else {
+                xr = r;
+                xl = max(l, r - m);
+            }
+        } else { // already in the range
+            xl = max(l, xl - m);
+            xr = min(r, xr + m);
+        }
+    }
+    return true;
+}
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-
-    ll summ == 0;
-
-    ll mm = 0;
-    multiset<ll> s;
-    for(ll i=0; i<n; i++){
-        // case 1
-        
+    ll n;
+    cin >> n;
+    vpll a(n);
+    for (ll i = 0; i < n; i++) {
+        cin >> a[i].ff >> a[i].ss;
     }
 
-    cout<<nline;
+    ll l = 0, r = 1e9;
+    ll ans = 0;
+    while (l <= r) {
+        ll m = l + ((r - l) >> 1);
+        if (f(m, a)) {
+            ans = m;
+            r = m - 1;
+        } else {
+            l = m + 1;
+        }
+    }
+
+    cout << ans << nline;
 }
+
 
 
 int main(){

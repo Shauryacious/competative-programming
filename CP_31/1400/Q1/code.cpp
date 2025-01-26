@@ -3,22 +3,7 @@
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Codechef: https://www.codechef.com/users/shauryacious27
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <chrono>
-#include <random>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <unordered_set>
-#include <cmath>
-#include <queue>
-#include <stack>
-#include <bitset>
-#include <numeric>
-#include <climits>
+#include <bits/stdc++.h>
 
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
@@ -126,20 +111,49 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+
 void solve() {
-    ll n; cin >> n;
+    ll n, m; cin>>n>>m;
     vll a(n); invec(a, n);
-
-    ll summ == 0;
-
-    ll mm = 0;
-    multiset<ll> s;
+    vs b;
     for(ll i=0; i<n; i++){
-        // case 1
-        
+        b.pb(to_string(a[i]));
     }
 
-    cout<<nline;
+    ll mx_sum = 0;
+    for(ll i=0; i<n; i++){
+        mx_sum += b[i].size();
+    }
+
+
+    vll c;
+    for(ll i=0; i<n; i++){
+        if(a[i]%10 == 0){
+            ll x = a[i];
+            ll cnt = 0;
+            while(x%10 == 0){
+                x = x/10;
+                cnt++;
+            }
+            c.pb(cnt);
+        }
+    }
+
+    sortvec(c);
+    reverse(all(c));
+    ll sum = 0;
+    for(ll i=0; i<sz(c); i+=2){
+        sum += c[i];
+    }
+
+    ll ans = mx_sum-sum;
+    if(ans > m){
+        cout<<"Sasha"<<nline;
+    }
+    else{
+        cout<<"Anna"<<nline;
+    }
 }
 
 

@@ -129,8 +129,17 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    ll a1=0,a2=0;
+    
+    for(ll i=0;i<n;i++){
+        if(a[i]%2 == a[0]%2) a1++;
+        else a2++;
+    }
+    
+    cout<<max(a1,a2)<<endl;
 }
+
+
 
 
 int main(){

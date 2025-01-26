@@ -3,22 +3,7 @@
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Codechef: https://www.codechef.com/users/shauryacious27
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <chrono>
-#include <random>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <unordered_set>
-#include <cmath>
-#include <queue>
-#include <stack>
-#include <bitset>
-#include <numeric>
-#include <climits>
+#include <bits/stdc++.h>
 
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
@@ -126,21 +111,54 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
+    ll n; 
+    cin >> n;
+    vll v(n); 
+    invec(v, n); // Input the vector
 
-    ll summ == 0;
+    // Splitting array into `a` and `b`
+    vll a; 
+    vll b;
+    ll x = LLONG_MIN; // Keep track of the last added to `a`
 
-    ll mm = 0;
-    multiset<ll> s;
-    for(ll i=0; i<n; i++){
-        // case 1
-        
+    for (ll i = 0; i < n; i++) {
+        if (v[i] >= x) {
+            a.pb(v[i]);
+            x = v[i]; // Update `x` to the current element
+        } else {
+            b.pb(v[i]);
+        }
     }
 
-    cout<<nline;
+    // Debugging splits
+    debug(a); // Marks this debug
+    debug(b); // Marks this debug
+
+    // Function to count increasing subsequences in a vector
+    auto count_increasing = [](vll &arr) {
+        ll count = 0;
+        for (ll i = 0; i < sz(arr) - 1; i++) {
+            if (arr[i] < arr[i + 1]) {
+                count++;
+            }
+        }
+        return count;
+    };
+
+    ll p1 = count_increasing(a);
+    ll p2 = count_increasing(b);
+
+    // Debugging counts
+    debug(p1); // Marks this debug
+    debug(p2); // Marks this debug
+
+    // Output the result
+    cout << p1 + p2 << nline;
 }
+
 
 
 int main(){

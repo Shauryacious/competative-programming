@@ -127,10 +127,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    int T;
+    cin >> T;
+    while (T--) {
+        int N;
+        long long X;
+        cin >> N >> X;
+        vector<long long> H(N);
+        for (auto &h : H) cin >> h;
+
+        // Sort the monsters by initial HP
+        sort(H.begin(), H.end());
+
+        // Calculate the minimum A
+        long long A = 0;
+        for (int i = 0; i < N; ++i) {
+            long long final_hp = H[i] + X * (N - i - 1);
+            A = max(A, final_hp);
+        }
+
+        cout << A << "\n";
+    }
 }
+
 
 
 int main(){

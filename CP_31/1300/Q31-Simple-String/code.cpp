@@ -3,22 +3,7 @@
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Codechef: https://www.codechef.com/users/shauryacious27
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <chrono>
-#include <random>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <unordered_set>
-#include <cmath>
-#include <queue>
-#include <stack>
-#include <bitset>
-#include <numeric>
-#include <climits>
+#include <bits/stdc++.h>
 
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
@@ -126,20 +111,33 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-
-    ll summ == 0;
-
-    ll mm = 0;
-    multiset<ll> s;
-    for(ll i=0; i<n; i++){
-        // case 1
-        
+    string s; cin>>s;
+    ll n = s.size();
+    for(ll i=1; i<n; i++){
+        if(s[i-1] == s[i]){
+            if(i != n-1){
+                for(char c = 'a'; c<='z'; c++){
+                    if(c != s[i-1] && c != s[i+1]){
+                        s[i] = c;
+                        break;
+                    }
+                }
+            }
+            else{
+                for(char c = 'a'; c<='z'; c++){
+                    if(c != s[i-1]){
+                        s[i] = c;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
-    cout<<nline;
+    cout<<s<<nline;
 }
 
 
@@ -149,7 +147,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

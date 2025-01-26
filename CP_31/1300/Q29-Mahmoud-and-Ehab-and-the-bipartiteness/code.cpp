@@ -126,20 +126,44 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-
-    ll summ == 0;
-
-    ll mm = 0;
-    multiset<ll> s;
-    for(ll i=0; i<n; i++){
-        // case 1
-        
+    ll n; cin>>n;
+    vector<vector<ll>> adj(n);
+    for(ll i=1; i<=n-1; i++){
+        ll u,v; cin>>u>>v;
+        u--; v--;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
-    cout<<nline;
+    vector<ll> color(n, -1);
+    queue<ll> q;
+    q.push(0);
+    color[0] = 0;
+    while(!q.empty()){
+        ll u = q.front();
+        q.pop();
+        for(auto v : adj[u]){
+            if(color[v] == -1){
+                color[v] = color[u] ^ 1 ^ 0;
+                q.push(v);
+            }
+        }
+    }
+
+    ll clr0 = 0, clr1 = 0;
+    for(auto x : color){
+        if(x == 0){
+            clr0++;
+        }
+        else{
+            clr1++;
+        }
+    }
+
+    cout<<(clr0*clr1) - (n-1)<<nline;
 }
 
 
@@ -149,7 +173,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

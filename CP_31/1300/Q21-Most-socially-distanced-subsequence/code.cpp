@@ -127,18 +127,28 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
+    ll n; cin>>n;
     vll a(n); invec(a, n);
 
-    ll summ == 0;
+    vll ans;
 
-    ll mm = 0;
-    multiset<ll> s;
     for(ll i=0; i<n; i++){
-        // case 1
-        
+        if(i==0 || i==n-1){
+            ans.pb(a[i]);
+            continue;
+        }
+        if(a[i-1] < a[i] && a[i] > a[i+1]){ // peak
+            ans.pb(a[i]);
+        }
+        else if(a[i-1] > a[i] && a[i] < a[i+1]){ // valley
+            ans.pb(a[i]);
+        }
     }
 
+    cout<<sz(ans)<<nline;
+    for(auto x : ans){
+        cout<<x<<" ";
+    }
     cout<<nline;
 }
 

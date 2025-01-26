@@ -127,19 +127,16 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-
-    ll summ == 0;
-
-    ll mm = 0;
-    multiset<ll> s;
-    for(ll i=0; i<n; i++){
-        // case 1
-        
+    ll n, x, m; cin>>n>>x>>m;
+    ll minl = x, maxr = x;
+    while(m--){
+        ll l, r; cin>>l>>r;
+        if(l <= minl && minl <= r || l <= maxr && maxr <= r){
+            minl = min(minl, l);
+            maxr = max(maxr, r);
+        }
     }
-
-    cout<<nline;
+    cout<<maxr - minl + 1<<nline;
 }
 
 
