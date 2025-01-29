@@ -111,10 +111,65 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+// https://codeforces.com/problemset/problem/1799/C
+// https://www.youtube.com/watch?v=pWwKg2Y9jTg
+
+// 01234567
+// aaaaabbb
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    string s; 
+    cin >> s;
+    sort(s.begin(), s.end());
+    ll n = s.length();
+    vector<char> ans(n);
+    ll l = 0, r = n - 1;
+
+    for (ll i = 0; i < n; i += 2) {
+        if (i == n - 1) {
+            ans[l] = s[i];
+        } 
+        else if (s[i] == s[i + 1]) {
+            ans[l] = s[i];
+            ans[r] = s[i + 1];
+            l++;
+            r--;
+        } 
+        else { // s[i] != s[i+1]
+            if (s[i + 1] == s[n - 1]) {
+                ll len = n - i - 1;
+                ll k1 = (len + 1) / 2; // ceil
+                ll k2 = len - k1;
+
+                while (k1--) {
+                    ans[l] = s[i + 1];
+                    l++;
+                }
+                ans[l] = s[i];
+                l++;
+                while (k2--) {
+                    ans[r] = s[i + 1];
+                    r--;
+                }
+
+                break;
+            } 
+            else {
+                for (ll j = i + 1; j < n; j++) {
+                    ans[l] = s[j];
+                    l++;
+                }
+                ans[r] = s[i];
+                break;
+            }
+        }
+    }
+
+    string answer = "";
+    for (auto x : ans) {
+        answer += x;
+    }
+    cout << answer << '\n';
 }
 
 

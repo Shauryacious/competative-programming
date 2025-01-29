@@ -3,7 +3,22 @@
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Codechef: https://www.codechef.com/users/shauryacious27
 
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <chrono>
+#include <random>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <bitset>
+#include <numeric>
+#include <climits>
 
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>

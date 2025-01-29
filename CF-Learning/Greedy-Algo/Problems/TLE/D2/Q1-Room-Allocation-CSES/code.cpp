@@ -111,11 +111,56 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+// https://www.youtube.com/watch?v=4B1RWApyfjc
+
+struct person {
+    int arrival, departure, idx;
+};
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    int n; cin >> n;
+    vector<person> v(n);
+    for(int i = 0; i < n; i++) {
+        cin >> v[i].arrival >> v[i].departure;
+        v[i].idx = i;
+    }
+
+    // Sort by arrival time
+    sort(v.begin(), v.end(), [&](person& a, person& b) {
+        if(a.departure == b.departure) {
+            return a.arrival < b.arrival;
+        }
+        return a.arrival < b.arrival;
+    });
+
+    vector<int> ans(n);
+
+    // Use a min-heap to track the earliest available room
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    int curr = 0;
+
+    for(auto p : v) {
+        if(!pq.empty() && pq.top().first <= p.arrival) {
+            // Reuse the room with the earliest departure time
+            int room_no = pq.top().second;
+            pq.pop();
+            pq.push({p.departure + 1, room_no});
+            ans[p.idx] = room_no;
+        } else {
+            // Assign a new room
+            curr++;
+            pq.push({p.departure + 1, curr});
+            ans[p.idx] = curr;
+        }
+    }
+
+    cout << curr << endl;
+    for(auto x : ans) {
+        cout << x << " ";
+    }
 }
+
 
 
 int main(){
@@ -124,7 +169,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

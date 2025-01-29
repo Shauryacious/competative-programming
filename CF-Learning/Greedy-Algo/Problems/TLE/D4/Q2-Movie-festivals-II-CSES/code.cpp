@@ -111,10 +111,46 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+// https://www.youtube.com/watch?v=SIXQ9Zav9H8
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Hello World" << nline;
+    ll n, k; cin>>n>>k;
+    vector<pair<ll, ll>> v(n);
+    for(ll i=0; i<n; i++){
+        cin>>v[i].first>>v[i].second;
+    }
+
+    auto cmp = [&](pair<ll, ll>& a, pair<ll, ll>& b){
+        if(a.ss == b.ss){
+            return a.ff < b.ff;
+        }
+        return a.ss < b.ss;
+    };
+
+    sort(v.begin(), v.end(), cmp);
+
+    debug(v);
+
+    ll ans = 0;
+    multiset<ll> endtimes;
+    for(ll i=1; i<=k; i++){
+        endtimes.insert(-1);
+    }
+
+    for(ll i=0; i<n; i++){
+        ll time = v[i].ff;
+        auto it = endtimes.upper_bound(time);
+
+        if(it == endtimes.begin()) continue; //no valid person left
+
+        it--; //go back once
+        endtimes.erase(it);
+        endtimes.insert(v[i].ss);
+
+        ans++;
+    }
+
+    cout<<ans;
 }
 
 
@@ -124,7 +160,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

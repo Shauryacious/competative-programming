@@ -32,7 +32,9 @@
     "valarray": "cpp",
     "format": "cpp",
     "ranges": "cpp",
-    "stacktrace": "cpp"
+    "stacktrace": "cpp",
+    "bitset": "cpp",
+    "algorithm": "cpp"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cStandard": "",
