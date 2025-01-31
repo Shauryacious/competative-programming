@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/shauryaagrawal/Desktop/Competitive_P",
-      "program": "/Users/shauryaagrawal/Desktop/Competitive_P/build/Debug/outDebug"
+      "cwd": "/Users/shauryaagrawal/Desktop/Competitive_P/CP_31/1000/Q26-Buying-torches",
+      "program": "/Users/shauryaagrawal/Desktop/Competitive_P/CP_31/1000/Q26-Buying-torches/build/Debug/outDebug"
     }
   ]
 }

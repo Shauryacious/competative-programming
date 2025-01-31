@@ -112,91 +112,61 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll a, b; cin>>a>>b;
-    if(a == b){
-        cout<<0<<nline;
+    ll a, b; 
+    cin >> a >> b;
+    
+    if (a == b) {
+        cout << 0 << nline;
         return;
     }
-
-    if(a > b){
+    
+    if (a > b) {
         ll count = 0;
-        while(true){
-            if(a % 8 == 0){
-                if(a/8 >= b){
-                    a /= 8;
-                    count++;
-                    if(a == b){
-                        cout<<count<<nline;
-                        return;
-                    }
-                }
-                else if(a%4 == 0 && a/4 >= b){
-                    a /= 4;
-                    count++;
-                    if(a == b){
-                        cout<<count<<nline;
-                        return;
-                    }
-                }
-                else if(a%2 == 0 && a/2 >= b){
-                    a /= 2;
-                    count++;
-                    if(a == b){
-                        cout<<count<<nline;
-                        return;
-                    }
-                }
-                else{
-                    cout<<-1<<nline;
-                    return;
-                }
-            }
-            else if(a % 4 == 0){
-                if(a/4 >= b){
-                    a /= 4;
-                    count++;
-                    if(a == b){
-                        cout<<count<<nline;
-                        return;
-                    }
-                }
-                else if(a%2 == 0 && a/2 >= b){
-                    a /= 2;
-                    count++;
-                    if(a == b){
-                        cout<<count<<nline;
-                        return;
-                    }
-                }
-                else{
-                    cout<<-1<<nline;
-                    return;
-                }
-            }
-            else if(a % 2 == 0){
-                else if(a/2 >= b){
-                    a /= 2;
-                    count++;
-                    if(a == b){
-                        cout<<count<<nline;
-                        return;
-                    }
-                }
-                else{
-                    cout<<-1<<nline;
-                    return;
-                }
-            }
-            else{
-                cout<<-1<<nline;
+        while (a > b) {
+            if (a % 8 == 0 && a / 8 >= b) {
+                a /= 8;
+                count++;
+            } else if (a % 4 == 0 && a / 4 >= b) {
+                a /= 4;
+                count++;
+            } else if (a % 2 == 0 && a / 2 >= b) {
+                a /= 2;
+                count++;
+            } else {
+                cout << -1 << nline;
                 return;
             }
         }
-    }
-    else{
-        cout<<INF<<nline;
+        if(a != b){
+            cout << -1 << nline;
+            return;
+        }
+        cout << count << nline;
+    } else {
+        ll count = 0;
+        while(a < b){
+            if(a*8 <= b){
+                a *= 8;
+                count++;
+            } else if (a*4 <= b) {
+                a *= 4;
+                count++;
+            } else if (a*2 <= b) {
+                a *= 2;
+                count++;
+            } else {
+                cout << -1 << nline;
+                return;
+            }
+        }
+        if(a != b){
+            cout << -1 << nline;
+            return;
+        }
+        cout << count << nline;
     }
 }
+
 
 
 int main(){
