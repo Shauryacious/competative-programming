@@ -112,37 +112,30 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    set<ll> s(all(a));
-    if(s.size() == 1){
-        cout<<"NO"<<nl;
-        return;
-    }
-    sort(a.rbegin(), a.rend());
-    vll ans;
-    ll x = a[0];
-    ans.pb(a[0]);
+    ll val; cin >> val;
+    string s = to_string(val);
+    ll n = s.size();
+    vs a;
     ll cnt = 0;
-    ll idx = 0;
-    while(a[idx] == x){
-        cnt++;
-        idx++;
+    for(ll i=0; i<n; i++){
+        if(s[i] != '0'){
+            cnt++;
+            ll j = i+1;
+            string temp = "";
+            temp += s[i];
+            while(j<n){
+                temp += "0";
+                j++;
+            }
+            a.pb(temp);
+        }
     }
-    cnt--;
 
-    for(ll i = idx; i < n; i++){
-        ans.pb(a[i]);
+    cout << cnt << nl;
+    for(auto x: a){
+        cout << x << " ";
     }
-    while(cnt--){
-        ans.pb(x);
-    }
-
-    cout<<"YES"<<nl;
-    for(auto i: ans){
-        cout<<i<<" ";
-    }
-    cout<<nl;
+    cout << nl;
 }
 
 

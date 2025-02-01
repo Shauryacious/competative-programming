@@ -112,37 +112,46 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    set<ll> s(all(a));
-    if(s.size() == 1){
-        cout<<"NO"<<nl;
+    ll m, n; cin>>m>>n;
+    vvll a(m, vll(n));
+
+    if(n == 1 && m == 1){
+        cout<<-1<<nl;
         return;
     }
-    sort(a.rbegin(), a.rend());
-    vll ans;
-    ll x = a[0];
-    ans.pb(a[0]);
-    ll cnt = 0;
-    ll idx = 0;
-    while(a[idx] == x){
-        cnt++;
-        idx++;
-    }
-    cnt--;
 
-    for(ll i = idx; i < n; i++){
-        ans.pb(a[i]);
+    if(n == 1){
+        for(ll i=0; i<m-1; i++){
+            swap(a[i][0], a[i+1][0]);
+        }
+
+        for(ll i=0; i<m; i++){
+            for(ll j=0; j<n; j++){
+                cout<<a[i][j]<<" ";
+            }
+        cout<<nl;
     }
-    while(cnt--){
-        ans.pb(x);
+        return;
     }
 
-    cout<<"YES"<<nl;
-    for(auto i: ans){
-        cout<<i<<" ";
+    for(ll i=0; i<m; i++){
+        for(ll j=0; j<n; j++){
+            cin>>a[i][j];
+        }
     }
-    cout<<nl;
+
+    for(ll i=0; i<m; i++){
+        for(ll j=0; j<n-1; j++){
+            swap(a[i][j], a[i][j+1]);
+        }
+    }
+
+    for(ll i=0; i<m; i++){
+        for(ll j=0; j<n; j++){
+            cout<<a[i][j]<<" ";
+        }
+        cout<<nl;
+    }
 }
 
 
