@@ -114,50 +114,60 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n, m; cin >> n >> m;
     string s, t; cin >> s >> t;
-
-    bool flag = false;
-    for (ll i = 0; i < n - 1; i++) {
-        if (s[i] == s[i + 1]) {
-            flag = true;
+    bool oks = true;
+    for(ll i = 0; i < n-1; i++){
+        if(s[i] == s[i+1]){
+            oks = false;
             break;
         }
     }
-    if (!flag) {
-        cout << "YES" << "\n";
+    if(oks){
+        cout << "YES" << nl;
         return;
     }
 
-    flag = false;
-    for (ll i = 0; i < n - 1; i++) {
-        if (t[i] == t[i + 1]) {
-            flag = true;
+    bool okt = true;
+    for(ll i = 0; i < m-1; i++){
+        if(t[i] == t[i+1]){
+            okt = false;
             break;
         }
     }
-    if (flag) {
-        cout << "NO" << "\n";
+
+    if(okt == false){
+        cout << "NO" << nl;
         return;
     }
-    
-    if (m == 2) {
-        if (t[0] == t[1]) {
-            cout << "NO" << "\n";
+
+    // oks == false && okt == true
+    if(t[0] == t[m-1]){
+        if(t[0] == '0'){
+            for(ll i = 0; i < n-1; i++){
+                if(s[i] == s[i+1]){
+                    if(s[i] == '0'){
+                        cout << "NO" << nl;
+                        return;
+                    }
+                }
+            }
+            cout << "YES" << nl;
+            return;
+        }
+        else{
+            for(ll i = 0; i < n-1; i++){
+                if(s[i] == s[i+1]){
+                    if(s[i] == '1'){
+                        cout << "NO" << nl;
+                        return;
+                    }
+                }
+            }
+            cout << "YES" << nl;
             return;
         }
     }
-
-    if (t[0] == t[m - 1]) {
-        char ch = t[0]; // First and last character of `t`
-        for (ll i = 0; i < n - 1; i++) {
-            if (s[i] == s[i + 1] && s[i] == ch) {
-                cout << "NO" << "\n";
-                return;
-            }
-        }
-        cout << "YES" << "\n";
-    }
-    else {
-        cout << "NO" << "\n";
+    else{
+        cout << "NO" << nl;
     }
 }
 
