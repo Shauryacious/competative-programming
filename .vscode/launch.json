@@ -3,11 +3,29 @@
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
-      "type": "lldb",
+      "type": "cppdbg",
       "request": "launch",
-      "args": [],
-      "cwd": "/Users/shauryaagrawal/Desktop/Competitive_P/ACodeDaily/800/Q64-Least-Ones",
-      "program": "/Users/shauryaagrawal/Desktop/Competitive_P/ACodeDaily/800/Q64-Least-Ones/build/Debug/outDebug"
+      "program": "${workspaceFolder}/build/Debug/outDebug",
+      "args": [
+        "<",
+        "${workspaceFolder}/input.txt",
+        ">",
+        "${workspaceFolder}/output.txt",
+        "2>",
+        "${workspaceFolder}/error.txt"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }

@@ -1,5 +1,22 @@
-aa
--1
-ww
-cod
-ban
+A = 1 2 7 10 
+
+0th element: 1
+1st element: 2
+2nd element: 7
+3rd element: 10
+
+No. of elems smaller than 6: 2
+No. of elems smaller than 11: 4
+No. of elems smaller than 1: 0
+
+Lower Bound of 6: 7
+Lower Bound of 7: 7
+Lower Bound of 2: 2
+Lower Bound of 1: 1
+Lower Bound of 10: 10
+
+Upper Bound of 6: 7
+Upper Bound of 7: 10
+Upper Bound of 1: 2
+
+A = 2 7 10 
