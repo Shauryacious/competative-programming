@@ -112,10 +112,31 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    ll n, k;
+    cin >> n >> k;
+    vll a(n);
+    invec(a, n);
+
+    ll ans = 0, i = 0;
+    multiset<ll> smin, smax;  // Use multiset instead of set
+
+    for (ll j = 0; j < n; j++) {
+        smax.insert(a[j]);
+        smin.insert(a[j]);
+
+        // Shrink the window while the condition is violated
+        while (*smax.rbegin() - *smin.begin() > k) {  // Use rbegin() for max
+            smax.erase(smax.find(a[i]));  // Erase only one occurrence
+            smin.erase(smin.find(a[i]));
+            i++;
+        }
+        
+        ans += j - i + 1;  // Count subarrays ending at j
+    }
+
+    cout << ans << nl;
 }
+
 
 
 int main(){
@@ -124,7 +145,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

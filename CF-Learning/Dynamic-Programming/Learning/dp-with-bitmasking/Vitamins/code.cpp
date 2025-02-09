@@ -113,8 +113,43 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    // debug(n);
+    vector<pair<ll, string>> v;
+    for(ll i = 0; i < n; i++){
+        ll c; string s;
+        cin >> c >> s;
+        v.pb({c, s});
+    }
+
+
+    vector<vector<ll>> dp(n+1, vector<ll>(8, 1e6));
+
+    // dp[i][mask] = min cost to get mask vitamins from first i vitamins
+
+    dp[0][0] = 0;
+    for(ll i = 0; i < n; i++){
+        auto p = v[i];
+        ll c = p.ff;
+        string s = p.ss;
+        ll mask = 0;
+        for(auto c : s){
+            mask |= (1 << (c - 'A'));
+        }
+
+        for(ll j = 0; j < 8; j++){
+            // Case 1: We don't take this vitamin
+            dp[i+1][j] = min(dp[i+1][j], dp[i][j]);
+
+            // Case 2: We take this vitamin
+            dp[i+1][j | mask] = min(dp[i+1][j | mask], dp[i][j] + c);
+        }
+    }
+
+    if(dp[n][7] == 1e6){
+        cout << -1 << nl;
+    } else {
+        cout << dp[n][7] << nl;
+    }
 }
 
 
@@ -124,7 +159,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

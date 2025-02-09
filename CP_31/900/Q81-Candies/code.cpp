@@ -1,18 +1,25 @@
-#pragma GCC optimize("O3,unroll-loops")
- 
+// Author : Shaurya Agrawal
+// Linkedin: https://www.linkedin.com/in/shauryacious/
+// Codeforces: https://codeforces.com/profile/Shauryacious
+// Codechef: https://www.codechef.com/users/shauryacious27
+
 #include<bits/stdc++.h>
+
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
- 
+
 using namespace std;
 using namespace chrono;
 using namespace __gnu_pbds;
- 
-#define fastio() ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
+
+// Speed
+#define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
+
+// Define Constants
 #define MOD 1000000007
 #define MOD1 998244353
 #define INF 1e18
-#define nline "\n"
+#define nl "\n"
 #define pb push_back
 #define ppb pop_back
 #define mp make_pair
@@ -21,20 +28,33 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define all(x) (x).begin(), (x).end()
- 
-#ifdef Priyansh31dec
-#define debug(x) cerr << #x<<" "; _print(x); cerr << endl;
-#else
-#define debug(x);
-#endif
- 
+
+
+
+
+// Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
-typedef __int128 ell;
-typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key
- 
+typedef pair<ll, ll> pll;
+typedef vector<ll> vll;
+typedef vector<vll> vvll;
+typedef vector<string> vs;
+typedef vector<pll> vpll;
+
+typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
+// typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
+
+
+/*---------------------------------------------------------------------------------------------------------------------------*/
+#ifndef ONLINE_JUDGE
+    #define debug(x) cerr << #x << " = "; _print(x); cerr << endl;
+#else
+    #define debug(x)
+#endif
+
+// DEEBUG
+
 void _print(ll t) {cerr << t;}
 void _print(int t) {cerr << t;}
 void _print(string t) {cerr << t;}
@@ -42,7 +62,7 @@ void _print(char t) {cerr << t;}
 void _print(lld t) {cerr << t;}
 void _print(double t) {cerr << t;}
 void _print(ull t) {cerr << t;}
- 
+
 template <class T, class V> void _print(pair <T, V> p);
 template <class T> void _print(vector <T> v);
 template <class T> void _print(set <T> v);
@@ -54,8 +74,8 @@ template <class T> void _print(set <T> v) {cerr << "[ "; for (T i : v) {_print(i
 template <class T> void _print(multiset <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
 template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i : v) {_print(i); cerr << " ";} cerr << "]";}
 // void _print(pbds v) {cerr << "[ "; for (auto i : v) {_print(i); cerr << " ";} cerr << "]";}
- 
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+/*---------------------------------------------------------------------------------------------------------------------------*/
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count()); //generates random numbers
 /*---------------------------------------------------------------------------------------------------------------------------*/
 ll gcd(ll a, ll b) {if (b > a) {return gcd(b, a);} if (b == 0) {return a;} return gcd(b, a % b);}
 ll expo(ll a, ll b, ll mod) {ll res = 1; while (b > 0) {if (b & 1)res = (res * a) % mod; a = (a * a) % mod; b = b >> 1;} return res;}
@@ -72,64 +92,46 @@ void google(int t) {cout << "Case #" << t << ": ";}
 vector<ll> sieve(int n) {int*arr = new int[n + 1](); vector<ll> vect; for (int i = 2; i <= n; i++)if (arr[i] == 0) {vect.push_back(i); for (int j = 2 * i; j <= n; j += i)arr[j] = 1;} return vect;}
 ll phin(ll n) {ll number = n; if (n % 2 == 0) {number /= 2; while (n % 2 == 0) n /= 2;} for (ll i = 3; i <= sqrt(n); i += 2) {if (n % i == 0) {while (n % i == 0)n /= i; number = (number / i * (i - 1));}} if (n > 1)number = (number / n * (n - 1)) ; return number;} //O(sqrt(N))
 ll getRandomNumber(ll l, ll r) {return uniform_int_distribution<ll>(l, r)(rng);} 
-/*--------------------------------------------------------------------------------------------------------------------------*/
-void solve(){
-    int t;
+ll max_ele(vector<ll> v) {return *max_element(v.begin(), v.end());}
+ll min_ele(vector<ll> v) {return *min_element(v.begin(), v.end());}
+/*---------------------------------------------------------------------------------------------------------------------------*/
+vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; i++) { if (isPrime[i] == 1) {for (ll j = i * i; j <= n; j += i) { isPrime[j] = 0;}}}vector<ll> primes;for (ll i = 2; i <= n; i++) {if (isPrime[i]) {primes.push_back(i);}}return primes;}
+/*---------------------------------------------------------------------------------------------------------------------------*/
+
+
+// Macros
+#define all(x) (x).begin(), (x).end()
+#define rep(i, j) for (ll i = 0; i < j; i++)
+#define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
+#define sortvec(v) sort(v.begin(), v.end())
+#define revsortvec(v) sort(v.rbegin(), v.rend())
+#define MAX(x) *max_element(all(x))
+#define MIN(x) *min_element(all(x))
+#define SUM(x) accumulate(all(x), 0LL)
+#define COUNT(x,u) count(all(x), u)
+/*---------------------------------------------------------------------------------------------------------------------------*/
+
+void solve() {
+    ll n; cin >> n;
+    for(ll i=2; i<32; i++){
+        ll x = (1<<i) - 1;
+        if(n%x == 0){
+            cout << n/x << nl;
+            return;
+        }
+    }
+}
+
+
+int main(){
+    #ifndef ONLINE_JUDGE
+        freopen("Error.txt", "w", stderr);
+    #endif
+    fastio();
+    ll t = 1; 
     cin >> t;
     while(t--){
-        ll n, m;
-        cin >> n >> m;
-        vector<ll> values(m);
-        for(int i = 0; i < m; i++){
-            cin >> values[i];
-        }        
-        sort(all(values));
-        vector<ll> ans;
-        for(int i = 0; i < m; i++){
-            ll val1 = values[i];
-            ll val2 = values[(i + 1) % m];
-            if(val1 < val2){
-                ans.pb(val2 - val1 - 1);
-            }else{
-                ans.pb(n - (val1 - val2) - 1);
-            }
-        }
-        debug(ans)
-        sort(all(ans));
-        reverse(all(ans));
-        ll daysOver = 0;
-        ll FinalAns = 0;
-        debug(ans)
-        for(int i = 0; i < sz(ans); i++){
-            ll valRem = ans[i] - (2LL * daysOver);
-            if(valRem <= 0){
-                continue;
-            }else{
-                if(valRem == 1){
-                    FinalAns++;
-                    daysOver++;
-                }else if(valRem == 2){
-                    FinalAns++;
-                    daysOver++;
-                }else{
-                    FinalAns += valRem - 1;
-                    daysOver +=2 ;
-                }
-            }
-        }
-        cout << n - FinalAns << nline;
+        solve();
     }
-}     
-int main() {
-#ifdef Priyansh31dec
-    freopen("Error.txt", "w", stderr);
-#endif
-    fastio();
-    auto start1 = high_resolution_clock::now();
-    solve();
-    auto stop1 = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop1 - start1);
-#ifdef Priyansh31dec
-    cerr << "Time: " << duration . count() / 1000 << endl;
-#endif
+    return 0;
 }

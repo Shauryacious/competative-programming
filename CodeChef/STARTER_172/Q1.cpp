@@ -112,10 +112,51 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    int n, x;
+    cin >> n >> x;
+    vector<int> nums;
+    for (int i = 0; i < n; i++) {
+        int p;
+        cin >> p;
+        nums.push_back(p);
+    }
+    
+    int ans = 0;
+    
+    // Try every starting index
+    for (int i = 0; i < n; i++) {
+        int c = 0;      // Counter for modifications used
+        int prev = -1;  // Track the previous value in the subarray
+        int len = 0;    // Current length of the increasing subarray
+        
+        // Extend the subarray from index i
+        for (int j = i; j < n; j++) {
+            // If current number maintains the increasing order
+            if (nums[j] >= prev) {
+                prev = nums[j];
+                len++;
+            } 
+            // Otherwise, if no modification has been used and multiplying
+            // the current element by x will preserve the order, do it
+            else {
+                if (c == 0 && nums[j] * x >= prev) {
+                    len++;
+                    c++;
+                    prev = nums[j] * x;
+                } else {
+                    break;
+                }
+            }
+            ans = max(ans, len);
+        }
+        
+        // Update answer if needed (although it's already done in the inner loop)
+        ans = max(ans, len);
+    }
+    
+    cout << ans << "\n";
 }
+
 
 
 int main(){

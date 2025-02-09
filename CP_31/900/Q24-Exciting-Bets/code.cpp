@@ -112,9 +112,17 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    ll a, b; cin>>a>>b;
+    if(a==b){
+        cout<<0<<" "<<0<<nl;
+        return;
+    }
+
+    ll diff = abs(a-b);
+    ll x = a%diff;
+    ll y = diff-x;
+
+    cout<<diff<<" "<<min(x,y)<<nl;
 }
 
 

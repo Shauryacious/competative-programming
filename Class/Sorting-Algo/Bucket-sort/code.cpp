@@ -113,9 +113,37 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    vector<double> a(n);
+    for(ll i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+    const ll N = 10;
+
+    vector<vector<double>> b(N);
+
+
+    // Step 1: Place the elements in the buckets
+    for(ll i = 0; i < n; i++) {
+        ll idx = (ll)(a[i] * N);
+        b[idx].pb(a[i]);
+    }
+
+    // Step 2: Sort the elements in each bucket
+    for(ll i = 0; i < N; i++) {
+        sort(b[i].begin(), b[i].end());
+    }
+
+    // Step 3: Concatenate the elements in the buckets
+    for(auto bucket : b) {
+        for(auto ele : bucket) {
+            cout << ele << " ";
+        }
+    }
+    cout << nl;
 }
+
+// 8
+// 0.14 0.53 0.76 0.738 0.94 0.12 0.23 0.34
 
 
 int main(){
@@ -124,7 +152,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

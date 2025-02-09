@@ -112,9 +112,35 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    string s, t; cin>>s>>t;
+    debug(s); debug(t);
+    set<char> st;
+    ll n = s.size(), m = t.size();
+    ll i = 0, j = 0;
+    while(i<n){
+        debug(i);
+        debug(st);
+        if(st.find(s[i]) != st.end()){ // if the character is already present in the set
+            j = 0;
+            st.clear();
+            continue; 
+        }
+
+        if(s[i] == t[j]){
+            j++;
+            st.insert(s[i]);
+        }
+        i++;
+    }
+    debug(i);
+    debug(j);
+
+    if(j == m){
+        cout<<"YES"<<nl;
+    }
+    else{
+        cout<<"NO"<<nl;
+    }
 }
 
 

@@ -113,8 +113,10 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    string s; cin >> s;
+    ll cnt0 = count(s.begin(), s.end(), '0');
+    ll cnt1 = n - cnt0;
+    cout<<abs(cnt0 - cnt1)<<nl;
 }
 
 
@@ -124,7 +126,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

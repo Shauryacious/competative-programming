@@ -113,8 +113,26 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    string ans = "";
+    for(ll i = 0; i < n; i++){
+        if(i%5 == 0){
+            ans += 'a';
+        }
+        else if(i%5 == 1){
+            ans += 'e';
+        }
+        else if(i%5 == 2){
+            ans += 'i';
+        }
+        else if(i%5 == 3){
+            ans += 'o';
+        }
+        else if(i%5 == 4){
+            ans += 'u';
+        }
+    }
+    sort(ans.begin(), ans.end());
+    cout << ans << nl;
 }
 
 
