@@ -28,9 +28,9 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define py cout<<"YES"<<nl
-#define pn cout<<"NO"<<nl
-#define pm cout<<"-1"<<nl
+#define py cout<<"YES"<<endl
+#define pn cout<<"NO"<<endl
+#define pm cout<<"-1"<<endl
 
 
 
@@ -114,10 +114,25 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+vll dp;
+
+void precompute() {
+    dp.resize(1000001, 0);
+    dp[2020] = 1;
+    dp[2021] = 1;
+    for (ll i = 2022; i <= 1000000; i++) {
+        dp[i] = dp[i - 2020] || dp[i - 2021];
+    }
+}
+
+
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    if (dp[n]) {
+        py;
+    } else {
+        pn;
+    }
 }
 
 
@@ -128,6 +143,7 @@ int main(){
     fastio();
     ll t = 1; 
     cin >> t;
+    precompute();
     while(t--){
         solve();
     }

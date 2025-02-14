@@ -28,9 +28,9 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define py cout<<"YES"<<nl
-#define pn cout<<"NO"<<nl
-#define pm cout<<"-1"<<nl
+#define py cout<<"YES"<<endl
+#define pn cout<<"NO"<<endl
+#define pm cout<<"-1"<<endl
 
 
 
@@ -115,9 +115,97 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    ll n, m; cin >> n >> m;
+    vector<vector<ll>> a(n, vector<ll>(m));
+    for(ll i = 0; i < n; i++) {
+        for(ll j = 0; j < m; j++) {
+            cin >> a[i][j];
+        }
+    }
+
+    vll sums(n);
+    for(ll i=0; i<n; i++){
+        ll sum = 0;
+        for(ll j=0; j<m; j++){
+            sum += a[i][j];
+        }
+        sums[i] = sum;
+    }
+
+    vpll v(n);
+    for(ll i=0; i<n; i++){
+        v[i] = {sums[i], i};
+    }
+    sort(all(v));
+    reverse(all(v));
+    debug(v);
+
+    vll vec;
+    for(auto p : v){
+        ll idx = p.ss;
+        for(ll j=0; j<m; j++){
+            vec.pb(a[idx][j]);
+        }
+    }
+    debug(vec);
+    ll xx = vec.size();
+    debug(xx);
+
+    vll prefix(xx+1);
+    for(ll i = 0; i < xx; i++){
+        prefix[i+1] = prefix[i] + vec[i];
+    }
+
+    ll ans = accumulate(all(prefix), 0LL);
+    cout<<ans<<nl;
+
+    debug(sums);
+}
+
+long long solve(long long index, long long val, long long &taken, bool used, vector<long long> &a, long long n)
+{
+    if (index == n)
+        return taken;
+ 
+    long long first = LLONG_MAX, second = LLONG_MAX;
+ 
+    if (a[index] >= 0)
+    {
+        first = solve(index + 1, val + a[index], taken, used, a, n);
+    }
+    else
+    {
+        if (!used)
+        {
+            first = solve(index + 1, val, taken, true, a, n);
+        }
+        
+        long long newVal = val + a[index];
+        long long newTaken = taken;
+        if (newVal < 0){
+            newTaken += abs(newVal);
+            newVal=0;
+        }
+            
+        
+        second = solve(index + 1, newVal, newTaken, used, a, n);
+    }
+ 
+    return min(first, second);
+}
+ 
+void indresh()
+{
+    long long n;
+    cin >> n;
+    vector<long long> a(n);
+    for (long long i = 0; i < n; i++)
+        cin >> a[i];
+ 
+    long long val = 0, taken = 0;
+    bool used = false;
+    taken = solve(0, val, taken, used, a, n);
+    cout << taken << endl;
 }
 
 

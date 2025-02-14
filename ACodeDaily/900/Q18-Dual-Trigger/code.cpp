@@ -28,9 +28,9 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define py cout<<"YES"<<nl
-#define pn cout<<"NO"<<nl
-#define pm cout<<"-1"<<nl
+#define py cout<<"YES"<<endl
+#define pn cout<<"NO"<<endl
+#define pm cout<<"-1"<<endl
 
 
 
@@ -116,8 +116,28 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    string s; cin >> s;
+
+    ll cnt1 = count(s.begin(), s.end(), '1');
+    
+    // Step 1: Odd cnt1 means impossible
+    if (cnt1 % 2 == 1) {
+        pn;
+        return;
+    }
+
+    // Step 2: Check if all `1`s are consecutive
+    if (cnt1 == 2) {
+        for (ll i = 0; i < n - 1; i++) {
+            if (s[i] == '1' && s[i + 1] == '1') {
+                pn;
+                return;
+            }
+        }
+    }
+
+    // Step 3: If there is at least one `0` breaking the sequence of `1`s, we can achieve `s`
+    py;
 }
 
 

@@ -28,9 +28,9 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define py cout<<"YES"<<nl
-#define pn cout<<"NO"<<nl
-#define pm cout<<"-1"<<nl
+#define py cout<<"YES"<<endl
+#define pn cout<<"NO"<<endl
+#define pm cout<<"-1"<<endl
 
 
 
@@ -115,9 +115,47 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
+    ll n = 3;
     vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    sortvec(a);
+
+    // case 0 : 0 cuts
+    // 1 1 1
+    if(a[0] == a[1] && a[1] == a[2]){
+        py;
+        return;
+    }
+
+    // case 1 : 1 cut
+    // 1 1 2
+    if(a[0] == a[1] && a[2] == 2*a[1]){
+        py;
+        return;
+    }
+
+    // case 2 : 2 cuts
+    // 1 1 3 or 1 2 2
+    else if(a[0] == a[1] && a[2] == 3*a[0]){
+        py;
+        return;
+    }
+    else if(a[1] == 2*a[0] && a[2] == 2*a[0]){
+        py;
+        return;
+    }
+
+    // case 3 : 3 cuts
+    // 1 1 4 or 1 2 3
+    else if(a[0] == a[1] && a[2] == 4*a[0]){
+        py;
+        return;
+    }
+    else if(a[1] == 2*a[0] && a[2] == 3*a[0]){
+        py;
+        return;
+    }
+
+    pn;
 }
 
 

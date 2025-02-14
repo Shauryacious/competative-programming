@@ -115,9 +115,27 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    ll ax, ay, bx, by, cx, cy; cin>>ax>>ay>>bx>>by>>cx>>cy;
+    ll ab = abs(ax-bx) + abs(ay-by) + 1;
+    ll ac = abs(ax-cx) + abs(ay-cy) + 1;
+    ll bc = abs(bx-cx) + abs(by-cy) + 1;
+
+    debug(ab);
+    debug(ac);
+    debug(bc);
+
+    // while counting ac and ab, 
+    // we are counting the common part twice
+    // so the common part will be ab+ac-bc
+
+    if((ab+ac-1) == bc){
+        cout<<1<<nl;
+        return;
+    }
+
+    ll dist = ab + ac - bc;
+    ll ans = (dist+1)/2;
+    cout<<ans<<nl;
 }
 
 

@@ -114,10 +114,32 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+bool f(ll n, ll m, map<ll, bool>& mp){
+    if(n == m) return true;
+    if(n < m) return false;
+    if(mp[n]) return mp[n];
+    if(n%3 == 0){
+        mp[n/3] = f(n/3, m, mp);
+        mp[2*n/3] = f(2*n/3, m, mp);
+        return mp[n/3] || mp[2*n/3];
+    }
+    return false;
+}
+
+// basically the approach is to check if we
+// can reach m from n by dividing n by 3 or
+// 2*n/3. If we can reach m from n by dividing
+// n by 3 or 2*n/3 then we can reach m from n
+
+
+// Solution using recursion and memoization
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    ll n, m; cin >> n >> m;
+    map<ll, bool> mp;
+    bool flag = f(n, m, mp);
+    if(flag) py;
+    else pn;
 }
 
 

@@ -28,9 +28,9 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define py cout<<"YES"<<nl
-#define pn cout<<"NO"<<nl
-#define pm cout<<"-1"<<nl
+#define py cout<<"YES"<<endl
+#define pn cout<<"NO"<<endl
+#define pm cout<<"-1"<<endl
 
 
 
@@ -114,11 +114,132 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n); invec(a, n);
-    cout << "Radhe Radhe" << nl;
+    ll n, m, k; 
+    cin >> n >> m >> k;
+    
+    if (abs(n - m) > k) {
+        pm;
+        return;
+    }
+
+    if(k > n && k > m){
+        pm;
+        return;
+    }
+
+    if(n == m){
+        if(k > n){
+            pm;
+            return;
+        }
+        else{
+            ll y = k;
+            string ans = "";
+            while (y--) {
+                ans += "0";
+            }
+            n -= k;
+            
+            if (n == m) {
+                for (ll i = 0; i < n; i++) {
+                    ans += "10";
+                }
+            } 
+            else if (n > m) { // still more number of 0s
+                ll x = n - m;
+                for (ll i = 0; i < m; i++) {
+                    ans += "10";
+                }
+                while (x--) {
+                    ans += "0";
+                }
+            } 
+            else { // more number of 1s
+                ll x = m - n;
+                for (ll i = 0; i < n; i++) {
+                    ans += "10";
+                }
+                while (x--) {
+                    ans += "1";
+                }
+            }
+            cout << ans << nl;
+            return;
+        }
+    }
+
+    if (n > m) { // more number of 0s
+        ll y = k;
+        string ans = "";
+        while (y--) {
+            ans += "0";
+        }
+        n -= k;
+        
+        if (n == m) {
+            for (ll i = 0; i < n; i++) {
+                ans += "10";
+            }
+        } 
+        else if (n > m) { // still more number of 0s
+            ll x = n - m;
+            for (ll i = 0; i < m; i++) {
+                ans += "10";
+            }
+            while (x--) {
+                ans += "0";
+            }
+        } 
+        else { // more number of 1s
+            ll x = m - n;
+            for (ll i = 0; i < n; i++) {
+                ans += "10";
+            }
+            while (x--) {
+                ans += "1";
+            }
+        }
+        cout << ans << nl;
+        return;
+    } 
+    else { // more number of 1s
+        ll y = k;
+        string ans = "";
+        while (y--) {
+            ans += "1";
+        }
+        m -= k;
+        
+        if (n == m) {
+            for (ll i = 0; i < n; i++) {
+                ans += "01";
+            }
+        } 
+        else if (n > m) { // more number of 0s
+            ll x = n - m;
+            for (ll i = 0; i < m; i++) {
+                ans += "01";
+            }
+            while (x--) {
+                ans += "0";
+            }
+        } 
+        else { // still more number of 1s
+            ll x = m - n;
+            for (ll i = 0; i < n; i++) {
+                ans += "01";
+            }
+            while (x--) {
+                ans += "1";
+            }
+        }
+        cout << ans << nl;
+        return;
+    }
 }
+
 
 
 int main(){
