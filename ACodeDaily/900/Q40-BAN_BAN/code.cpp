@@ -1,7 +1,9 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious27
+// Codechef: https://www.codechef.com/users/cant_breath
+
+// The magic you are looking for lies in the stuff you are ignoring :3
 
 #include<bits/stdc++.h>
 
@@ -104,7 +106,6 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 // Macros
 #define all(x) (x).begin(), (x).end()
-#define rep(i, j) for (ll i = 0; i < j; i++)
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
@@ -115,38 +116,16 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, c, d; cin>>n>>c>>d;
-    vll b(n*n); invec(b, n*n);
-
-    vvll v(n, vll(n, 0));
-    ll mn = *min_element(all(b));
-
-    multiset<ll> st(b.begin(), b.end());
-    v[0][0] = mn;
-    for(ll j=1; j<n; j++){
-        v[0][j] = v[0][j-1] + d;
+    ll n; cin >> n;
+    ll ans = (n+1)/2;
+    debug(ans);
+    ll i=1, j=(3*n);
+    cout<<ans<<nl;
+    while(ans--){
+        cout<<i<<" "<<j<<nl;
+        i+=3; j-=3;
     }
-    for(ll i=1; i<n; i++){
-        for(ll j=0; j<n; j++){
-            v[i][j] = v[i-1][j] + c;
-        }
-    }
-
-
-
-    for(ll i=0; i<n; i++){
-        for(ll j=0; j<n; j++){
-            if(st.find(v[i][j]) == st.end()){ //not found
-                pn;
-                return;
-            }
-            else{
-                st.erase(st.find(v[i][j]));
-            }
-        }
-    }
-
-    py;
+    return;
 }
 
 

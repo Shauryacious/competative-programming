@@ -115,38 +115,30 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, c, d; cin>>n>>c>>d;
-    vll b(n*n); invec(b, n*n);
-
-    vvll v(n, vll(n, 0));
-    ll mn = *min_element(all(b));
-
-    multiset<ll> st(b.begin(), b.end());
-    v[0][0] = mn;
-    for(ll j=1; j<n; j++){
-        v[0][j] = v[0][j-1] + d;
+    ll n; cin >> n;
+    vvll a(n, vll(2));
+    while(n--){
+        ll m; cin>>m;
+        vll v(m);
+        invec(v, m);
+        sortvec(v);
+        a[n][0] = v[0];
+        a[n][1] = v[1];
     }
-    for(ll i=1; i<n; i++){
-        for(ll j=0; j<n; j++){
-            v[i][j] = v[i-1][j] + c;
-        }
+    auto cmp = [&](vll& a, vll& b){
+        return a[1] > b[1];
+    };
+    sort(all(a), cmp);
+    debug(a);
+    ll mn = INF;
+    ll sum = 0;
+    for(auto x : a){
+        sum += x[1];
+        mn = min(mn, x[0]);
     }
-
-
-
-    for(ll i=0; i<n; i++){
-        for(ll j=0; j<n; j++){
-            if(st.find(v[i][j]) == st.end()){ //not found
-                pn;
-                return;
-            }
-            else{
-                st.erase(st.find(v[i][j]));
-            }
-        }
-    }
-
-    py;
+    sum -= a.back()[1];
+    sum += mn;
+    cout<<sum<<nl;
 }
 
 

@@ -115,38 +115,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, c, d; cin>>n>>c>>d;
-    vll b(n*n); invec(b, n*n);
-
-    vvll v(n, vll(n, 0));
-    ll mn = *min_element(all(b));
-
-    multiset<ll> st(b.begin(), b.end());
-    v[0][0] = mn;
-    for(ll j=1; j<n; j++){
-        v[0][j] = v[0][j-1] + d;
+    ll n; cin >> n;
+    ll cnt2 = 0, cnt3 = 0;
+    while(n % 2 == 0) {
+        n /= 2;
+        cnt2++;
     }
-    for(ll i=1; i<n; i++){
-        for(ll j=0; j<n; j++){
-            v[i][j] = v[i-1][j] + c;
-        }
+    while(n % 3 == 0) {
+        n /= 3;
+        cnt3++;
+    }
+    if(n != 1){
+        cout << "-1" << nl;
+        return;
     }
 
-
-
-    for(ll i=0; i<n; i++){
-        for(ll j=0; j<n; j++){
-            if(st.find(v[i][j]) == st.end()){ //not found
-                pn;
-                return;
-            }
-            else{
-                st.erase(st.find(v[i][j]));
-            }
-        }
+    if(cnt3 > cnt2) {
+        cout << "-1" << nl;
+        return;
     }
 
-    py;
+    
+
+
 }
 
 

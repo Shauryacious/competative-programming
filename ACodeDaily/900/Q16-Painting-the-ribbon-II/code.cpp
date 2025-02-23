@@ -1,7 +1,9 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious27
+// Codechef: https://www.codechef.com/users/cant_breath
+
+// The magic you are looking for lies in the stuff you are ignoring :3
 
 #include<bits/stdc++.h>
 
@@ -115,38 +117,38 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, c, d; cin>>n>>c>>d;
-    vll b(n*n); invec(b, n*n);
-
-    vvll v(n, vll(n, 0));
-    ll mn = *min_element(all(b));
-
-    multiset<ll> st(b.begin(), b.end());
-    v[0][0] = mn;
-    for(ll j=1; j<n; j++){
-        v[0][j] = v[0][j-1] + d;
+    ll n, b, k; cin >> n >> b >> k;
+    ll curr = 1;
+    vll v;
+    for(ll i=0; i<n; i++){
+        v.pb(curr);
+        if(curr == b) curr = 1;
+        else curr++;
     }
-    for(ll i=1; i<n; i++){
-        for(ll j=0; j<n; j++){
-            v[i][j] = v[i-1][j] + c;
-        }
-    }
-
-
 
     for(ll i=0; i<n; i++){
-        for(ll j=0; j<n; j++){
-            if(st.find(v[i][j]) == st.end()){ //not found
-                pn;
-                return;
-            }
-            else{
-                st.erase(st.find(v[i][j]));
-            }
+        if(v[i] != 1 && k){
+            v[i] = 1;
+            k--;
         }
     }
 
-    py;
+    bool check = true;
+    for(ll i=0; i<n; i++){
+        if(v[i] != 1){
+            check = false;
+            break;
+        }
+    }
+
+    if(check){
+        pn;
+        return;
+    }
+    else{
+        py;
+        return;
+    }
 }
 
 

@@ -115,38 +115,54 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, c, d; cin>>n>>c>>d;
-    vll b(n*n); invec(b, n*n);
-
-    vvll v(n, vll(n, 0));
-    ll mn = *min_element(all(b));
-
-    multiset<ll> st(b.begin(), b.end());
-    v[0][0] = mn;
-    for(ll j=1; j<n; j++){
-        v[0][j] = v[0][j-1] + d;
-    }
-    for(ll i=1; i<n; i++){
-        for(ll j=0; j<n; j++){
-            v[i][j] = v[i-1][j] + c;
-        }
-    }
-
-
-
-    for(ll i=0; i<n; i++){
-        for(ll j=0; j<n; j++){
-            if(st.find(v[i][j]) == st.end()){ //not found
-                pn;
+    ll n, k; cin >> n >> k;
+    vll a(n); invec(a, n);
+    if(k == 4){
+        ll ans = INF;
+        ll cnt2 = 0;
+        for(ll i=0; i<n; i++){
+            if(a[i] % 4 == 0){
+                cout<<0<<nl;
                 return;
             }
-            else{
-                st.erase(st.find(v[i][j]));
+            if(a[i] % 2 == 0){
+                cnt2++;
             }
         }
+        if(cnt2 == 0){
+            ans = 2;
+        }
+        else if(cnt2 >= 2){
+            ans = 0;
+        }
+        else{
+            ans = 1;
+        }
+        for(ll i=0; i<n; i++){
+            a[i] %= k;
+        }
+        debug(a);
+        for(ll i=0; i<n; i++){
+            if(a[i] == 0){
+                ans = 0;
+            }
+            ans = min(ans, k-a[i]);
+        }
+        cout<<ans<<nl;
+        return;
     }
-
-    py;
+    for(ll i=0; i<n; i++){
+        a[i] %= k;
+    }
+    debug(a);
+    ll ans = INF;
+    for(ll i=0; i<n; i++){
+        if(a[i] == 0){
+            ans = 0;
+        }
+        ans = min(ans, k-a[i]);
+    }
+    cout<<ans<<nl;
 }
 
 

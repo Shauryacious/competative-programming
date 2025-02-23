@@ -1,7 +1,9 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious27
+// Codechef: https://www.codechef.com/users/cant_breath
+
+// The magic you are looking for lies in the stuff you are ignoring :3
 
 #include<bits/stdc++.h>
 
@@ -115,38 +117,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, c, d; cin>>n>>c>>d;
-    vll b(n*n); invec(b, n*n);
-
-    vvll v(n, vll(n, 0));
-    ll mn = *min_element(all(b));
-
-    multiset<ll> st(b.begin(), b.end());
-    v[0][0] = mn;
-    for(ll j=1; j<n; j++){
-        v[0][j] = v[0][j-1] + d;
+    ll n; cin >> n;
+    vll a(n);
+    for(ll i = 0; i < n; i++){
+        cin >> a[i];
+        a[i]++;
     }
-    for(ll i=1; i<n; i++){
-        for(ll j=0; j<n; j++){
-            v[i][j] = v[i-1][j] + c;
+    char ch = 'a';
+    map<ll, vector<char>> mp;
+    string ans;
+    for(ll i = 0; i < n; i++){
+        if(a[i] == 1){
+            ans += ch;
+            mp[2].pb(ch);
+            ch++;
+        }
+        else{
+            char c = mp[a[i]].back();
+            mp[a[i] + 1].pb(c);
+            mp[a[i]].pop_back();
+            ans += c;
         }
     }
-
-
-
-    for(ll i=0; i<n; i++){
-        for(ll j=0; j<n; j++){
-            if(st.find(v[i][j]) == st.end()){ //not found
-                pn;
-                return;
-            }
-            else{
-                st.erase(st.find(v[i][j]));
-            }
-        }
-    }
-
-    py;
+    cout << ans << nl;
 }
 
 

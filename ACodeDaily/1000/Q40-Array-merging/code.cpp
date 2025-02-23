@@ -114,39 +114,48 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
 void solve() {
-    ll n, c, d; cin>>n>>c>>d;
-    vll b(n*n); invec(b, n*n);
+    ll n; cin >> n;
+    vll a(n); 
+    for(ll &x : a) cin >> x;
+    vll b(n);
+    for(ll &x : b) cin >> x;
 
-    vvll v(n, vll(n, 0));
-    ll mn = *min_element(all(b));
-
-    multiset<ll> st(b.begin(), b.end());
-    v[0][0] = mn;
-    for(ll j=1; j<n; j++){
-        v[0][j] = v[0][j-1] + d;
-    }
-    for(ll i=1; i<n; i++){
-        for(ll j=0; j<n; j++){
-            v[i][j] = v[i-1][j] + c;
+    map<ll, ll> maxCountA, maxCountB;
+    
+    // Count max contiguous segment in array a
+    for (ll i = 0; i < n; i++) {
+        ll x = a[i], cnt = 0;
+        while (i < n && a[i] == x) {
+            cnt++;
+            i++;
         }
+        i--;
+        maxCountA[x] = max(maxCountA[x], cnt);
     }
 
-
-
-    for(ll i=0; i<n; i++){
-        for(ll j=0; j<n; j++){
-            if(st.find(v[i][j]) == st.end()){ //not found
-                pn;
-                return;
-            }
-            else{
-                st.erase(st.find(v[i][j]));
-            }
+    // Count max contiguous segment in array b
+    for (ll i = 0; i < n; i++) {
+        ll x = b[i], cnt = 0;
+        while (i < n && b[i] == x) {
+            cnt++;
+            i++;
         }
+        i--;
+        maxCountB[x] = max(maxCountB[x], cnt);
     }
-
-    py;
+    
+    // Find the maximum length among all values
+    ll ans = 0;
+    for (auto &[val, cntA] : maxCountA) {
+        ll totalCnt = cntA + maxCountB[val]; // Merge only if present in both
+        ans = max(ans, totalCnt);
+    }
+    for (auto &[val, cntB] : maxCountB) {
+        ans = max(ans, cntB); // Ensure we consider standalone segments from B
+    }
+    cout << ans << nl;
 }
 
 
