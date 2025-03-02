@@ -3,22 +3,7 @@
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Codechef: https://www.codechef.com/users/shauryacious27
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <chrono>
-#include <random>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <unordered_set>
-#include <cmath>
-#include <queue>
-#include <stack>
-#include <bitset>
-#include <numeric>
-#include <climits>
+#include<bits/stdc++.h>
 
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
@@ -34,7 +19,7 @@ using namespace __gnu_pbds;
 #define MOD 1000000007
 #define MOD1 998244353
 #define INF 1e18
-#define nline "\n"
+#define nl "\n"
 #define pb push_back
 #define ppb pop_back
 #define mp make_pair
@@ -43,14 +28,22 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
+#define py cout<<"YES"<<nl
+#define pn cout<<"NO"<<nl
+#define pm cout<<"-1"<<nl
+
+
+
 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
+typedef pair<ll, ll> pll;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
+typedef vector<pll> vpll;
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
@@ -111,76 +104,114 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 // Macros
 #define all(x) (x).begin(), (x).end()
-#define rep(i, j) for (ll i = 0; i < j; i++)
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
-#define maxvec(v) *max_element(v.begin(), v.end())
-#define minvec(v) *min_element(v.begin(), v.end())
+#define MAX(x) *max_element(all(x))
+#define MIN(x) *min_element(all(x))
+#define SUM(x) accumulate(all(x), 0LL)
+#define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-// https://codeforces.com/problemset/problem/1348/A
-// https://www.youtube.com/watch?v=UqKD3InMf08
+
+void mergeAndCount(vector<ll>& arr, vector<ll>& indices, vector<ll>& temp, vector<ll>& tempIndices, vector<ll>& b, ll left, ll mid, ll right) {
+    ll i = left, j = mid + 1, k = left;
+    ll right_count = 0;  // Number of elements from the right subarray that have been placed in merged array
+
+    while (i <= mid && j <= right) {
+        if (arr[indices[j]] < arr[indices[i]]) {
+            temp[k] = arr[indices[j]];
+            tempIndices[k] = indices[j];
+            right_count++;  // Every element in the right subarray is smaller than arr[indices[i]]
+            j++;
+        } else {
+            temp[k] = arr[indices[i]];
+            tempIndices[k] = indices[i];
+            b[indices[i]] += right_count;  // Add count of smaller elements
+            i++;
+        }
+        k++;
+    }
+
+    while (i <= mid) {
+        temp[k] = arr[indices[i]];
+        tempIndices[k] = indices[i];
+        b[indices[i]] += right_count;
+        i++, k++;
+    }
+
+    while (j <= right) {
+        temp[k] = arr[indices[j]];
+        tempIndices[k] = indices[j];
+        j++, k++;
+    }
+
+    for (ll x = left; x <= right; x++) {
+        indices[x] = tempIndices[x];
+    }
+}
+
+void mergeSortAndCount(vector<ll>& arr, vector<ll>& indices, vector<ll>& temp, vector<ll>& tempIndices, vector<ll>& b, ll left, ll right) {
+    if (left >= right) return;
+
+    ll mid = left + (right - left) / 2;
+
+    mergeSortAndCount(arr, indices, temp, tempIndices, b, left, mid);
+    mergeSortAndCount(arr, indices, temp, tempIndices, b, mid + 1, right);
+    mergeAndCount(arr, indices, temp, tempIndices, b, left, mid, right);
+}
+
+vector<ll> countInversionsPerElement(vector<ll>& arr) {
+    ll n = arr.size();
+    vector<ll> b(n, 0);  // Stores inversion count for each element
+    vector<ll> indices(n), temp(n), tempIndices(n);
+    iota(indices.begin(), indices.end(), 0);  // Store original indices
+
+    mergeSortAndCount(arr, indices, temp, tempIndices, b, 0, n - 1);
+    return b;
+}
 
 
 void solve() {
-    ll a, b, c; cin>>a>>b>>c;
-    ll m; cin>>m;
-    vll usb;
-    vll ps2;
-    for(ll i=0; i<m; i++){
-        ll x; cin>>x;
-        string s; cin>>s;
-        if(s == "USB"){
-            usb.pb(x);
-        }else{
-            ps2.pb(x);
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
+    vll b = countInversionsPerElement(a);
+
+    debug(b);
+    ll summ = accumulate(all(b), 0LL);
+    if(summ == 0){
+        cout<<n<<" "<<n<<nl;
+        return;
+    }
+
+    ll mxidx = -1;
+    ll mx = -INF;
+    for(ll i=n-1; i>=0; i--){
+        if(b[i] > mx){
+            mx = b[i];
+            mxidx = i;
         }
     }
-
-
-    sort(usb.rbegin(), usb.rend());
-    sort(ps2.rbegin(), ps2.rend());
-    debug(usb);
-    debug(ps2);
-
-    ll cnt = 0;
-    ll cost = 0;
-    ll j = usb.size() - 1;
-    while(j >= 0 && a > 0){
-        cost += usb[j];
-        j--;
-        a--;
-        cnt++;
-        usb.pop_back();
+    debug(mxidx);
+    ll left = mxidx+1;
+    ll right = left;
+    for(ll i=mxidx; i<n-1; i++){
+        debug(i);
+        debug(a);
+        debug(b);
+        swap(a[i], a[i+1]);
+        b = countInversionsPerElement(a);
+        debug(a);
+        debug(b);
+        ll sum_new = accumulate(all(b), 0LL);
+        if(sum_new < summ){
+            summ = sum_new;
+            right = i+1;
+        }
     }
+    right++;
 
-    j = ps2.size() - 1;
-    while(j >= 0 && b > 0){
-        cost += ps2[j];
-        j--;
-        b--;
-        cnt++;
-        ps2.pop_back();
-    }
-
-    vll both;
-    for(ll i=0; i<usb.size(); i++){
-        both.pb(usb[i]);
-    }
-    for(ll i=0; i<ps2.size(); i++){
-        both.pb(ps2[i]);
-    }
-    sort(both.rbegin(), both.rend());
-    j = both.size() - 1;
-    while(j >= 0 && c > 0){
-        cost += both[j];
-        j--;
-        c--;
-        cnt++;
-    }
-
-    cout<<cnt<<" "<<cost<<nline;
+    cout<<left<<" "<<right<<nl;
 }
 
 
@@ -190,7 +221,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

@@ -3,23 +3,14 @@
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Codechef: https://www.codechef.com/users/shauryacious27
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <chrono>
-#include <random>
-#include <set>
-#include <map>
-#include <unordered_map>
-#include <unordered_set>
-#include <cmath>
-#include <queue>
-#include <stack>
-#include <bitset>
-#include <numeric>
+#include<bits/stdc++.h>
+
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
+using namespace chrono;
+using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -28,7 +19,7 @@ using namespace std;
 #define MOD 1000000007
 #define MOD1 998244353
 #define INF 1e18
-#define nline "\n"
+#define nl "\n"
 #define pb push_back
 #define ppb pop_back
 #define mp make_pair
@@ -37,14 +28,25 @@ using namespace std;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
+#define py cout<<"YES"<<nl
+#define pn cout<<"NO"<<nl
+#define pm cout<<"-1"<<nl
+
+
+
 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
+typedef pair<ll, ll> pll;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
+typedef vector<pll> vpll;
+
+typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
+// typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
 
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -93,6 +95,8 @@ void google(int t) {cout << "Case #" << t << ": ";}
 vector<ll> sieve(int n) {int*arr = new int[n + 1](); vector<ll> vect; for (int i = 2; i <= n; i++)if (arr[i] == 0) {vect.push_back(i); for (int j = 2 * i; j <= n; j += i)arr[j] = 1;} return vect;}
 ll phin(ll n) {ll number = n; if (n % 2 == 0) {number /= 2; while (n % 2 == 0) n /= 2;} for (ll i = 3; i <= sqrt(n); i += 2) {if (n % i == 0) {while (n % i == 0)n /= i; number = (number / i * (i - 1));}} if (n > 1)number = (number / n * (n - 1)) ; return number;} //O(sqrt(N))
 ll getRandomNumber(ll l, ll r) {return uniform_int_distribution<ll>(l, r)(rng);} 
+ll max_ele(vector<ll> v) {return *max_element(v.begin(), v.end());}
+ll min_ele(vector<ll> v) {return *min_element(v.begin(), v.end());}
 /*---------------------------------------------------------------------------------------------------------------------------*/
 vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; i++) { if (isPrime[i] == 1) {for (ll j = i * i; j <= n; j += i) { isPrime[j] = 0;}}}vector<ll> primes;for (ll i = 2; i <= n; i++) {if (isPrime[i]) {primes.push_back(i);}}return primes;}
 /*---------------------------------------------------------------------------------------------------------------------------*/
@@ -100,45 +104,27 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 // Macros
 #define all(x) (x).begin(), (x).end()
-#define rep(i, j) for (int i = 0; i < j; i++)
-#define invec(v, n) for (int i = 0; i < n; i++) cin >> v[i]
+#define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 #define sortvec(v) sort(v.begin(), v.end())
 #define revsortvec(v) sort(v.rbegin(), v.rend())
-#define maxvec(v) *max_element(v.begin(), v.end())
-#define minvec(v) *min_element(v.begin(), v.end())
+#define MAX(x) *max_element(all(x))
+#define MIN(x) *min_element(all(x))
+#define SUM(x) accumulate(all(x), 0LL)
+#define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
-void solve(){
-    ll n;
-    cin >> n;
-
-    vll b;
-    for (ll i = 1; i * i <= n; i++) {
-        if (n % i == 0) {
-            b.pb(i);
-            if (i != n / i) {
-                b.pb(n / i);
-            }
+void solve() {
+    ll n; cin >> n;
+    ll ans = 1;
+    for(ll i=1; i<=n; i++){
+        if(n%i != 0){
+            break;
         }
+        ans++;
     }
-
-    sort(b.begin(), b.end());
-
-
-    ll count = 1, max_cnt = 1;
-    for (int i = 0; i < b.size() - 1; i++) {
-        if (abs(b[i] - b[i + 1]) == 1) {
-            count++;
-        } else {
-            count = 1;  // Reset to 1 since this divisor starts a new sequence
-        }
-        max_cnt = max(max_cnt, count);
-    }
-
-
-    cout << max_cnt << nline;
+    cout<<ans-1<<nl;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
