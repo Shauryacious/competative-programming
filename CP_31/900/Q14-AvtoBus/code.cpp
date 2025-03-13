@@ -116,28 +116,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin >> n;
-    ll cnt2 = 0, cnt3 = 0;
-    while(n % 2 == 0) {
-        n /= 2;
-        cnt2++;
-    }
-    while(n % 3 == 0) {
-        n /= 3;
-        cnt3++;
-    }
-    if(n != 1){
-        cout << "-1" << nl;
-        return;
+    if(n%4 != 0 && n%6 != 0){
+        pm; return;
     }
 
-    if(cnt3 > cnt2) {
-        cout << "-1" << nl;
-        return;
+    ll mn = n/6;
+    while(n%4 != 0){
+        mn--;
+        n += 6;
     }
-
+    n -= mn*6;
+    ll mx = n/4;
     
-
-
 }
 
 
