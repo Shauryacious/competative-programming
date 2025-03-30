@@ -116,37 +116,32 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n, k; cin >> n >> k;
     vll a(n); invec(a, n);
-    ll sum = accumulate(all(a), 0LL);
-    if(sum == k){
-        cout<<1<<" "<<n<<nl;
-        return;
+    ll sm = accumulate(all(a), 0LL);
+
+    ll x = 0;
+    if(k > sm){
+        x = k/sm;
+        k = k%sm;
     }
 
-    ll x = k/sum;
-    k %= sum;
-
-    for(ll i = 0; i < n; i++){
-        a.pb(a[i]);
-    }
-
-    ll i=0, j=0;
-    ll l = 0, r = 0; //answer
-    ll curr = 0;
-    ll diff = a.size();
-    while(j < a.size()){
-        curr += a[j];
-        while(curr >= k){
-            if(j-i+1 < diff){
-                l = i;
-                r = j;
-                diff = j-i+1;
-            }
-            curr -= a[i];
-            i++;
+    ll minidx = -1, len = INF;
+    for(ll i=0; i<n; i++){
+        ll curr = 0;
+        ll tkn = 0;
+        ll j = i;
+        while(curr < k){
+            curr += a[j];
+            tkn++;
+            j = (j+1)%n;
         }
-        j++;
+
+        if(tkn < len){
+            len = tkn;
+            minidx = i;
+        }
     }
-    cout<<l+1<<" "<<diff+(x*n)<<nl;
+
+    cout<<minidx+1 <<" "<< len+(x*n)<<nl;
 }
 
 

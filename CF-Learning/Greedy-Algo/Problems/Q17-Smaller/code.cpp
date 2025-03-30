@@ -109,10 +109,15 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll q; cin>>q;
+    debug(q);
     vector<ll> fs(26,0);
     fs[0] = 1;
     vector<ll> ft(26,0);
     ft[0] = 1;
+    debug(fs);
+    debug(ft);
+    string sss = "-----------------------------------------";
+    debug(sss);
     while(q--){
         ll type, k; cin>>type>>k;
         string s; cin>>s;
@@ -128,8 +133,43 @@ void solve() {
         }
         debug(fs);
         debug(ft);
+        debug(sss);
 
-        
+        bool flag = true;
+        for(ll i=1; i<26; i++){
+            if(ft[i] != 0){
+                cout<<"YES"<<nl;
+                flag = false;
+                break;
+            }
+        }
+        if(!flag){
+            continue;
+        }
+
+        if(fs[0] == ft[0]){
+            cout<<"NO"<<nl;
+            continue;
+        }
+        else if(fs[0] > ft[0]){
+            cout<<"NO"<<nl;
+            continue;
+        }
+        else{ //fs[0] < ft[0]
+            bool flag2 = true;
+            for(ll i=1; i<26; i++){
+                if(fs[i] != 0){
+                    cout<<"NO"<<nl;
+                    flag2 = false;
+                    break;
+                }
+            }
+            if(!flag2){
+                continue;
+            }
+            cout<<"YES"<<nl;
+            continue;
+        }
     }   
 }
 

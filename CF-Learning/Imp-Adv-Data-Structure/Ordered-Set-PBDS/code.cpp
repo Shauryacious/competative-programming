@@ -147,14 +147,18 @@ void solve() {
 	cout << endl;
 
 	// finding number of elements smaller than X - 3rd query
-	cout << "No. of elems smaller than 6: " << A.order_of_key(6) << endl; // 2
-	cout << "No. of elems smaller than 11: " << A.order_of_key(11) << endl; // 4
-	cout << "No. of elems smaller than 1: " << A.order_of_key(1) << endl; // 0
+	cout << "No. of elems strictly smaller than 6: " << A.order_of_key(6) << endl; // 2
+	cout << "No. of elems strictly smaller than 11: " << A.order_of_key(11) << endl; // 4
+	cout << "No. of elems strictly smaller than 1: " << A.order_of_key(1) << endl; // 0
 	cout << endl;   
 
 
 	// lower bound -> Lower Bound of X = first element >= X in the set
+    // cout << "Index of Lower Bound of 6: " << A.lower_bound(6) - A.begin() << endl; //! not a valid query
+    // use order_of_key instead
+    cout << "Index of Lower Bound of 6: " << A.order_of_key(6) << endl;
 	cout << "Lower Bound of 6: " << *A.lower_bound(6) << endl;
+    cout << "Index of Lower Bound of 7: " << A.order_of_key(7) << endl;
 	cout << "Lower Bound of 7: " << *A.lower_bound(7) << endl;
 	cout << "Lower Bound of 2: " << *A.lower_bound(2) << endl;
 	cout << "Lower Bound of 1: " << *A.lower_bound(1) << endl;
@@ -166,6 +170,8 @@ void solve() {
 	cout << "Upper Bound of 7: " << *A.upper_bound(7) << endl;
 	cout << "Upper Bound of 1: " << *A.upper_bound(1) << endl;
 	cout << endl;
+
+    // cout<<A[2]<<endl; //! not a valid query
 
 	// Remove elements - 2nd query
 	A.erase(1);

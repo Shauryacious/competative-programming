@@ -111,51 +111,51 @@ void solve() {
     ll n; cin >> n;
     vll a(n); invec(a, n);
     ll sum = accumulate(a.begin(), a.end(), 0LL);
-    ll mx = *max_element(a.begin(), a.end());
-    if(sum <= mx){
-        cout<<"NO"<<nl;
-        return;
-    }
-
-    bool is0 = false;
-    if(a[0] == 0 || a[n-1] == 0){
-        is0 = true;
-    }
-
-    bool isneg = false;
-    for(ll i=0; i<n; i++){
-        if(a[i] < 0){
-            isneg = true;
-            break;
-        }
-    }
 
     ll curr = 0;
-    ll max_window = 0;
+    ll curr_max = 0;
+    ll max_len = -1;
+    ll prev = -1;
     for(ll i=0; i<n; i++){
         if(curr + a[i] >= a[i]){
             curr += a[i];
         }
         else{
+            prev = i-1;
             curr = a[i];
         }
-
-        max_window = max(max_window, curr);
+        if(curr > curr_max){
+            curr_max = curr;
+            max_len = i - prev;
+        }
     }
 
-    if(max_window == sum){
-        if(is0){
-            cout<<"NO"<<nl;
-        }
-        else if(isneg){
-            cout<<"NO"<<nl;
-        }
-        else{
+    debug(sum);
+    debug(curr_max);
+    debug(max_len);
+
+    vll prefix(n, 0);
+    prefix[0] = a[0];
+    for(ll i=1; i<n; i++){
+        prefix[i] = prefix[i-1] + a[i];
+    }
+
+    if(curr_max > sum){
+        cout<<"NO"<<nl;
+    }
+    else if(curr_max == sum){
+        if(max_len == n){
+            for(ll i=0; i<n; i++){
+                if(prefix[i] == 0){
+                    cout<<"NO"<<nl;
+                    return;
+                }
+            }
             cout<<"YES"<<nl;
         }
-    }
-    else if(max_window > sum){
-        cout<<"NO"<<nl;
+        else{
+            cout<<"NO"<<nl;
+        }
     }
     else{
         cout<<"YES"<<nl;
