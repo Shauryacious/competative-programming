@@ -136,7 +136,7 @@ void dfs(ll u, ll p, vvll &adj){
     outtime[u] = t;
 }
 
-bool isUAncestorOfV(ll u, ll v){
+bool isAncestor(ll u, ll v){
     return intime[u] < intime[v] && outtime[v] < outtime[u];
 }
 
@@ -159,7 +159,7 @@ void solve() {
     while(q--){
         ll u, v; cin >> u >> v;
         u--, v--;
-        if(isUAncestorOfV(u, v)){
+        if(isAncestor(u, v)){ // is u ancestor of v
             cout << "YES" << nl;
         }else{
             cout << "NO" << nl;

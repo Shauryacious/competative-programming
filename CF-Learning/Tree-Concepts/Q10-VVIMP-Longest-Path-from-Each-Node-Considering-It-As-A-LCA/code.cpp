@@ -109,72 +109,65 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 
-void dfs(ll u, ll p, vvll& adj, vll& heights){
-    for(auto v : adj[u]){
-        if(v != p){
-            // Call dfs on all children
-            dfs(v, u, adj, heights);
-
-            // Calc Height
+// **ATTENTION:** Modified DFS to also record each node's parent.
+void dfs(ll u, ll p, vvll &adj, vll &heights, vll &parent) {
+    parent[u] = p;
+    for (auto v : adj[u]) {
+        if (v != p) {
+            dfs(v, u, adj, heights, parent);
             heights[u] = max(heights[u], heights[v] + 1);
         }
     }
 }
 
-
-
 void solve() {
-    ll n; cin >> n;
+    ll n;
+    cin >> n;
     vvll adj(n);
-    for(ll i = 0; i < n - 1; i++){
-        ll u, v; cin >> u >> v;
+    for (ll i = 0; i < n - 1; i++){
+        ll u, v;
+        cin >> u >> v;
         u--, v--;
         adj[u].pb(v);
         adj[v].pb(u);
     }
 
-    // Calculate heights of all nodes
-    vector<ll> heights(n, 1);
-    dfs(0, -1, adj, heights);
+    // Initialize heights (starting from 1) and parent vector.
+    vll heights(n, 1);
+    vll parent(n, -1);
+    dfs(0, -1, adj, heights, parent);
     debug(heights)
 
+    // **ATTENTION:** Compute longest path (i.e. candidate diameter) using only the children.
     vector<ll> longestPath(n, 0);
-
-    vll visited(n, 0);
-    visited[0] = 1;
-
-    // Calculate the longest path from each node, by considering it as LCA
-    // of the two farthest nodes from it, i.e. the two children nodes with maximum height
-    for(ll u=0; u<n; u++){
+    ll diameter = 0;
+    for (ll u = 0; u < n; u++) {
         multiset<ll, greater<ll>> mst;
-        for(auto v : adj[u]){
-            if(visited[v] == 0){
-                mst.insert(heights[v]);
-                visited[v] = 1;
-            }
+        // Only consider children (neighbors not equal to parent)
+        for (auto v : adj[u]) {
+            if (v == parent[u]) continue;
+            mst.insert(heights[v]);
         }
-
-        // initialize it as 1
+        // Initialize the longest path at u as 1 (the node itself)
         longestPath[u] = 1;
-
-        // first max
-        if(mst.size()){
+        // Add the largest child height if it exists
+        if (!mst.empty()){
             longestPath[u] += *mst.begin();
-            mst.erase(mst. begin());
+            mst.erase(mst.begin());
         }
-
-        // second max
-        if(mst.size()){
+        // Add the second largest child height if it exists
+        if (!mst.empty()){
             longestPath[u] += *mst.begin();
-            mst.erase(mst. begin());
         }
+        diameter = max(diameter, longestPath[u]);
     }
-
     debug(longestPath);
+    debug(diameter);
 
-    ll diameter = *max_element(longestPath.begin(), longestPath.end());
-
+    // **ATTENTION:** Output the final answer.
+    cout << 3 * (diameter - 1) << nl;
 }
+
 
 // write test case for above code
 // 2
@@ -215,7 +208,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

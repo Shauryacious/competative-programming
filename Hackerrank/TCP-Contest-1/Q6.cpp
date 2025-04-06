@@ -113,10 +113,10 @@ bool f(ll r, ll n, ll m, vll& a, vll& b){
         ll trashcan = b[j];
         ll raccoon = a[i];
         ll diff = abs(trashcan - raccoon);
-        if(diff <= r){ // the raccoon is in range of the trashcan => check next city
+        if(diff <= r){ // the raccoon is in range of the trashcan => check next raccoon
             i++;
         }
-        else{ // the raccoon is NOT in range of the trashcan => use next Tower
+        else{ // the raccoon is NOT in range of the trashcan => use next trashcan
             j++;
         }
     }

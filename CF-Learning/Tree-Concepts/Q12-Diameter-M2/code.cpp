@@ -154,6 +154,8 @@ void solve() {
 
     ll diameter = distance2[secondEndPoint];
     debug(diameter);
+
+    cout<<3*(diameter)<<nl;
 }
 
 
@@ -215,7 +217,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }
