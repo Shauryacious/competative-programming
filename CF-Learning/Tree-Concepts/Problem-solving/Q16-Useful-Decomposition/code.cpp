@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious27
+// Love you 3000 mumma <3
 
 #include<bits/stdc++.h>
 
@@ -107,113 +107,57 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
-
-void dfs(ll u, ll p, vvll& adj, ll dist ,vll& distance){
-    distance[u] = dist;
+void dfs(ll u, ll p, vvll &adj, ll &x){
+    if(adj[u].size() == 1){
+        x = u;
+        return;
+    }
     for(auto v : adj[u]){
         if(v != p){
-            dfs(v, u, adj, dist + 1, distance);
+            dfs(v, u, adj, x);
         }
     }
 }
 
-
-
 void solve() {
-    ll n; cin >> n;
-    if(n == 1){
-        cout<<0<<nl;
-        return;
-    }
-    vvll adj(n);
-    for(ll i = 0; i < n - 1; i++){
-        ll u, v; cin >> u >> v;
-        u--, v--;
+    ll n; cin>>n;
+
+    vvll adj(n+1);
+    for(ll i=0; i<n-1; i++){
+        ll u, v; cin>>u>>v;
         adj[u].pb(v);
         adj[v].pb(u);
     }
 
-    // Take any random node and find the farthest node from it
-    ll node = 1; // Random node
+    ll cnt = 0;
+    ll node = 1;
+    for(ll i=1; i<=n; i++){
+        if(adj[i].size() > 2){
+            node = i;
+            cnt++;
+        }
+    }
 
-    // This vector will store the distance of each node from the choosen node
-    vll distance(n, 0);
+    if(cnt > 1){
+        cout<<"No"<<nl;
+        return;
+    }
 
-    dfs(node, -1, adj, 0,distance);
-    debug(distance);
+    vpll ans;
+    for(auto v : adj[node]){
+        ll x = node;
+        dfs(v, node, adj, x);
+        ans.pb({node, x});
+    }
 
-    // First End point of the diameter will be the farthest node from the choosen node
-    ll firstEndPoint = max_element(all(distance)) - distance.begin();
-    debug(firstEndPoint);
+    cout<<"Yes"<<nl;
+    cout<<ans.size()<<nl;
+    for(auto p : ans){
+        cout<<p.ff<<" "<<p.ss<<nl;
+    }
+    return;
 
-    // Now take the farthest node and find the farthest node from it
-    vll distance2(n, 0);
-    dfs(firstEndPoint, -1, adj, 0, distance2);
-    debug(distance2);
-
-    // Second End point of the diameter will be the farthest node from the First End point
-    ll secondEndPoint  = max_element(all(distance2)) - distance2.begin();
-    debug(secondEndPoint);
-
-    ll diameter = 0;
-    diameter = distance2[secondEndPoint];
-    debug(diameter);
-
-    cout<<(diameter)<<nl;
 }
-
-
-// write test case for above code
-// 2
-// 5
-// 1 2
-// 1 3
-// 2 4
-// 2 5
-// 7
-// 1 2
-// 1 3
-// 3 4
-// 3 5
-// 5 6
-// 5 7
-
-// Test case 1
-//     1
-//    / \
-//   2   3
-//  / \
-// 4   5
-
-
-// Corresponding 0 indexed tree
-//     0
-//    / \
-//   1   2
-//  / \
-// 3   4
-
-
-// Test case 2
-//     1
-//    / \
-//   2   3
-//      / \
-//     4   5
-//        / \
-//       6   7
-
-// Corresponding 0 indexed tree
-//     0
-//    / \
-//   1   2
-//      / \
-//     3   4
-//        / \
-//       5   6
-
-
 
 
 int main(){

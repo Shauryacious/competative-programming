@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Codechef: https://www.codechef.com/users/shauryacious27
+// Love you 3000 mumma <3
 
 #include<bits/stdc++.h>
 
@@ -107,114 +107,110 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
-
-void dfs(ll u, ll p, vvll& adj, ll dist ,vll& distance){
-    distance[u] = dist;
+void dfs1(ll u, ll p, vvll &adj, vll &c, ll &x, ll &y){
     for(auto v : adj[u]){
         if(v != p){
-            dfs(v, u, adj, dist + 1, distance);
+            if(c[v] != c[u]){
+                x = u;
+                y = v;
+                return;
+            }
+            else{
+                dfs1(v, u, adj, c, x, y);
+            }
+        }
+    }
+}
+
+void dfs2(ll u, ll p, vvll& adj, vll& c, ll color, bool &flag){
+    if(c[u] != color){
+        flag = false;
+        return;
+    }
+    for(auto v : adj[u]){
+        if(v != p){
+            dfs2(v, u, adj, c, color, flag);
         }
     }
 }
 
 
-
 void solve() {
-    ll n; cin >> n;
-    if(n == 1){
-        cout<<0<<nl;
-        return;
-    }
-    vvll adj(n);
-    for(ll i = 0; i < n - 1; i++){
-        ll u, v; cin >> u >> v;
-        u--, v--;
+    ll n; cin>>n;
+    vvll adj(n+1);
+    for(ll i=1; i<=n-1; i++){
+        ll u, v; cin>>u>>v;
         adj[u].pb(v);
         adj[v].pb(u);
     }
 
-    // Take any random node and find the farthest node from it
-    ll node = 1; // Random node
+    vll c(n+1);
+    for(ll i=1; i<=n; i++){
+        cin>>c[i];
+    }
 
-    // This vector will store the distance of each node from the choosen node
-    vll distance(n, 0);
+    ll u = 1, v = 2;
+    dfs1(1, 0, adj, c, u, v);
+    if(u == -1 && v == -1){
+        py;
+        return;
+    }
+    debug(adj);
+    debug(u);
+    debug(v);
 
-    dfs(node, -1, adj, 0,distance);
-    debug(distance);
+    bool ans1 = true;
+    for(auto x : adj[u]){
+        ll color = c[x];
+        bool flag = true;
+        for(auto y : adj[x]){
+            if(y == u) continue;
+            dfs2(y, x, adj, c, color, flag);
+        }
+        ans1 &= flag;
+    }
 
-    // First End point of the diameter will be the farthest node from the choosen node
-    ll firstEndPoint = max_element(all(distance)) - distance.begin();
-    debug(firstEndPoint);
+    bool ans2 = true;
+    for(auto x : adj[v]){
+        ll color = c[x];
+        debug(color);
+        bool flag = true;
+        for(auto y : adj[x]){
+            if(y == v) continue;
+            dfs2(y, x, adj, c, color, flag);
+        }
+        debug(flag);
+        ans2 &= flag;
+    }
+    debug(ans1);
+    debug(ans2);
 
-    // Now take the farthest node and find the farthest node from it
-    vll distance2(n, 0);
-    dfs(firstEndPoint, -1, adj, 0, distance2);
-    debug(distance2);
-
-    // Second End point of the diameter will be the farthest node from the First End point
-    ll secondEndPoint  = max_element(all(distance2)) - distance2.begin();
-    debug(secondEndPoint);
-
-    ll diameter = 0;
-    diameter = distance2[secondEndPoint];
-    debug(diameter);
-
-    cout<<(diameter)<<nl;
+    if(ans1 || ans2){
+        py;
+        if(ans1){
+            cout<<u<<nl;
+        }
+        else{
+            cout<<v<<nl;
+        }
+    }
+    else{
+        pn;
+    }
 }
 
-
-// write test case for above code
-// 2
-// 5
+// 4
 // 1 2
-// 1 3
-// 2 4
-// 2 5
-// 7
-// 1 2
-// 1 3
+// 2 3
 // 3 4
-// 3 5
-// 5 6
-// 5 7
 
-// Test case 1
-//     1
-//    / \
-//   2   3
-//  / \
-// 4   5
-
-
-// Corresponding 0 indexed tree
-//     0
-//    / \
-//   1   2
-//  / \
-// 3   4
-
-
-// Test case 2
-//     1
-//    / \
-//   2   3
-//      / \
-//     4   5
-//        / \
-//       6   7
-
-// Corresponding 0 indexed tree
-//     0
-//    / \
-//   1   2
-//      / \
-//     3   4
-//        / \
-//       5   6
-
-
-
+//       1
+//      /
+//     2
+//    /
+//   3
+//  /
+// 4
 
 int main(){
     #ifndef ONLINE_JUDGE
