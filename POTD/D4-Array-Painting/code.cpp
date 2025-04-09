@@ -107,25 +107,57 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
-bool isPrime(ll n) {
-    if(n < 2) return false;
-    if(n % 2 == 0) return n == 2;
-    for (ll i = 3; i * i <= n; i += 2)
-        if(n % i == 0)
-            return false;
-    return true;
-}
-
 void solve() {
-    ll x; 
-    int k;
-    cin >> x >> k; 
-    if(k != 1) {
-        cout << "NO" << "\n";
-    } else {
-        cout << (isPrime(x) ? "YES" : "NO") << "\n";
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
+    ll ans = 0;
+    ll i = 0;
+    vll colored(n, 0);
+    while(i < n){
+        if(a[i] > 0){
+            ll l = i-1;
+            ll mx = 1;
+            while(i < n && a[i] > 0){
+                mx = max(mx, a[i]);
+                colored[i] = 1;
+                i++;
+            }
+            ll r = i;
+            debug(l);
+            debug(r);
+            debug(mx);
+
+            if(mx == 1){
+                if(l >= 0 && colored[l] == 0){
+                    colored[l] = 1;
+                }
+                else if(r < n && colored[r] == 0){
+                    colored[r] = 1;
+                }
+            }
+            else{ // mx == 2 -> do both if possible
+                if(l >= 0 && colored[l] == 0){
+                    colored[l] = 1;
+                }
+                if(r < n && colored[r] == 0){
+                    colored[r] = 1;
+                }
+            }
+            ans++;
+        }
+        else{
+            i++;
+        }
     }
+
+    debug(colored);
+    for(ll i = 0; i < n; i++){
+        if(colored[i] == 0){
+            ans++;
+        }
+    }
+
+    cout << ans << nl;
 }
 
 
@@ -135,7 +167,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

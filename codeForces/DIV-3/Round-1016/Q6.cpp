@@ -107,9 +107,59 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll pos(ll n, ll x, ll y) {
+    if (n == 1) {
+        if (x == 1 && y == 1) return 1;
+        if (x == 2 && y == 2) return 2;
+        if (x == 2 && y == 1) return 3;
+        else return 4;
+    }
+    ll h = 1LL << (n - 1);
+    ll block = 1LL << (2 * (n - 1));
+    if (x <= h && y <= h) return pos(n - 1, x, y);
+    if (x > h && y > h) return block + pos(n - 1, x - h, y - h);
+    if (x > h && y <= h) return 2 * block + pos(n - 1, x - h, y);
+    return 3 * block + pos(n - 1, x, y - h);
+}
+
+vll coord(ll n, ll d) {
+    if (n == 1) {
+        if (d == 1) return {1, 1};
+        if (d == 2) return {2, 2};
+        if (d == 3) return {2, 1};
+        return {1, 2};
+    }
+    ll h = 1LL << (n - 1);
+    ll block = 1LL << (2 * (n - 1));
+    if (d <= block) {
+        vll p = coord(n - 1, d);
+        return {p[0], p[1]};
+    }
+    if (d <= 2 * block) {
+        vll p = coord(n - 1, d - block);
+        return {p[0] + h, p[1] + h};
+    }
+    if (d <= 3 * block) {
+        vll p = coord(n - 1, d - 2 * block);
+        return {p[0] + h, p[1]};
+    }
+    vll p = coord(n - 1, d - 3 * block);
+    return {p[0], p[1] + h};
+}
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, q; cin >> n >> q;
+    while (q--) {
+        string str; cin >> str;
+        if (str == "<-") {
+            ll d; cin >> d;
+            vll p = coord(n, d);
+            cout << p[0] << " " << p[1] << nl;
+        } else {
+            ll a, b; cin >> a >> b;
+            cout << pos(n, a, b) << nl;
+        }
+    }
 }
 
 

@@ -107,25 +107,32 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
-bool isPrime(ll n) {
-    if(n < 2) return false;
-    if(n % 2 == 0) return n == 2;
-    for (ll i = 3; i * i <= n; i += 2)
-        if(n % i == 0)
-            return false;
-    return true;
-}
-
 void solve() {
-    ll x; 
-    int k;
-    cin >> x >> k; 
-    if(k != 1) {
-        cout << "NO" << "\n";
-    } else {
-        cout << (isPrime(x) ? "YES" : "NO") << "\n";
+    ll n, q; cin >> n >> q;
+    vll a(n); invec(a, n);
+    vll queries(q); invec(queries, q);
+
+    vll pref(n);
+    pref[0] = a[0];
+    for (ll i = 1; i < n; i++) {
+        pref[i] = pref[i - 1] + a[i];
     }
+
+    vll prefmax(n);
+    prefmax[0] = a[0];
+    for (ll i = 1; i < n; i++) {
+        prefmax[i] = max(prefmax[i - 1], a[i]);
+    }
+
+    vll ans;
+    for (auto k : queries) {
+        ll idx = upper_bound(all(prefmax), k) - prefmax.begin();
+        if (idx == 0) ans.pb(0);
+        else ans.pb(pref[idx - 1]);
+    }
+
+    for (auto x : ans) cout << x << " ";
+    cout << nl;
 }
 
 
