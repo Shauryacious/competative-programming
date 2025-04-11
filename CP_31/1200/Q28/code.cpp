@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you 3000 mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,47 +108,44 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
+    ll n, m; cin>>n>>m;
+    vll a(n); invec(a, n);
+    map<ll, ll> mp;
+    for(ll i=0; i<n; i++){
+        mp[a[i]]++;
+    }
+
+    ll cnt = 0;
+    for(ll i=0; i<n; i++){
+        ll x = m - a[i];
+        if(mp[x]){
+            ll z = mp[a[i]];
+            ll mn = min(z, mp[x]);
+            mp[x] -= mn;
+            mp[a[i]] -= mn;
+            if(mp[x] == 0){
+                if(mp[a[i]]) mp[a[i]]--;
+                else  mp.erase(a[i]);
+                mp.erase(x);
+            }
+            if(mp[a[i]] == 0){
+                if(mp[x]) mp[x]--;
+                else  mp.erase(x);
+                mp.erase(a[i]);
+            }
+            cnt ++;
+        }
+        else{
+            cnt++;
         }
     }
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
-
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
-            }
-        }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
-    }
-
-    cout << ans << nl;
+    cout << cnt << nl;
 }
 
+// 1 1 1 5 2 4 4 8 6 7
 
+// 4 4 | 2 6 | 1 7 1| 8 | 1 5
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);

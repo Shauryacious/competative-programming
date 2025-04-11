@@ -110,6 +110,33 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+    set<ll> st(all(a));
+    bool all0 = true;
+    for(ll i=0; i<n; i++){
+        if(a[i] != 0){
+            all0 = false;
+            break;
+        }
+    }
+
+    if(all0){
+        cout << -1 << nl;
+        return;
+    }
+    
+
+    ll mx = *max_element(all(a));
+    ll mn = *min_element(all(a));
+
+    if(st.find(mx + mx) == st.end()){
+        cout << mx <<" " << mx << nl;
+        return;
+    }
+
+    if(st.find(mn + mn) == st.end()){
+        cout << mn <<" " << mn << nl;
+        return;
+    }
 }
 
 

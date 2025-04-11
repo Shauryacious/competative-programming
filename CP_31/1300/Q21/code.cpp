@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you 3000 mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,44 +108,30 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
+    vpll v(n);
+    for(ll i=0; i<n; i++){
+        v[i].ff = a[i];
+        v[i].ss = i+1;
+    }
+
+    sort(all(v));
+    ll ans = 0;
+
+    // The loop runs in O(n*log(n)) time complexity
+    for(ll i = 0; i<n; i++){
+        for(ll j=i+1; j<n; j++){
+            if(v[i].ff*v[j].ff > 2*n){
+                break;
+            } 
+            if(v[i].ff*v[j].ff == v[i].ss+v[j].ss){
+                ans++;
+            }
         }
     }
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
-
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
-            }
-        }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
-    }
-
-    cout << ans << nl;
+    cout<<ans<<nl;
 }
 
 

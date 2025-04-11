@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you 3000 mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,44 +108,57 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
+    ll n, k;
+    cin >> n >> k;
+    vll a(n); invec(a, n);
+    vll b(n); invec(b, n);
+
+    map<ll, vll> mp;
+    for (ll i = 0; i < n; i++) {
+        mp[a[i]].pb(i);
+    }
+
+    vector<pair<ll, char>> v;
+    for (ll i = 0; i < n; i++) {
+        v.pb({a[i], '('});
+        v.pb({b[i], ')'});
+    }
+
+    sort(all(v));
+    stack<pair<ll, char>> st;
+    vector<ll> ans(n, INF);
+
+    for (auto it : v) {
+        if (it.second == '(') {
+            st.push(it);
+        } else {
+            if (!st.empty()) {
+                auto tp = st.top();
+                st.pop();
+                ll ele = tp.first;
+                if (!mp[ele].empty()) {
+                    ll idx = mp[ele].back();
+                    mp[ele].pop_back();
+                    if(mp[ele].empty()){
+                        mp.erase(ele);
+                    }
+                    ans[idx] = it.first;
+                }
+            }
+        }
+    }
+    debug(mp);
+    for(ll i=0; i<n; i++){
+        if(ans[i] == INF){
+            ans[i] = b[((*mp.begin()).second.back())];
+            (*mp.begin()).second.pop_back();
         }
     }
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
-
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
-            }
-        }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
+    for (ll i = 0; i < n; i++) {
+        cout << ans[i] << " ";
     }
-
-    cout << ans << nl;
+    cout << nl;
 }
 
 

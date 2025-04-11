@@ -108,44 +108,20 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
-        }
+    ll n, m; cin>>n>>m;
+    vll a(n); invec(a, n);
+    vll b(m); invec(b, m);
+    ll sum1 = accumulate(all(a), 0LL);
+    ll sum2 = accumulate(all(b), 0LL);
+    if(sum1 > sum2){
+        cout<<"Tsondu"<<nl;
     }
-
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
-
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
-            }
-        }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
+    else if(sum1 < sum2){
+        cout<<"Tenzing"<<nl;
     }
-
-    cout << ans << nl;
+    else{
+        cout<<"Draw"<<nl;
+    }
 }
 
 

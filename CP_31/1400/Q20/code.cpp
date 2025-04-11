@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you 3000 mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,44 +108,60 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
+    ll n, k; cin>>n>>k;
+    vll a(n); invec(a, n);
+    vll b(n);
+    for(ll i = 0; i < n; i++){
+        b[i] = a[i]%k;
+    }
+    debug(b);
+
+    ll cnt = 0, curr = 0;
+    multiset<ll, greater<ll>> st;
+    for(ll i=0; i<n; i++){
+        if(b[i] != 0) st.insert(b[i]);
+    }
+    for(auto it : st){
+        debug(it);
+    }
+    // debug(st);
+    while(st.size()){
+        auto ele = *st.begin();
+        if(st.find((k - curr)) != st.end()){
+            st.erase(st.find(k - curr));
+            curr++;
+            if(curr == k){
+                curr = 0;
+                cnt++;
+            }
+            continue;
+        }
+        if((curr + ele) % k == 0){
+            st.erase(st.find(ele));
+            curr++;
+            if(curr == k){
+                curr = 0;
+                cnt++;
+            }
+        }
+        else{
+            if(curr < k - ele){
+                curr = k - ele;
+            }
+            else{
+                cnt++;
+                curr = k - ele;
+            }
+            st.erase(st.find(ele));
+            curr++;
+            if(curr == k){
+                curr = 0;
+                cnt++;
+            }
         }
     }
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
-
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
-            }
-        }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
-    }
-
-    cout << ans << nl;
+    cout<< cnt*k + curr << nl;
 }
 
 

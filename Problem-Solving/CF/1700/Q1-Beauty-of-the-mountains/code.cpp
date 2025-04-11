@@ -107,47 +107,83 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+class SubmatrixSum {
+    vvll prefix;
+    ll m, n;
+
+public:
+    SubmatrixSum(const vvll &matrix) {
+        m = matrix.size();
+        n = matrix[0].size();
+        prefix.assign(m, vll(n, 0));
+
+        for(ll i = 0; i < m; i++) {
+            for(ll j = 0; j < n; j++) {
+                prefix[i][j] = matrix[i][j];
+                if(i > 0) prefix[i][j] += prefix[i-1][j];
+                if(j > 0) prefix[i][j] += prefix[i][j-1];
+                if(i > 0 && j > 0) prefix[i][j] -= prefix[i-1][j-1];
+            }
+        }
+    }
+
+    ll query(ll r, ll c, ll k) {
+        ll r2 = r + k - 1, c2 = c + k - 1;
+        if(r2 >= m || c2 >= n) return -1;
+
+        ll sum = prefix[r2][c2];
+        if(r > 0) sum -= prefix[r-1][c2];
+        if(c > 0) sum -= prefix[r2][c-1];
+        if(r > 0 && c > 0) sum += prefix[r-1][c-1];
+
+        return sum;
+    }
+};
+
 void solve() {
-    ll n, m; cin >> n >> m;
+    ll n, m, k; cin >> n >> m >> k;
     vvll a(n, vll(m));
+    for(ll i = 0; i < n; i++) for(ll j = 0; j < m; j++) cin >> a[i][j];
+
+    vector<string> b(n);
+    invec(b, n);
+
+    vvll sign(n, vll(m));
+    ll sum = 0;
+
     for(ll i = 0; i < n; i++) {
         for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
+            if(b[i][j] == '0') {
+                sign[i][j] = -1;
+                sum -= a[i][j];
+            } else {
+                sign[i][j] = 1;
+                sum += a[i][j];
+            }
         }
     }
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
+    sum = abs(sum);
+    SubmatrixSum obj(sign);
 
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
+    vll allSubSums;
+    for(ll i = 0; i < n; i++) {
+        for(ll j = 0; j < m; j++) {
+            if(i + k - 1 < n && j + k - 1 < m) {
+                allSubSums.pb(abs(obj.query(i, j, k)));
             }
         }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
     }
 
-    cout << ans << nl;
+    ll g = 0;
+    for(auto x : allSubSums) g = gcd(g, x);
+
+    if(g == 0) {
+        cout << (sum == 0 ? "YES" : "NO") << nl;
+    } else {
+        cout << (sum % g == 0 ? "YES" : "NO") << nl;
+    }
 }
-
 
 int main(){
     #ifndef ONLINE_JUDGE

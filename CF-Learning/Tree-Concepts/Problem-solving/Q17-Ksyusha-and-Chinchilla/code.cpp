@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you 3000 mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -107,46 +107,73 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
-        }
+
+void dfs(ll u, ll p, vvll& adj, vll& size, vll& ans, map<pll, ll>& mp){
+    size[u] = 1;
+    for(auto v: adj[u]){
+        if(v == p) continue;
+        dfs(v, u, adj, size, ans, mp);
+        size[u] += size[v];
     }
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
-
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
-            }
-        }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
+    if(size[u] == 3){
+        size[u] = 0;
+        ans.pb(mp[{u, p}]);
     }
-
-    cout << ans << nl;
 }
+
+void solve() {
+    ll n; cin>>n;
+    vvll adj(n+1);
+    map<pll, ll> mp;
+    for(ll i=1; i<=n-1; i++){
+        ll u, v; cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+
+        mp[{u, v}] = i;
+        mp[{v, u}] = i;
+    }
+    adj[0].pb(1);
+    adj[1].pb(0);
+
+    vll size(n+1, 0);
+    vll ans;
+
+    dfs(0, -1, adj, size, ans, mp);
+
+    debug(ans);
+
+    if(ans.size() * 3 != n){
+        cout<<-1<<nl;
+        return;
+    }
+
+    cout<<ans.size() - 1<<nl;
+    for(auto x: ans){
+        if(x == 0) continue;
+        cout<<x<<" ";
+    }
+    cout<<nl;
+    return;
+
+}
+
+
+// 6
+// 1 2
+// 1 3
+// 4 3
+// 1 5
+// 6 1
+
+
+//                1 - 6
+//              / | \
+//             2  3  5
+//               /
+//              4
+
 
 
 int main(){

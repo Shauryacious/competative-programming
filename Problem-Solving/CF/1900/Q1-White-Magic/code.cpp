@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you 3000 mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -107,45 +107,93 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+vll setbit(2e5 + 5, 0);
+
 void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
+    debug(n);
+    debug(a);
+    if(a[0] == 0){ //Edge case
+        ll anss = 0;
+        for(ll i=0; i<n; i++){
+            if(a[i] != 0){
+                anss++;
+            }
+        }
+        cout<<anss+1<<nl;
+        return;
+    }
+
+    ll ans = 0;
+    bool flag = true;
+    for(ll i=0; i<n; i++){
+        if(a[i] != 0){
+            ans++;
+        }
+        else{
+            flag = false;
+        }
+    }
+    if(flag){
+        cout<<ans<<nl;
+        return;
+    }
+    debug(ans);
+
+    set<ll> st;
+    vll b;
+    for(ll i=0; i<n; i++){
+        if(a[i] != 0){
+            b.pb(a[i]);
+        }
+        else{
+            st.insert(b.size()-1);
         }
     }
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
-
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
-            }
-        }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
+    if (st.empty()){
+        cout << ans << endl;
+        return ; 
     }
 
-    cout << ans << nl;
+    debug(b);
+    debug(st);
+
+    n = b.size();
+    setbit.assign(2e5 + 5, 0);
+    setbit[0] = 1;
+    vll mex(n, 0);
+    vll mn(n, 1e9 + 5);
+    mn[0] = b[0];
+    for(ll i=1; i<n; i++){
+        mn[i] = min(mn[i-1], b[i]);
+    }
+    ll j = 0;
+    for(ll i=n-1; i>=0; i--){
+        if (b[i] <= 2e5)setbit[b[i]] = 1;
+        while((j <= 2e5+1) && (setbit[j] == 1)){
+            j++;
+        }
+        mex[i] = j;
+    }
+    mex.pb(1);
+    debug(mn);
+    debug(mex);
+
+    for(ll i=0; i<n; i++){
+        if(mn[i] >= mex[i+1]){
+            if(st.find(i) != st.end()){
+                ans++;
+                break;
+            }
+        }
+        else{
+            break;
+        }
+    }
+    cout<<ans<<nl;
+
 }
 
 

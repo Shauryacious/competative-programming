@@ -108,44 +108,110 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
-        }
+    ll n, x; cin>>n>>x;
+    vll a(n); invec(a, n);
+    stack<ll> st1, st2, st3;
+    for(ll i=n-1; i>=0; i--){
+        st1.push(a[i]);
+    }
+    vll b(n); invec(b, n);
+    for(ll i=n-1; i>=0; i--){
+        st2.push(b[i]);
+    }
+    vll c(n); invec(c, n);
+    for(ll i=n-1; i>=0; i--){
+        st3.push(c[i]);
     }
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
 
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
+    ll curr = 0; ll j = 0;
+    while(curr != x && (!st1.empty() || !st2.empty() || !st3.empty())){
+        if(st1.size()){
+            ll ele = st1.top();
+            if(ele > x){
+                while(st1.size()) st1.pop();
+            }
+            else{
+                st1.pop();
+                bool flag = true;
+                for(ll i=0; i<32; i++){
+                    if(((ele>>i) & 1 == 1) && ((x>>i) & 1 == 0)){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
+                    curr |= ele;
+                }
+                else{
+                    while(st1.size()) st1.pop();
+                }
+            }
+        }
+        if(curr == x){
+            break;
+        }
+
+        if(st2.size()){
+            ll ele = st2.top();
+            if(ele > x){
+                while(st2.size()) st2.pop();
+            }
+            else{
+                st2.pop();
+                bool flag = true;
+                for(ll i=0; i<32; i++){
+                    if(((ele>>i) & 1 == 1) && ((x>>i) & 1 == 0)){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
+                    curr |= ele;
+                }
+                else{
+                    while(st2.size()) st2.pop();
+                }
+            }
+        }
+        if(curr == x){
+            break;
+        }
+
+        if(st3.size()){
+            ll ele = st3.top();
+            if(ele > x){
+                while(st3.size()) st3.pop();
+            }
+            else{
+                st3.pop();
+                bool flag = true;
+                for(ll i=0; i<32; i++){
+                    if(((ele>>i) & 1 == 1) && ((x>>i) & 1 == 0)){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
+                    curr |= ele;
+                }
+                else{
+                    while(st3.size()) st3.pop();
+                }
             }
         }
 
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
+        if(curr == x){
+            break;
         }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
     }
 
-    cout << ans << nl;
+    if(curr == x){
+        cout<< "YES" << nl;
+    }
+    else{
+        cout<< "NO" << nl;
+    }
 }
 
 

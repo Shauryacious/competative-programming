@@ -27,7 +27,7 @@ using namespace __gnu_pbds;
 #define ss second
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
-#define sz(x) ((int)(x).size())
+// #define sz(x) ((int)(x).size())
 #define py cout<<"YES"<<nl
 #define pn cout<<"NO"<<nl
 #define pm cout<<"-1"<<nl
@@ -107,9 +107,95 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll ca;
+
+ll dfs_sz(ll u, ll p, vvll& adj, vll& sz) {
+    sz[u] = 1;
+    for (auto v : adj[u]) {
+        if (v == p) continue;
+        sz[u] += dfs_sz(v, u, adj, sz);
+    }
+    return sz[u];
+}
+
+ll dfs(ll u, ll p, vvll& adj, vll& ans) {
+    vll rem;
+    for (auto v : adj[u]) {
+        if (v == p) continue;
+        ll r = dfs(v, u, adj, ans);
+        if (r != -1) rem.pb(r);
+    }
+    while (rem.size() > 1) {
+        ll a = rem.back(); rem.pop_back();
+        ll b = rem.back(); rem.pop_back();
+        ans[a] = ans[b] = ca++;
+    }
+    if (u != 1) {
+        if (!rem.empty()) {
+            ans[u] = ans[rem.back()] = ca++;
+            return -1;
+        }
+        return u;
+    } else {
+        if (!rem.empty()) {
+            ans[u] = ans[rem.back()] = ca++;
+        }
+        return -1;
+    }
+}
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n; cin >> n;
+
+    // if(n % 2){
+    //     string ss = "";
+    //     for (ll i = 0; i < n - 1; i++) {
+    //         ll x; cin >> x;
+    //         ss += '0';
+    //     }
+    //     cout << ss << nl;
+    //     debug(ss);
+    //     return;
+    // }
+
+    vvll adj(n + 1);
+    string str = "";
+    for (ll i = 2; i <= n; i++) {
+        ll p; cin >> p;
+        adj[i].pb(p);
+        adj[p].pb(i);
+        if(adj[i].size()%2 == 0 || adj[p].size()%2 == 0 || i&1){
+            str += "0";
+        }
+        else{
+            str += "1";
+        }
+    }
+
+    cout << str << nl;
+
+
+    if(str[(str).size()-1] == '0'){
+        return;
+    }
+
+    vll sz(n + 1);
+    dfs_sz(1, 0, adj, sz);
+    for (ll i = 2; i <= n; i++) {
+        if (sz[i] % 2 == 0) {
+            cout << -1 << nl;
+            return;
+        }
+    }
+
+    vll ans(n + 1, 0);
+    ca = 1;
+    dfs(1, 0, adj, ans);
+
+    for (ll i = 1; i <= n; i++) {
+        cout << ans[i] << " ";
+    }
+    cout << nl;
 }
 
 

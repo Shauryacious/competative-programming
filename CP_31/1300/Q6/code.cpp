@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you 3000 mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -104,48 +104,33 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 // Macros
 #define all(x) (x).begin(), (x).end()
-#define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
+#define invec(v, n) for (ll i = 1; i <= n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin >> n >> m;
-    vvll a(n, vll(m));
-    for(ll i = 0; i < n; i++) {
-        for(ll j = 0; j < m; j++) {
-            cin >> a[i][j];
+    ll n; cin>>n;
+    vll a(n+1); invec(a, n);
+    vll b(n+1); invec(b, n);
+
+    vll d(n); 
+    for(ll i = 1; i <= n; i++){
+        d[i-1] = a[i] - b[i];
+    }
+    debug(d);
+    ll mx = *max_element(all(d));
+    vll ans;
+    for(ll i = 0; i < n; i++){
+        if(d[i] == mx){
+            ans.pb(i+1);
         }
     }
+    sort(all(ans));
+    cout<<ans.size()<<nl;
 
-    ll tot = n * m, ans = tot;
-    vll dx = {1, 1, -1, -1}, dy = {1, -1, 1, -1};
-
-    for(ll k = 0; k < 4; k++) {
-        ll vx = dx[k], vy = dy[k];
-        vll cand;
-        for(ll i = 0; i < n; i++) {
-            for(ll j = 0; j < m; j++) {
-                ll off = i * vx + j * vy;
-                cand.pb(a[i][j] - off);
-            }
-        }
-
-        sort(all(cand), [](ll x, ll y) {
-            return x < y;
-        });
-
-        ll freq = 1, mx = 1;
-        for(ll i = 1; i < tot; i++) {
-            if(cand[i] == cand[i-1]) freq++;
-            else {
-                mx = max(mx, freq);
-                freq = 1;
-            }
-        }
-        mx = max(mx, freq);
-        ans = min(ans, tot - mx);
+    for(auto i : ans){
+        cout<<i<<" ";
     }
-
-    cout << ans << nl;
+    cout<<nl;
 }
 
 
