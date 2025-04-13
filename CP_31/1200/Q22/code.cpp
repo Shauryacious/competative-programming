@@ -108,68 +108,58 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    // ios::sync_with_stdio(false);
-    // cin.tie(nullptr);
- 
-    ll n, m;
-    cin >> n >> m;
-    vector<map<string, ll>> a(n);
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            string s;
-            cin >> s;
-            string name = "", num = "";
-            bool flag = true;
-            for (char c : s) {
-                if (flag && c != '_') name += c;
-                else if (c == '_') flag = false;
-                else if (!flag) num += c;
-            }
-            ll num1 = stoll(num);
-            a[i][name] = num1;
+    ll n, k, x; cin>>n>>k>>x;
+    vll a(n); invec(a, n);
+    sort(all(a));
+    debug(a);
+    vll diff;
+    for(ll i=1; i<n; i++){
+        diff.pb(a[i]-a[i-1]);
+    }
+    debug(diff);
+
+    vll req;
+    for(ll i=0; i<diff.size(); i++){
+        ll val = (diff[i] + x - 1) / x;
+        val = max(val-1, 0LL);
+        req.pb(val);
+    }
+
+    // req.pb(0);
+    debug(req);
+    ll cnt = 0;
+    for(ll i=0; i<req.size(); i++){
+        if(req[i] != 0){
+            cnt++;
+        }
+    }
+    cnt++;
+    debug(cnt);
+
+    set<pair<ll, ll>> st;
+    for(ll i=0; i<req.size(); i++){
+        if(req[i] == 0) continue;   
+        st.insert({req[i], i});
+    }
+
+    while(k > 0 && st.size() > 0){
+        auto it = *st.begin();
+        st.erase(it);
+        ll val = it.first;
+        ll idx = it.second;
+        if(k >= val){
+            k -= val;
+            cnt--;
+        }
+        else{
+            break;
         }
     }
 
-    set<string> st;
-    map<string, ll> mp;
-    for (auto &p : a[0]) {
-        st.insert(p.first);
-        mp[p.first] = p.second;
-    }
- 
-    vector<string> ans;
-    for (ll i = 0; i < n; i++) {
-        if (st.empty()) break;
-        ll currmx = -1;
-        vector<string> temp, toRemove;
-        for (auto name : st) {
-            if (a[i].count(name))
-                mp[name] = min(mp[name], a[i][name]);
-        }
-        for (auto name : st)
-            currmx = max(currmx, mp[name]);
-        for (auto name : st) {
-            if (mp[name] == currmx) {
-                temp.pb(name);
-                toRemove.pb(name);
-            }
-        }
-        for (auto name : toRemove)
-            st.erase(name);
-        sort(temp.begin(), temp.end());
-        for (auto name : temp)
-            ans.pb(name);
-    }
-    if (!st.empty()) {
-        vector<string> remain(st.begin(), st.end());
-        sort(remain.begin(), remain.end());
-        for (auto name : remain)
-            ans.pb(name);
-    }
-    for (auto name : ans)
-        cout << name << " ";
-    cout << nl;
+
+    cout << cnt << nl;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE

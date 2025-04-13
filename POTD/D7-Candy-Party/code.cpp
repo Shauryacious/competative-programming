@@ -108,68 +108,73 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    // ios::sync_with_stdio(false);
-    // cin.tie(nullptr);
- 
-    ll n, m;
-    cin >> n >> m;
-    vector<map<string, ll>> a(n);
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            string s;
-            cin >> s;
-            string name = "", num = "";
-            bool flag = true;
-            for (char c : s) {
-                if (flag && c != '_') name += c;
-                else if (c == '_') flag = false;
-                else if (!flag) num += c;
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
+    ll sum = accumulate(all(a), 0LL);
+    debug(sum);
+    if(sum%n != 0){
+        pn; return;
+    }
+
+    ll avg = sum/n;
+    bool ok = true;
+
+    vll bits(64, 0);
+
+    for(ll i=0; i<n; i++){
+        ll diff = abs(a[i] - avg);
+        ll temp = diff;
+
+        ll cnt = 0, cnt1 = 0;
+        while(temp){
+            if(temp%2 == 1){
+                cnt1++;
             }
-            ll num1 = stoll(num);
-            a[i][name] = num1;
+            temp>>= 1;
+            cnt++;
+        }
+
+        ll num = 0;
+        for(ll j=cnt-cnt1; j<cnt; j++){
+            num |= (1LL<<j);
+        }
+
+        debug(diff);
+        debug(num);
+
+        if(num != diff){
+            ok = false;
+            break;
+        }
+
+        ll x = cnt + 1;
+        ll y = cnt-cnt1+1;
+
+        if(avg > a[i]){
+            bits[x]++;
+            bits[y]--;
+        }
+        else{
+            bits[x]--;
+            bits[y]++;
         }
     }
 
-    set<string> st;
-    map<string, ll> mp;
-    for (auto &p : a[0]) {
-        st.insert(p.first);
-        mp[p.first] = p.second;
-    }
- 
-    vector<string> ans;
-    for (ll i = 0; i < n; i++) {
-        if (st.empty()) break;
-        ll currmx = -1;
-        vector<string> temp, toRemove;
-        for (auto name : st) {
-            if (a[i].count(name))
-                mp[name] = min(mp[name], a[i][name]);
+    for(ll i=1; i<64; i++){
+        if(bits[i] != 0){
+            ok = false;
+            break;
         }
-        for (auto name : st)
-            currmx = max(currmx, mp[name]);
-        for (auto name : st) {
-            if (mp[name] == currmx) {
-                temp.pb(name);
-                toRemove.pb(name);
-            }
-        }
-        for (auto name : toRemove)
-            st.erase(name);
-        sort(temp.begin(), temp.end());
-        for (auto name : temp)
-            ans.pb(name);
     }
-    if (!st.empty()) {
-        vector<string> remain(st.begin(), st.end());
-        sort(remain.begin(), remain.end());
-        for (auto name : remain)
-            ans.pb(name);
+
+    if(!ok){
+        pn; return;
     }
-    for (auto name : ans)
-        cout << name << " ";
-    cout << nl;
+
+    cout << "YES" << nl;
+
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -177,7 +182,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

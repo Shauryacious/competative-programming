@@ -108,8 +108,26 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    string s; cin>>s;
+    ll n = s.length();
+    string ans = "";
+    for(ll i=0; i<n; i++){
+        if(s[i] == '.'){
+            ans += '0';
+        }
+        else{
+            if(i+1 < n && s[i+1] == '.'){
+                ans += '1';
+                i++;
+            }
+            else{
+                ans += '2';
+                i++;
+            }
+        }
+    }
+
+    cout << (ans) << nl;
 }
 
 
@@ -119,7 +137,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

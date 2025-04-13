@@ -108,68 +108,69 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    // ios::sync_with_stdio(false);
-    // cin.tie(nullptr);
- 
-    ll n, m;
-    cin >> n >> m;
-    vector<map<string, ll>> a(n);
-    for (ll i = 0; i < n; i++) {
-        for (ll j = 0; j < m; j++) {
-            string s;
-            cin >> s;
-            string name = "", num = "";
-            bool flag = true;
-            for (char c : s) {
-                if (flag && c != '_') name += c;
-                else if (c == '_') flag = false;
-                else if (!flag) num += c;
+    ll n; cin>>n;
+    string s; cin>>s;
+
+    //Base Case
+    string ss = s;
+    reverse(ss.begin(), ss.end());
+    if(s == ss){
+        cout<<0<<nl;
+        return;
+    }
+
+    set<char> st;
+    for(char ch = 'a'; ch <= 'z'; ch++){
+        string t = "";
+        for(int i = 0; i < n; i++){
+            if(s[i] != ch){
+                t += s[i];
             }
-            ll num1 = stoll(num);
-            a[i][name] = num1;
+        }
+        string tt = t;
+        reverse(tt.begin(), tt.end());
+        if(t == tt){
+            st.insert(ch);
         }
     }
 
-    set<string> st;
-    map<string, ll> mp;
-    for (auto &p : a[0]) {
-        st.insert(p.first);
-        mp[p.first] = p.second;
+    debug(st);
+    if(st.size() == 0){
+        cout<<-1<<nl;
+        return;
     }
- 
-    vector<string> ans;
-    for (ll i = 0; i < n; i++) {
-        if (st.empty()) break;
-        ll currmx = -1;
-        vector<string> temp, toRemove;
-        for (auto name : st) {
-            if (a[i].count(name))
-                mp[name] = min(mp[name], a[i][name]);
-        }
-        for (auto name : st)
-            currmx = max(currmx, mp[name]);
-        for (auto name : st) {
-            if (mp[name] == currmx) {
-                temp.pb(name);
-                toRemove.pb(name);
+
+    ll ans = INF;
+    for(auto ch : st){
+        ll i = 0, j = n - 1;
+        ll cnt = 0;
+        while(i < j){
+            if(s[i] == s[j]){
+                i++;
+                j--;
+            }
+            else{ // s[i] != s[j]
+                while(i < j && s[i] == ch){
+                    i++;
+                    cnt++;
+                }
+                while(i < j && s[j] == ch){
+                    j--;
+                    cnt++;
+                }
             }
         }
-        for (auto name : toRemove)
-            st.erase(name);
-        sort(temp.begin(), temp.end());
-        for (auto name : temp)
-            ans.pb(name);
+        ans = min(ans, cnt);
     }
-    if (!st.empty()) {
-        vector<string> remain(st.begin(), st.end());
-        sort(remain.begin(), remain.end());
-        for (auto name : remain)
-            ans.pb(name);
+
+    if(ans == INF){
+        cout<<-1<<nl;
     }
-    for (auto name : ans)
-        cout << name << " ";
-    cout << nl;
+    else{
+        cout<<ans<<nl;
+    }
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -177,7 +178,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }
