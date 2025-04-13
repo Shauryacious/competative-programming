@@ -38,10 +38,7 @@
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [],
-  "C_Cpp_Runner.includeSearch": [
-    "*",
-    "**/*"
-  ],
+  "C_Cpp_Runner.includeSearch": ["*", "**/*"],
   "C_Cpp_Runner.excludeSearch": [
     "**/build",
     "**/build/**",
@@ -83,6 +80,9 @@
     "format": "cpp",
     "ranges": "cpp",
     "stacktrace": "cpp",
-    "chrono": "cpp"
+    "chrono": "cpp",
+    "bitset": "cpp",
+    "queue": "cpp",
+    "stack": "cpp"
   }
 }
