@@ -108,82 +108,45 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    string p, s; cin >> p >> s;
-    ll n = p.size(), m = s.size();
-    vector<pair<char, ll>> vp, vc;
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
+    vll b(n); invec(b, n);
 
-    for(ll i = 0; i < n; i++){
-        if(p[i] == 'L'){
-            ll cntl = 0;
-            while(i < n && p[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vp.push_back({'L', cntl});
+    vll c(n);
+    for(ll i=0; i<n; i++){
+        c[i] = b[i] - a[i];
+    }
+    debug(c);
+
+    multiset<ll> st;
+    vll neg;
+    for(ll i=0; i<n; i++){
+        if(c[i] >= 0){
+            st.insert(c[i]);
         }
         else{
-            ll cntr = 0;
-            while(i < n && p[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vp.push_back({'R', cntr});
+            neg.pb(c[i]);
         }
     }
 
-    for(ll i = 0; i < m; i++){
-        if(s[i] == 'L'){
-            ll cntl = 0;
-            while(i < m && s[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vc.push_back({'L', cntl});
+    sort(neg.rbegin(), neg.rend()); 
+    debug(neg);
+
+    ll cnt = 0;
+    for(ll i=0; i<neg.size(); i++){
+        if(st.empty()){
+            break;
         }
-        else{
-            ll cntr = 0;
-            while(i < m && s[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vc.push_back({'R', cntr});
+        auto it = st.lower_bound(abs(neg[i]));
+        if(it != st.end()){
+            cnt++;
+            st.erase(it);
         }
     }
 
-    debug(vp);  
-    debug(vc);
+    cnt += (ll)st.size()/2;
 
-    ll j = 0;
-    for(ll i=0; i<vp.size(); i++){
-        char ch = vp[i].first;
-        ll cnt = vp[i].second;
-        if(j >= vc.size()){
-            pn;
-            return;
-        }
-        char chs = vc[j].first;
-        ll cnts = vc[j].second;
-        if(ch != chs){
-            pn;
-            return;
-        }
-        if(!(cnt <= cnts && cnts <= 2*cnt)){
-            pn;
-            return;
-        }
-        j++;
-    }
-
-    if(j < vc.size()){
-        pn;
-        return;
-    }
-
-    py;
+    cout<<cnt<<nl;
 }
 
 

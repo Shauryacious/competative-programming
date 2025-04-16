@@ -107,83 +107,89 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    string p, s; cin >> p >> s;
-    ll n = p.size(), m = s.size();
-    vector<pair<char, ll>> vp, vc;
+ll dp[20][2][2][2];
 
+ll f(ll idx, ll tight, ll isValid, ll k, unordered_map<ll, ll>& mp, string& s){
+    ll n = s.size();
+    if(idx == n){
+        if(isValid && k){
+            return 1;
+        }
+        return 0;
+    }
+
+    if(dp[idx][tight][isValid][k] != -1) return dp[idx][tight][isValid][k];
+
+    ll bound = (tight) ? s[idx] - '0' : 9;
+
+    ll ans = 0;
+    for(ll i = 0; i <= bound; i++){
+        ll newtight = (tight && (i == bound));
+        if(isValid){
+            mp[i]++;
+            ll newk = k;
+            for(auto it: mp){
+                if(it.second >= ((n+1)/2)){
+                    newk = 1;
+                    break;
+                }
+            }
+            ans += f(idx + 1, newtight, isValid, newk, mp, s);
+            mp[i]--;
+        }
+        else{
+            if(i == 0){
+                ans += f(idx + 1, newtight, 0, 0, mp, s);
+            }
+            else{
+                mp[i]++;
+                ll newk = k;
+                for(auto it: mp){
+                    if(it.second >= ((n+1)/2)){
+                        newk = 1;
+                        break;
+                    }
+                }
+                ans += f(idx + 1, newtight, 1, newk, mp, s);
+                mp[i]--;
+            }
+        }
+    }
+
+    return dp[idx][tight][isValid][k] = ans;
+}
+
+
+ll check(string l){
+    map<ll, ll> mp;
+    ll n = l.size();
     for(ll i = 0; i < n; i++){
-        if(p[i] == 'L'){
-            ll cntl = 0;
-            while(i < n && p[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vp.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < n && p[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vp.push_back({'R', cntr});
-        }
+        mp[l[i] - '0']++;
     }
-
-    for(ll i = 0; i < m; i++){
-        if(s[i] == 'L'){
-            ll cntl = 0;
-            while(i < m && s[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vc.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < m && s[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vc.push_back({'R', cntr});
-        }
+    for(auto it: mp){
+        if(it.second >= ((n+1)/2)) return 1;
     }
+    return 0;
+}
 
-    debug(vp);  
-    debug(vc);
+void solve() {
+    ll L, R; cin>>L>>R;
+    string r = to_string(R);
+    string l = to_string(L);
 
-    ll j = 0;
-    for(ll i=0; i<vp.size(); i++){
-        char ch = vp[i].first;
-        ll cnt = vp[i].second;
-        if(j >= vc.size()){
-            pn;
-            return;
-        }
-        char chs = vc[j].first;
-        ll cnts = vc[j].second;
-        if(ch != chs){
-            pn;
-            return;
-        }
-        if(!(cnt <= cnts && cnts <= 2*cnt)){
-            pn;
-            return;
-        }
-        j++;
-    }
+    memset(dp, -1, sizeof(dp));
 
-    if(j < vc.size()){
-        pn;
-        return;
-    }
+    unordered_map<ll, ll> mpr;
+    ll ansr = f(0, 1, 0, 0, mpr, r);
 
-    py;
+    memset(dp, -1, sizeof(dp));
+    unordered_map<ll, ll> mpl;
+    ll ansl = f(0, 1, 0, 0, mpl, l);
+
+    ll x = check(l);
+    debug(x);
+    ll ans = ansr - ansl + check(l);
+    cout << ans << nl;
 }
 
 
@@ -193,7 +199,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

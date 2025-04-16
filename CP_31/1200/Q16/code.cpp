@@ -108,82 +108,9 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    string p, s; cin >> p >> s;
-    ll n = p.size(), m = s.size();
-    vector<pair<char, ll>> vp, vc;
-
-    for(ll i = 0; i < n; i++){
-        if(p[i] == 'L'){
-            ll cntl = 0;
-            while(i < n && p[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vp.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < n && p[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vp.push_back({'R', cntr});
-        }
-    }
-
-    for(ll i = 0; i < m; i++){
-        if(s[i] == 'L'){
-            ll cntl = 0;
-            while(i < m && s[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vc.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < m && s[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vc.push_back({'R', cntr});
-        }
-    }
-
-    debug(vp);  
-    debug(vc);
-
-    ll j = 0;
-    for(ll i=0; i<vp.size(); i++){
-        char ch = vp[i].first;
-        ll cnt = vp[i].second;
-        if(j >= vc.size()){
-            pn;
-            return;
-        }
-        char chs = vc[j].first;
-        ll cnts = vc[j].second;
-        if(ch != chs){
-            pn;
-            return;
-        }
-        if(!(cnt <= cnts && cnts <= 2*cnt)){
-            pn;
-            return;
-        }
-        j++;
-    }
-
-    if(j < vc.size()){
-        pn;
-        return;
-    }
-
-    py;
+    ll n, q; cin>>n>>q;
+    vll a(n); invec(a, n);
+    
 }
 
 

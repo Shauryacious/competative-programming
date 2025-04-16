@@ -107,84 +107,37 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    string p, s; cin >> p >> s;
-    ll n = p.size(), m = s.size();
-    vector<pair<char, ll>> vp, vc;
-
-    for(ll i = 0; i < n; i++){
-        if(p[i] == 'L'){
-            ll cntl = 0;
-            while(i < n && p[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vp.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < n && p[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vp.push_back({'R', cntr});
-        }
-    }
-
-    for(ll i = 0; i < m; i++){
-        if(s[i] == 'L'){
-            ll cntl = 0;
-            while(i < m && s[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vc.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < m && s[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vc.push_back({'R', cntr});
-        }
-    }
-
-    debug(vp);  
-    debug(vc);
-
-    ll j = 0;
-    for(ll i=0; i<vp.size(); i++){
-        char ch = vp[i].first;
-        ll cnt = vp[i].second;
-        if(j >= vc.size()){
-            pn;
-            return;
-        }
-        char chs = vc[j].first;
-        ll cnts = vc[j].second;
-        if(ch != chs){
-            pn;
-            return;
-        }
-        if(!(cnt <= cnts && cnts <= 2*cnt)){
-            pn;
-            return;
-        }
-        j++;
-    }
-
-    if(j < vc.size()){
-        pn;
-        return;
-    }
-
-    py;
+void solve(){
+	int n;
+	cin >> n;
+	string s;
+	cin >> s;
+	bool is_palindrome=1;
+	int cnt_0 = 0;
+	for(int i=0;i<n;i++){
+		cnt_0 += s[i]=='0';
+	}
+	if(cnt_0 == 1){
+		cout << "BOB\n";
+		return;
+	}
+	if(cnt_0%2){
+		cout << "ALICE\n";
+		return;
+	}
+	cout << "BOB\n";
+	return;
 }
+
+
+// 100101001 
+// 100111001 (Alice set)
+// 110111001 (BOB set)
+// 100111011 (Alice Reverse)
+// 110111011 (BOB set)
+// 110111111 (Alice set)
+// 111111011 (BOB reverse)
+// 111111111 (Alice set)
 
 
 int main(){

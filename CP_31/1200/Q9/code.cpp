@@ -108,82 +108,20 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    string p, s; cin >> p >> s;
-    ll n = p.size(), m = s.size();
-    vector<pair<char, ll>> vp, vc;
-
-    for(ll i = 0; i < n; i++){
-        if(p[i] == 'L'){
-            ll cntl = 0;
-            while(i < n && p[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vp.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < n && p[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vp.push_back({'R', cntr});
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
+    multiset<ll> st(a.begin(), a.end());
+    ll cnt = 0;
+    while(st.size()){
+        cnt++;
+        ll x = *st.begin();
+        st.erase(st.find(x));
+        while(st.find(x+1) != st.end()){
+            x++;
+            st.erase(st.find(x));
         }
     }
-
-    for(ll i = 0; i < m; i++){
-        if(s[i] == 'L'){
-            ll cntl = 0;
-            while(i < m && s[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vc.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < m && s[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vc.push_back({'R', cntr});
-        }
-    }
-
-    debug(vp);  
-    debug(vc);
-
-    ll j = 0;
-    for(ll i=0; i<vp.size(); i++){
-        char ch = vp[i].first;
-        ll cnt = vp[i].second;
-        if(j >= vc.size()){
-            pn;
-            return;
-        }
-        char chs = vc[j].first;
-        ll cnts = vc[j].second;
-        if(ch != chs){
-            pn;
-            return;
-        }
-        if(!(cnt <= cnts && cnts <= 2*cnt)){
-            pn;
-            return;
-        }
-        j++;
-    }
-
-    if(j < vc.size()){
-        pn;
-        return;
-    }
-
-    py;
+    cout<<cnt<<nl;
 }
 
 

@@ -110,6 +110,77 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+
+    ll mx = 676;
+    ll l = 0;
+    debug(l);
+    for(ll i=0; i<n; i++){
+        l = max(l, (ll)(log2(a[i])));
+        cout<< bitset<10>(a[i]) << " ";
+    }
+    cout << nl;
+
+    ll sum = accumulate(a.begin(), a.end(), 0);
+    // for(ll i=0; i<n; i++){
+    //     cout<<(sum ^ a[i]) << " ";
+    // }
+    // cout << nl;
+
+    vll v(32);
+    for(ll i=0; i<32; i++){
+        for(ll j=0; j<n; j++){
+            if((a[j] & (1<<i)) > 0){
+                v[i]++;
+            }
+            else{
+                v[i]--;
+            }
+        }
+    }
+    for(ll i=0; i<=l; i++){
+        cout << v[i] << " ";
+    }
+    cout << nl;
+
+    set<ll> st(a.begin(), a.end());
+    for(ll i=l; i>=0; i--){
+        bool flag = false;
+        if(v[i] < 0 && v[i] > -n){
+            for(auto x : st){
+                if((x & (1<<i)) == 0){ // if the ith bit is not set
+                    st.erase(x);
+                }
+                if(st.size() == 1){
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        else if(v[i] > 0 && v[i] < n){
+            for(auto x : st){
+                if((x & (1<<i)) > 0){ // if the ith bit is set
+                    st.erase(x);
+                }
+                if(st.size() == 1){
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        else if(v[i] == n || v[i] == -n){
+            continue;
+        }
+        if(flag) break;
+    }
+
+    ll ele = *st.begin();
+    debug(ele);
+
+    ll ans = 0;
+    for(ll i=0; i<n; i++){
+        ans += (a[i] ^ ele);
+    }
+    cout << ans << nl;
 }
 
 

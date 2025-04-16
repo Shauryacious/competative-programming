@@ -108,8 +108,12 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    string a, b, c; cin>>a>>b>>c;
+    string s = "";
+    s += a[0];
+    s += b[0];
+    s += c[0];
+    cout<<s<<nl;
 }
 
 

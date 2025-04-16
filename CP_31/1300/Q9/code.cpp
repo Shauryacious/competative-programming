@@ -107,83 +107,43 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+const ll NN = 1e5 + 5;
+ll c[NN];
 void solve() {
-    string p, s; cin >> p >> s;
-    ll n = p.size(), m = s.size();
-    vector<pair<char, ll>> vp, vc;
+    ll q; cin>>q;
+    memset(c, 0, sizeof(c));
+    vector<pair<ll, vector<ll>>> v;
+    for(ll i = 0; i < q; i++){
+        ll n; cin>>n;
+        vector<ll> a(n);
+        invec(a, n);
+        v.pb({n, a});
+    }
 
-    for(ll i = 0; i < n; i++){
-        if(p[i] == 'L'){
-            ll cntl = 0;
-            while(i < n && p[i] == 'L'){
-                cntl++;
-                i++;
+    auto cmp = [](pair<ll, vector<ll>> a, pair<ll, vector<ll>> b) {
+        return a.ff > b.ff;
+    };
+
+    sort(v.begin(), v.end(), cmp);
+    debug(v);
+
+    for(ll i = 0; i < q; i++){
+        ll n = v[i].ff;
+        vector<ll> a = v[i].ss;
+        bool f = true;
+        for(ll j = 0; j < n; j++){
+            if(c[a[j]] == 0){
+                c[a[j]] = 1;
+                f = false;
             }
-            i--;
-            vp.push_back({'L', cntl});
         }
-        else{
-            ll cntr = 0;
-            while(i < n && p[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vp.push_back({'R', cntr});
+        // debug(c); 
+        if(f){
+            py; return;
         }
     }
 
-    for(ll i = 0; i < m; i++){
-        if(s[i] == 'L'){
-            ll cntl = 0;
-            while(i < m && s[i] == 'L'){
-                cntl++;
-                i++;
-            }
-            i--;
-            vc.push_back({'L', cntl});
-        }
-        else{
-            ll cntr = 0;
-            while(i < m && s[i] == 'R'){
-                cntr++;
-                i++;
-            }
-            i--;
-            vc.push_back({'R', cntr});
-        }
-    }
-
-    debug(vp);  
-    debug(vc);
-
-    ll j = 0;
-    for(ll i=0; i<vp.size(); i++){
-        char ch = vp[i].first;
-        ll cnt = vp[i].second;
-        if(j >= vc.size()){
-            pn;
-            return;
-        }
-        char chs = vc[j].first;
-        ll cnts = vc[j].second;
-        if(ch != chs){
-            pn;
-            return;
-        }
-        if(!(cnt <= cnts && cnts <= 2*cnt)){
-            pn;
-            return;
-        }
-        j++;
-    }
-
-    if(j < vc.size()){
-        pn;
-        return;
-    }
-
-    py;
+    pn;
 }
 
 
