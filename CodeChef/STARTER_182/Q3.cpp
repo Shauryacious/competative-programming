@@ -108,8 +108,42 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll x, y, z; cin >> x >> y >> z;
+    //Edge Case
+    if(x == 0){
+        cout<<min(y, z)<<nl;
+        return;
+    }
+    else if(y == 0){
+        cout<<min(x, z)<<nl;
+        return;
+    }
+    else if(z == 0){
+        cout<<min(x, y)<<nl;
+        return;
+    }
+
+    ll mx = max(x, max(y, z));
+    ll sm = x + y + z;
+    ll rem = sm - mx;
+
+    if(x%2==0 && y%2==0 && z%2==0){
+        cout<<rem<<nl;
+        return;
+    }
+
+    if(x&1 && y&1 && z&1){ // all are odd
+        cout<<rem-1<<nl;
+        return;
+    }
+
+    if(!(mx&1) && !(rem&1)){ // max is even and sum of rest is even
+        cout<<rem-1<<nl;
+        return;
+    }
+
+
+    cout<<rem<<nl;
 }
 
 

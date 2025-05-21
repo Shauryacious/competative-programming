@@ -107,35 +107,68 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
 
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
+void solve() {
+    ll n; 
+    cin >> n;
+    vector<pair<ll, vll>> v(n);
+    for (ll i = 0; i < n; i++) {
+        ll x; 
+        cin >> x;
+        v[i].ff = x;
+        v[i].ss.resize(x);
+        ll bi = 0, mn = 0;
+        for (ll j = 0; j < x; j++) {
+            cin >> v[i].ss[j];
+            bi = max(bi, v[i].ss[j] - mn);
+            mn++;
         }
-        if((d % a[i]) == 0) ans--;
+        v[i].ss.pb(bi);
     }
-    cout<<ans<<nl;
+    debug(v);
+
+    auto cmp = [&](auto &a, auto &b) -> bool {
+        ll mxa = a.ss.back(), mxb = b.ss.back();
+        if (mxa != mxb) 
+            return mxa < mxb;
+        // strict on equal bᵢ:
+        return a.ff > b.ff;
+    };
+
+    sort(all(v), cmp);
+
+    for (ll i = 0; i < n; i++) {
+        v[i].ss.pop_back();
+    }
+    debug(v);
+
+    auto f = [&](ll start) -> bool {
+        ll curr = start;
+        for (ll i = 0; i < n; i++) {
+            for (auto a : v[i].ss) {
+                if (a >= curr) 
+                    return false;
+                curr++;
+            }
+        }
+        return true;
+    };
+
+    ll lo = 0, hi = (ll)1e18, ans = hi;
+    while (lo <= hi) {
+        ll mid = lo + ((hi - lo) >> 1);
+        if (f(mid)) {
+            ans = mid;
+            hi = mid - 1;
+        } else {
+            lo = mid + 1;
+        }
+    }
+
+    cout << ans << nl;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
 
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
 
 int main(){
     #ifndef ONLINE_JUDGE

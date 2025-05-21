@@ -107,35 +107,56 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
-
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
-        }
-        if((d % a[i]) == 0) ans--;
-    }
-    cout<<ans<<nl;
+bool ask(string s){
+    cout<<"? "<<s<<endl;
+    string x; cin>>x;
+    if(x=="1") return true;
+    else return false;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
+void solve() {
+    ll n; cin>>n;
+    bool left = false;
+    if(n == 1){
+        if(ask("0")) cout<<"! 0"<<endl;
+        else cout<<"! 1"<<endl;
+        return;
+    }
 
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
+    string s1 = "00", s2 = "11", s3 = "01", s4 = "10";
+    if(n==2){
+        if(ask(s1)){
+            cout<<"! "<<s1<<endl;
+        }
+        else if(ask(s2)){
+            cout<<"! "<<s2<<endl;
+        }
+        else if(ask(s3)){
+            cout<<"! "<<s3<<endl;
+        }
+        else{
+            cout<<"! "<<s4<<endl;
+        }
+        return;
+    }
+
+
+    while(true){
+        if(ask(s1)){
+            while(true)
+        }
+        else if(ask(s2)){
+            left = true;
+        }
+        else if(ask(s3)){
+            left = true;
+        }
+        else{
+            left = false;
+        }
+    }
+}
+
 
 int main(){
     #ifndef ONLINE_JUDGE

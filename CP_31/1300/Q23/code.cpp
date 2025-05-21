@@ -107,35 +107,128 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
 
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
+void checkAndPrint(ll a, ll b, ll c, ll n) {
+    debug(a);
+    debug(b);
+    debug(c);
+    debug(n);
+    if((a * b * c) == n){
+        unordered_set<ll> s;
+        s.insert(a);
+        s.insert(b);
+        s.insert(c);
+        if(s.size() == 3){
+            py;
+            cout << a << " " << b << " " << c << nl;
+            return;
         }
-        if((d % a[i]) == 0) ans--;
     }
-    cout<<ans<<nl;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
+void solve() {
+    ll n; cin>>n;
+    map<ll, ll> m;
+    ll x = n;
+    for(ll i = 2; i*i <= n; i++){
+        while(n%i == 0){
+            m[i]++;
+            n /= i;
+        }
+    }
+    if(n > 1){
+        m[n]++;
+    }
+    n = x;
+    debug(m);
+    if(m.size() >= 3){
+        auto aa = *m.begin();
+        m.erase(m.begin());
+        ll a = aa.ff;
+        aa.ss--;
 
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
+        auto bb = *m.begin();
+        m.erase(m.begin());
+        ll b = bb.ff;
+        bb.ss--;
+
+        ll c = 1;
+        while(aa.ss > 0){
+            c *= aa.ff;
+            aa.ss--;
+        }
+        while(bb.ss > 0){
+            c *= bb.ff;
+            bb.ss--;
+        }
+        for(auto i : m){
+            while(i.ss > 0){
+                c *= i.ff;
+                i.ss--;
+            }
+        }
+        checkAndPrint(a, b, c, n);
+        return;
+    }
+    else if(m.size() == 2){
+        auto aa = *m.begin();
+        m.erase(m.begin());
+        auto bb = *m.begin();
+        m.erase(m.begin());
+        if(aa.ss >= 3){
+            ll a = aa.ff;
+            aa.ss--;
+            ll b = 1;
+            while(aa.ss > 0){
+                b *= aa.ff;
+                aa.ss--;
+            }
+            ll c = 1;
+            while(bb.ss > 0){
+                c *= bb.ff;
+                bb.ss--;
+            }
+            checkAndPrint(a, b, c, n);
+            return;
+        }
+        else if(bb.ss >= 3){
+            ll b = bb.ff;
+            bb.ss--;
+            ll a = 1;
+            while(bb.ss > 0){
+                a *= bb.ff;
+                bb.ss--;
+            }
+            ll c = 1;
+            while(aa.ss > 0){
+                c *= aa.ff;
+                aa.ss--;
+            }
+            checkAndPrint(a, b, c, n);
+            return;
+        }
+    }
+    else if(m.size() == 1){
+        auto aa = *m.begin();
+        m.erase(m.begin());
+        if(aa.ss >= 6){
+            ll a = aa.ff;
+            aa.ss--;
+            ll b = aa.ff * aa.ff;
+            aa.ss -= 2;
+            ll c = 1;
+            while(aa.ss > 0){
+                c *= aa.ff;
+                aa.ss--;
+            }
+            checkAndPrint(a, b, c, n);
+            return;
+        }
+    }
+
+    pn;
+}
+
 
 int main(){
     #ifndef ONLINE_JUDGE

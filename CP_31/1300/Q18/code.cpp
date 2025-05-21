@@ -108,34 +108,20 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
-
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
-        }
-        if((d % a[i]) == 0) ans--;
+    int n;
+    cin >> n;
+    int k = n / 2;
+    ll ans;
+    // even n: split into k vertical + k horizontal moves → (k+1)^2 endpoints
+    // odd  n: one axis has k+1 steps, the other k → 2 * (k+1)*(k+2)
+    if (n % 2 == 0) {
+        ans = 1LL * (k + 1) * (k + 1);
+    } else {
+        ans = 1LL * (k + 1) * (k + 2) * 2;
     }
-    cout<<ans<<nl;
+    cout << ans << nl;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
-
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -143,7 +129,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

@@ -108,34 +108,53 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
+    ll n; cin>>n;
+    string s, t; cin>>s>>t;
 
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
-        }
-        if((d % a[i]) == 0) ans--;
+    if(s==t){
+        cout<<0<<nl;
+        return;
     }
-    cout<<ans<<nl;
+
+    bool seen1 = false;
+    ll idx = -1;
+    for(ll i=0; i<n; i++){
+        if(seen1 == false && s[i] != t[i]){
+            pm;
+            return;
+        }
+        if(s[i] == '1'){
+            seen1 = true;
+            idx = i;
+            break;
+        }
+    }
+
+    vll ans;
+    for(ll i=idx; i<=n-2; i++){
+        if(s[i]=='1' && s[i+1]=='0'){
+            ans.pb(i+1);
+            s[i+1] = '1';
+        }
+    }
+    debug(s);
+    debug(ans);
+
+    for(ll i=n-1; i>=idx+1; i--){
+        if(t[i] == '0'){
+            ans.pb(i);
+        }
+    }
+    debug(ans);
+
+    cout<<ans.size()<<nl;
+    for(auto x: ans){
+        cout<<x<<" ";
+    }
+    cout<<nl;
+
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
-
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
 
 int main(){
     #ifndef ONLINE_JUDGE

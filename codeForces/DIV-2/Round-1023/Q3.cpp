@@ -108,34 +108,109 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
+    ll n, k; 
+    cin >> n >> k;
+    string s; 
+    cin >> s;
+    vll a(n); 
+    invec(a, n);
 
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
+    // --- KADANE WITH INDEXES ---
+    ll current = a[0], maxsum = a[0];
+    int tempL = 0, bestL = 0, bestR = 0;
+    for (int i = 1; i < n; i++) {
+        // decide whether to start new subarray at i
+        if (current + a[i] < a[i]) {
+            current = a[i];
+            tempL = i;
+        } else {
+            current += a[i];
         }
-        if((d % a[i]) == 0) ans--;
+        // update best if we found a strictly larger sum
+        if (current > maxsum) {
+            maxsum = current;
+            bestL = tempL;
+            bestR = i;
+        }
     }
-    cout<<ans<<nl;
+
+    debug(maxsum);
+    debug(bestL);
+    debug(bestR);
+    // // print max sum and its interval
+    // cout << maxsum << "\n";
+    // // 0-based indices of subarray giving maxsum:
+    // cout << bestL << " " << bestR << "\n";
+    // if you want 1-based:
+    // cout << bestL+1 << " " << bestR+1 << "\n";
+
+    if (maxsum > k) {
+        pn; 
+        return;
+    }
+    if (maxsum == k) {
+        py;
+        for (int i = 0; i < n; i++) {
+            cout << a[i] << " ";
+        }
+        cout << "\n";
+        return;
+    }
+    int cnt0 = count(s.begin(), s.end(), '0');
+    if (cnt0 == 0) {
+        pn;
+        return;
+    }
+    ll diff = k - maxsum;
+
+    vll ans = a;
+    for (int i = bestL; i <= bestR; i++) {
+        if(s[i] == '0') {
+            ans[i] = diff;
+            py;
+            for (int j = 0; j < n; j++) {
+                cout << ans[j] << " ";
+            }
+            cout << "\n";
+            return;
+        }
+    }
+
+    ll curr = 0;
+    if(bestL > 0){
+        for(ll i=bestL-1; i>=0; i--){
+            curr += a[i];
+            if(s[i] == '0'){
+                ans[i] = diff + abs(curr);
+                py;
+                for (int j = 0; j < n; j++) {
+                    cout << ans[j] << " ";
+                }
+                cout << "\n";
+                return;
+            }
+        }
+    }
+
+    curr = 0;
+    if(bestR < n-1){
+        for(ll i=bestR+1; i<n; i++){
+            curr += a[i];
+            if(s[i] == '0'){
+                ans[i] = diff + abs(curr);
+                py;
+                for (int j = 0; j < n; j++) {
+                    cout << ans[j] << " ";
+                }
+                cout << "\n";
+                return;
+            }
+        }
+    }
+    pn;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
 
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
 
 int main(){
     #ifndef ONLINE_JUDGE

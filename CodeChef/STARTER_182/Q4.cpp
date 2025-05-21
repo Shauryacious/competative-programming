@@ -107,10 +107,186 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+
+
+// void solve() {
+//     ll n, k; cin >> n >> k;
+//     string s; cin >> s;
+//     // reverse(s.begin(), s.begin() + n - 2);
+//     debug(s);
+
+//     bool f = false;
+//     for(ll i = 0; i < n; i++){
+//         char ch = s[i];
+//         ll cnt = 0;
+//         bool used = false;
+//         while(i < n && s[i] == ch){
+//             cnt++;
+//             if(cnt == k){
+//                 debug(i);
+//                 ll j = i;
+//                 while(j < n && s[j] == ch){
+//                     j++;
+//                 }
+//                 if(j < n){
+//                     char ch2 = s[j];
+//                     debug(j);
+//                     // reverse(s.begin() + i, s.begin() + j + 1); // FIXED
+//                     if(j+1 < n && s[j+1] != ch2){
+//                         char ch3 = s[j+1];
+//                         ll jj = j + 1;
+//                         ll cnt3 = 0;
+//                         while(jj < n && s[jj] == ch3){
+//                             jj++;
+//                             cnt3++;
+//                         }
+//                         if(cnt3 >= (k-1)){ // We have to discard this G choice, and look for a better G
+                            
+//                         }
+//                     }
+//                     else{
+//                         reverse(s.begin() + i, s.begin() + j + 1);
+//                     }
+//                     used = true;
+//                     debug(s);
+//                 }
+//                 else if(j == n){
+//                     pn;
+//                     return;
+//                 }
+//             }
+//             i++;
+//             if(used){
+//                 f = true;
+//                 break;
+//             }
+//         }
+//         i--;
+//         if(f) break;
+//     }
+
+//     for(ll i = 0; i < n; i++){
+//         char ch = s[i];
+//         ll cnt = 0;
+//         while(i < n && s[i] == ch){
+//             cnt++;
+//             if(cnt >= k){
+//                 pn;
+//                 return;
+//             }
+//             i++;
+//         }
+//     }
+
+//     py;
+// }
+
+
+
+
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, k; 
+    cin >> n >> k;
+    string s; 
+    cin >> s;
+    debug(s);
+
+    bool performed = false;
+    // Try to find a candidate block to reverse
+    for (ll i = 0; i < n; i++) {
+        char cur = s[i];
+        ll cnt = 0;
+        bool op_done = false;
+        // Count consecutive same characters
+        while(i < n && s[i] == cur) {
+            cnt++;
+            // When block length reaches k, check candidate for reversal
+            if(cnt == k) {
+                debug(i);
+                ll j = i;
+                // Move j until the group of cur ends
+                while(j < n && s[j] == cur)
+                    j++;
+                    debug(j);
+                // If there is a next group...
+                if(j < n) {
+                    char candidate = s[j];
+                    debug(j);
+                    // If there is an element after the candidate group and it is different,
+                    // we may have a problematic reversal.
+                    if(j + 1 < n && s[j + 1] != candidate) {
+                        char nextChar = s[j + 1];
+                        ll jj = j + 1;
+                        ll cntNext = 0;
+                        // Count the consecutive nextChar after candidate group
+                        while(jj < n && s[jj] == nextChar) {
+                            cntNext++;
+                            jj++;
+                        }
+                        // If the candidate group would “steal” one from a group that is exactly k–1 long,
+                        // then skip this candidate.
+                        debug(cntNext);
+                        if(cntNext == (k - 1)) {
+                            // j++;
+                            // Skip this candidate reversal and let the loop continue
+                            ;
+                        }
+                        // If the next group is already too long, the answer is "NO"
+                        else if(cntNext >= k) {
+                            pn;
+                            return;
+                        }
+                        else {
+                            // Otherwise safe to reverse
+                            reverse(s.begin() + i, s.begin() + j + 1);
+                            op_done = true;
+                        }
+                    }
+                    else {
+                        // Either there is no element after j or the next element is the same as candidate:
+                        // safe to reverse.
+                        reverse(s.begin() + i, s.begin() + j + 1);
+                        op_done = true;
+                        debug(op_done);
+                    }
+                    if(op_done) {
+                        debug(s);
+                        performed = true;
+                        break;
+                    }
+                }
+                // If there is no candidate (j==n) then we cannot do any reversal.
+                else if(j == n) {
+                    pn;
+                    return;
+                }
+            }
+            i++;
+        }
+        i--;  // readjust index since inner loop advanced it
+        if(performed)
+            break;
+    }
+
+    // Final check: if any segment of length >= k exists, output "NO"
+    for(ll i = 0; i < n; i++){
+        char cur = s[i];
+        ll cnt = 0;
+        while(i < n && s[i] == cur) {
+            cnt++;
+            if(cnt >= k) {
+                pn;
+                return;
+            }
+            i++;
+        }
+    }
+    py;
 }
+
+
 
 
 int main(){

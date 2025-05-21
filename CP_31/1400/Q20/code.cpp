@@ -111,57 +111,32 @@ void solve() {
     ll n, k; cin>>n>>k;
     vll a(n); invec(a, n);
     vll b(n);
+    map<ll, ll> mp;
+
     for(ll i = 0; i < n; i++){
         b[i] = a[i]%k;
+        b[i] = k - b[i];
+        if(b[i]%k != 0){
+            mp[b[i]]++;
+        }
     }
     debug(b);
 
-    ll cnt = 0, curr = 0;
-    multiset<ll, greater<ll>> st;
-    for(ll i=0; i<n; i++){
-        if(b[i] != 0) st.insert(b[i]);
-    }
-    for(auto it : st){
-        debug(it);
-    }
-    // debug(st);
-    while(st.size()){
-        auto ele = *st.begin();
-        if(st.find((k - curr)) != st.end()){
-            st.erase(st.find(k - curr));
-            curr++;
-            if(curr == k){
-                curr = 0;
-                cnt++;
-            }
-            continue;
-        }
-        if((curr + ele) % k == 0){
-            st.erase(st.find(ele));
-            curr++;
-            if(curr == k){
-                curr = 0;
-                cnt++;
-            }
-        }
-        else{
-            if(curr < k - ele){
-                curr = k - ele;
-            }
-            else{
-                cnt++;
-                curr = k - ele;
-            }
-            st.erase(st.find(ele));
-            curr++;
-            if(curr == k){
-                curr = 0;
-                cnt++;
-            }
-        }
+    if(mp.size() == 0){
+        cout << 0 << nl;
+        return;
     }
 
-    cout<< cnt*k + curr << nl;
+    ll mx = 0;
+    for(auto it : mp){
+        ll x = it.ff;
+        ll y = it.ss;
+        ll val = x + (y-1)*k;
+        mx = max(mx, val);
+    }
+
+    cout << mx + 1 << nl;
+
 }
 
 

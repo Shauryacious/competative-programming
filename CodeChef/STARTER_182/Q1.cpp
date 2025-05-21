@@ -109,7 +109,20 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    string s; cin>>s;
+    ll ans = 0, cntg = 0, cntb = 0;
+    for(auto ch : s){
+        ans++;
+        if(ch == 'G') cntg++;
+        else{
+            cntb++;
+            if(cntb > 2*cntg){
+                break;
+            }
+        }
+    }
+
+    cout<<ans<<nl;
 }
 
 

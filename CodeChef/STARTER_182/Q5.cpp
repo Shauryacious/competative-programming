@@ -108,9 +108,118 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, k; 
+    cin >> n >> k;
+    string s; 
+    cin >> s;
+    debug(s);
+
+    bool opPerformed = false;
+    // Traverse the string, looking for a block that reaches a length of k.
+    for (ll i = 0; i < n; i++) {
+        char cur = s[i];
+        ll cnt = 0;
+        bool opDone = false;
+        // Count the run of cur.
+        while (i < n && s[i] == cur) {
+            cnt++;
+            // When the run first reaches length k, try to fix it.
+            if (cnt == k) {
+                debug(i);
+                // i is now at the kth occurrence.
+                // Try to choose a candidate reversal endpoint, starting from j = i+1.
+                ll j = i + 1;
+                ll candidateEnd = -1;
+                bool candidateFound = false;
+                while (j < n) {
+                    // Identify the candidate group from index j.
+                    char cand = s[j];
+                    ll cntCand = 0;
+                    ll t = j;
+                    while (t < n && s[t] == cand) {
+                        cntCand++;
+                        t++;
+                    }
+                    // If the candidate group itself is too long, no move is possible.
+                    if (cntCand >= k) {
+                        pn;  // print "NO"
+                        return;
+                    }
+                    candidateEnd = t - 1; // candidate group covers indices [j, t-1].
+                    
+                    // If there is a next group, check if we should merge.
+                    if (candidateEnd + 1 < n) {
+                        char nextChar = s[candidateEnd + 1];
+                        ll cntNext = 0;
+                        ll tt = candidateEnd + 1;
+                        while (tt < n && s[tt] == nextChar) {
+                            cntNext++;
+                            tt++;
+                        }
+                        // If the next group is dangerous (its count is at least k-1)
+                        // then try to merge—but if its letter is 'G' we want to take at most (k-1) of them.
+                        if (cntNext >= k - 1) {
+                            if (nextChar == 'G') {
+                                // Instead of merging the entire next group,
+                                // take only (k-1) G’s (if possible).
+                                candidateEnd = candidateEnd + (k - 1);
+                                candidateFound = true;
+                                break;
+                            } else {
+                                // For non-'G', merge the group completely.
+                                candidateEnd = tt - 1;
+                                j = tt;
+                                continue;
+                            }
+                        } else {
+                            // Next group is safe; candidate endpoint remains as is.
+                            candidateFound = true;
+                            break;
+                        }
+                    } else {
+                        // No next group exists, so candidate endpoint is safe.
+                        candidateFound = true;
+                        break;
+                    }
+                }
+                // If we found a candidate endpoint, perform the reversal.
+                if (candidateFound && candidateEnd != -1) {
+                    // Reverse from the kth occurrence (at index i) up to candidateEnd.
+                    reverse(s.begin() + i, s.begin() + candidateEnd + 1);
+                    opDone = true;
+                    debug(s);
+                } else {
+                    pn;
+                    return;
+                }
+            }
+            i++;
+            if (opDone) {
+                opPerformed = true;
+                break;
+            }
+        }
+        i--;  // adjust i since inner loop advanced it
+        if (opPerformed)
+            break;
+    }
+    
+    // Final check: if any contiguous block in s has length >= k, output "NO".
+    for (ll i = 0; i < n; i++) {
+        char cur = s[i];
+        ll cnt = 0;
+        while (i < n && s[i] == cur) {
+            cnt++;
+            if (cnt >= k) {
+                pn;
+                return;
+            }
+            i++;
+        }
+    }
+    py;
 }
+
 
 
 int main(){

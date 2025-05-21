@@ -108,34 +108,55 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
+    ll n, m; cin>>n>>m;
+    map<ll, vll> mpx, mpy;
+    for(ll i = 1; i <= n; i++){
+        for(ll j = 1; j <= m; j++){
+            ll x; cin>>x;
+            mpx[x].pb(i);
+            mpy[x].pb(j);
+        }
+    }
+    debug(mpx);
+    debug(mpy);
 
     ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
+    for(auto p : mpx){
+        vll v = p.ss;
+        sort(all(v));
+        ll nn = v.size();
+        vll pref(nn, 0);
+        pref[0] = v[0];
+        for(ll i = 1; i < nn; i++){
+            pref[i] = pref[i - 1] + v[i - 1];
         }
-        if((d % a[i]) == 0) ans--;
+        debug(pref);
+        ll sum = 0;
+        for(ll i = 0; i < nn - 1; i++){
+            sum += (pref[nn-1] - pref[i]) - (nn - i - 1) * v[i];
+        }
+        ans += sum;
     }
-    cout<<ans<<nl;
+
+    for(auto p : mpy){
+        vll v = p.ss;
+        sort(all(v));
+        ll nn = v.size();
+        vll pref(nn, 0);
+        pref[0] = v[0];
+        for(ll i = 1; i < nn; i++){
+            pref[i] = pref[i - 1] + v[i - 1];
+        }
+        ll sum = 0;
+        for(ll i = 0; i < nn - 1; i++){
+            sum += (pref[nn-1] - pref[i]) - (nn - i - 1) * v[i];
+        }
+        ans += sum;
+    }
+
+    cout << ans << nl;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
-
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -143,7 +164,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

@@ -108,34 +108,49 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, k, d; cin>>n>>k>>d;
+    ll n, k; cin>>n>>k;
     vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
-
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
-        }
-        if((d % a[i]) == 0) ans--;
+    map<ll, ll> m;
+    for(ll i=0; i<n; i++){
+        m[a[i]]++;
     }
-    cout<<ans<<nl;
+    ll mx = *max_element(all(a));
+    ll mn = *min_element(all(a));
+    ll sm = accumulate(all(a), 0);
+
+    if(mx - mn <= k){
+        if(sm&1){
+            cout<<"Tom"<<nl;
+            return;
+        }
+        else{
+            cout<<"Jerry"<<nl;
+            return;
+        }
+    }
+
+    if(mx - mn - 1 == k){
+        if(m[mx] == 1){
+            if(sm&1){
+                cout<<"Tom"<<nl;
+                return;
+            }
+            else{
+                cout<<"Jerry"<<nl;
+                return;
+            }
+        }
+        else{
+            cout<<"Jerry"<<nl;
+            return;
+        }
+    }
+    else{ // mx - mn has a gap more than k + 1
+        cout<<"Jerry"<<nl;
+        return;
+    }
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
-
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
 
 int main(){
     #ifndef ONLINE_JUDGE

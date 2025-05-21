@@ -107,35 +107,47 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
 
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
-        }
-        if((d % a[i]) == 0) ans--;
+
+void solve() {
+    ll n; cin>>n;
+    vvll adj(n+1);
+    for(ll u=2; u<=n; u++){
+        ll v; cin>>v;
+        adj[v].pb(u);
+        adj[u].pb(v);
     }
+
+    string s; cin>>s;
+
+    vector<pair<ll, ll>> subt(n+1); // {black, white}
+    ll ans = 0;
+
+    auto dfs = [&](ll u, ll p, auto&& dfs) -> void {
+        char c = s[u-1];
+        if(c == 'B'){
+            subt[u].ff++;
+        }else{
+            subt[u].ss++;
+        }
+
+        for(auto v : adj[u]){
+            if(v != p){
+                dfs(v, u, dfs);
+                subt[u].ff += subt[v].ff;
+                subt[u].ss += subt[v].ss;
+            }
+        }
+
+        if(subt[u].ff == subt[u].ss){
+            ans++;
+        }
+    };
+
+    dfs(1, 0, dfs);
     cout<<ans<<nl;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
-
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
 
 int main(){
     #ifndef ONLINE_JUDGE

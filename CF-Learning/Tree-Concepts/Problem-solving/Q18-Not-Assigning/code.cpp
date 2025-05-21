@@ -108,34 +108,76 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
-
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
+    ll n; cin >> n;
+    vvll adj(n+1);
+    bool f = false;
+    vll deg(n+1, 0);
+    map<pll, ll> mp; // fixed: added missing semicolon
+    for (ll i = 1; i <= n-1; i++) {
+        ll u, v; cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+        deg[u]++;
+        deg[v]++;
+        mp[{u, v}] = i;
+        mp[{v, u}] = i;
+        if (deg[u] > 2 || deg[v] > 2) {
+            f = true;
         }
-        if((d % a[i]) == 0) ans--;
     }
-    cout<<ans<<nl;
+
+    if (f) {
+        cout << -1 << nl;
+        return;
+    }
+
+    vll ans(n, 0);
+    ll x = 0;
+    ll node1 = -1, node2 = -1;
+    for (auto v : adj[1]) {
+        if (x == 0) node1 = v;
+        else node2 = v;
+        x++;
+    }
+
+    if (node2 == -1) node2 = node1; // handle n=2 case
+
+    ans[mp[{1, node1}]] = 2;
+    ans[mp[{1, node2}]] = 3;
+
+    auto dfs = [&](ll u, ll p, ll val, auto&& dfs) -> void {
+        for (auto v : adj[u]) {
+            if (v != p) {
+                ans[mp[{u, v}]] = val;
+                dfs(v, u, (val == 2 ? 3 : 2), dfs);
+            }
+        }
+    };
+
+    dfs(node1, 1, 3, dfs);
+    dfs(node2, 1, 2, dfs);
+
+    for (ll i = 1; i <= n-1; i++) {
+        cout << ans[i] << " ";
+    }
+    cout << nl;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
+// 7
+// 1 2
+// 1 3
+// 3 4
+// 3 5
+// 6 2
+// 7 2
 
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
+
+//                1
+//              /   \
+//             2     3
+//            / \   / \
+//           6   7  4   5
+
 
 int main(){
     #ifndef ONLINE_JUDGE

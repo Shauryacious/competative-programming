@@ -108,34 +108,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, k, d; cin>>n>>k>>d;
+    ll n; cin>>n;
     vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
-
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
+    vll b(n); invec(b, n);  
+    reverse(all(b));
+    reverse(all(a));
+    ll i = 0, j = 0;
+    set<ll> st;
+    while(i < n){
+        if(a[i] == b[j]){
+            i++;
+            j++;
+            while(j < n && (st.find(b[j]) != st.end())){
+                j++;
+            }
         }
-        if((d % a[i]) == 0) ans--;
+        else{
+            st.insert(a[i]);
+            i++;
+        }
     }
-    cout<<ans<<nl;
+    cout<<st.size()<<nl;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
-
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -143,7 +138,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

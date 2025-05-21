@@ -107,35 +107,68 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n, k, d; cin>>n>>k>>d;
-    vll a(n); invec(a, n);
-    debug(a);
-    sort(all(a));
-
-    ll ans = 0;
-    for(ll i=0; i<(n-k); i++){
-        if(a[i] > d) ans++;
-        else{
-            ans += (d/a[i]) + 1;
-        }
-        if((d % a[i]) == 0) ans--;
-    }
-    cout<<ans<<nl;
+ll gcd_all(const vll &v){
+    ll g = 0;
+    for (ll x : v) g = g==0 ? x : __gcd(g, x);
+    return g;
 }
 
-// void solve() {
-//     ll n, k, d; cin>>n>>k>>d;
-//     vll a; invec(a, n);
-//     sort(all(a));
+// return list of distinct prime factors of x
+vll prime_factors(ll x){
+    vll P;
+    for (ll d = 2; d*d <= x; d++){
+        if (x % d == 0){
+            P.push_back(d);
+            while (x % d == 0) x /= d;
+        }
+    }
+    if (x > 1) P.push_back(x);
+    return P;
+}
 
-//     ll ans = 0;
-//     for(ll i=0; i<(n-k); i++){
-//         if(a[i] == 0) continue;
-//         ans += (d/a[i]);
-//     }
-//     cout<<ans<<nl;
-// }
+void solve(){
+    int n;
+    cin >> n;
+    vll a(n);
+    for (int i = 0; i < n; i++) cin >> a[i];
+
+    // 1) if overall gcd >1, impossible
+    ll g_all = gcd_all(a);
+    if (g_all > 1){
+        cout << "No\n";
+        return;
+    }
+
+    // 2) find any prime p that divides some a[i] but not all
+    vector<int> ans;
+    for (int i = 0; i < n; i++){
+        vll P = prime_factors(a[i]);
+        for (ll p : P){
+            bool some_not = false;
+            for (int j = 0; j < n; j++){
+                if (a[j] % p != 0){
+                    some_not = true;
+                    break;
+                }
+            }
+            if (!some_not) continue;  
+            // p divides a[i] but not all → use p to split
+            ans.resize(n);
+            for (int k = 0; k < n; k++){
+                ans[k] = (a[k] % p == 0 ? 1 : 2);
+            }
+            // both groups non‑empty by construction
+            cout << "Yes\n";
+            for (int k = 0; k < n; k++){
+                cout << ans[k] << (k+1<n?' ':'\n');
+            }
+            return;
+        }
+    }
+
+    // should never reach here when gcd_all==1
+    cout << "No\n";
+}
 
 int main(){
     #ifndef ONLINE_JUDGE
