@@ -108,63 +108,8 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin>>n>>m;
-    vvll adj(n + 1);
-    for(ll i = 0; i < m; i++){
-        ll u, v; cin>>u>>v;
-        adj[u].pb(v);
-        adj[v].pb(u);
-    }
-
-    vll col(n + 1, -1);
-
-    bool is_bipartite = true;
-
-    auto power = [&](ll times) -> ll {
-        ll res = 1;
-        while(times--){
-            res = mod_mul(res, 2, MOD1);
-            res %= MOD1;
-        }
-        return res;
-    };
-
-    ll ans = 1;
-
-    auto dfs = [&](ll u, ll c, ll &cnt0, ll &cnt1, auto && dfs) -> void {
-        if(!is_bipartite) return;
-        col[u] = c;
-        if(c == 0) cnt0++;
-        else cnt1++;
-        for(auto v : adj[u]){
-            if(col[v] == -1){
-                dfs(v, c ^ 1, cnt0, cnt1, dfs);
-            } 
-            else{
-                if(col[v] == c){
-                    is_bipartite = false;
-                    return;
-                }
-            }
-        }
-    };
-
-    for(ll i = 1; i <= n; i++){
-        if(col[i] == -1){
-            ll cnt0 = 0, cnt1 = 0;
-            dfs(i, 0, cnt0, cnt1, dfs);
-            if(!is_bipartite) {
-                cout << "0" << nl;
-                return;
-            }
-            ll xx = power(cnt0);
-            ll yy = power(cnt1);
-            ll ways = mod_add(xx, yy, MOD1);
-            ans = mod_mul(ans, ways, MOD1);
-        }
-    }
-
-    cout << ans << nl;
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
 }
 
 
