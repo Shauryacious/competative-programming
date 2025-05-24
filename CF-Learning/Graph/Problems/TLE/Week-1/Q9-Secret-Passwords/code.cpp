@@ -109,7 +109,38 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    vvll adj(n + 1 + 26);
+    for(ll i = 1; i <= n; i++) {
+        string s; cin >> s;
+        for(ll j = 0; j < s.size(); j++) {
+            ll u = i;
+            ll v = (s[j] - 'a') + n + 1; // mapping a to n+1, b to n+2, ..., z to n+26
+            adj[u].pb(v);
+            adj[v].pb(u);
+        }
+    }
+
+    vll vis(n + 1 + 26, 0);
+
+    auto dfs = [&](ll u, auto && dfs) -> void {
+        vis[u] = 1;
+        for(auto v : adj[u]) {
+            if(!vis[v]) {
+                dfs(v, dfs);
+            }
+        }
+    };
+
+    ll cnt = 0;
+    for(ll i = n + 1; i <= n + 26; i++) {
+        if(adj[i].empty()) continue; // skip isolated dummy nodes
+        if(!vis[i]) {
+            cnt++;
+            dfs(i, dfs);
+        }
+    }
+
+    cout << cnt << nl;
 }
 
 
@@ -119,7 +150,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -107,9 +107,37 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+const int MAXN = 200005;
+
+ll dp[MAXN];
+
+void prec() {
+    dp[0] = 1;
+    dp[1] = 2;
+    dp[2] = 3;
+    for(int i = 3; i < MAXN; ++i) {
+        dp[i] = (dp[i - 1] + dp[i - 3]) % MOD1;
+    }
+}
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n; cin >> n;
+    string s; cin >> s;
+    ll ans = 1;
+    ll i = 0;
+
+    while(i < n) {
+        ll j = i;
+        while(j + 1 < n && s[j] != s[j + 1]) ++j;
+        ll len = j - i + 1;
+        if(len >= 4) {
+            ll m = len - 3;
+            ans = mod_mul(ans, dp[m], MOD1);
+        }
+        i = j + 1;
+    }
+
+    cout << ans << '\n';
 }
 
 
@@ -120,6 +148,7 @@ int main(){
     fastio();
     ll t = 1; 
     cin >> t;
+    prec();
     while(t--){
         solve();
     }

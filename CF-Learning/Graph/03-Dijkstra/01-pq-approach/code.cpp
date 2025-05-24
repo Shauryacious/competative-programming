@@ -44,6 +44,7 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
+typedef vector<vector<pll>> vvpll;
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
@@ -108,8 +109,40 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvpll adj(n + 1);
+    for(ll i = 0; i < m; i++){
+        ll u, v, w; cin>>u>>v>>w;
+        adj[u].pb({w, v});
+    }
+
+    set<pll> pq; // min heap
+    vll dist(n + 1, INF);
+    dist[1] = 0;
+    pq.insert({0, 1}); // {distance, node}
+
+    while(!pq.empty()){
+        auto [d, u] = *pq.begin();
+        pq.erase(pq.begin());
+
+        for(auto [w, v] : adj[u]){
+            if(dist[u] + w < dist[v]){
+                if(pq.count({dist[v], v})){
+                    pq.erase({dist[v], v});
+                }
+                dist[v] = dist[u] + w;
+                pq.insert({dist[v], v});
+            }
+        }
+    }
+
+    for(ll i = 1; i <= n; i++){
+        if(dist[i] == INF) cout << "-1 ";
+        else cout << dist[i] << " ";
+    }
+    cout << nl;
+
+
 }
 
 
@@ -119,7 +152,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

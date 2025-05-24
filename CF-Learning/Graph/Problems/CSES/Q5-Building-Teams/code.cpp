@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,8 +108,47 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvll adj(n+1);
+
+    for(ll i=0; i<m; i++){
+        ll u, v; cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    vll color(n+1, -1);
+    bool possible = true;
+
+    auto dfs = [&](ll u, ll c, auto && dfs) -> void {
+        color[u] = c;
+        for(auto v: adj[u]){
+            if(color[v] == -1){
+                dfs(v, c^1, dfs);
+            }
+            else{
+                if(color[v] == color[u]){
+                    possible = false;
+                    return;
+                }
+            }
+        }
+    };
+
+    for(ll i=1; i<=n; i++){
+        if(color[i] == -1){
+            dfs(i, 0, dfs);
+            if(possible == false){
+                cout<<"IMPOSSIBLE"<<nl;
+                return;
+            }
+        }
+    }
+
+    for(ll i=1; i<=n; i++){
+        cout<<color[i]+1<<" ";
+    }
+    cout<<nl;
 }
 
 
@@ -119,7 +158,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

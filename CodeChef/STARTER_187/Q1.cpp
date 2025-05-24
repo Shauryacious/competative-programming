@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,9 +108,20 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll x, y, k; cin>>x>>y>>k;
+    ll mx = max(x, y), mn = min(x, y);
+    k = min(mx, k);
+
+    mx -= k;
+    ll mx2 = max(mx, mn);
+    if(mx2 > k){
+        cout<<"BOB"<<nl;
+        return;
+    }
+
+    cout<<"ALICE"<<nl;
 }
+
 
 
 int main(){

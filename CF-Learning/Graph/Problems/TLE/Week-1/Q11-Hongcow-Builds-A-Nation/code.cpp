@@ -108,8 +108,77 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m, k; cin>>n>>m>>k;
+    vll c(k); 
+    invec(c, k);
+
+    vector<vll> adj(n + 1);
+    for(ll i = 0; i < m; i++){
+        ll u, v; cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    map<ll, pll> mp;
+    vll vis(n + 1, 0);
+
+    auto dfs = [&](ll u, ll& cnt, ll& edge, auto && dfs) -> void {
+        vis[u] = 1;
+        cnt++;
+        for(auto v : adj[u]){
+            edge++;
+            if(vis[v] == 0){
+                dfs(v, cnt, edge, dfs);
+            }
+        }
+        return;
+    };
+
+    ll x = n;
+    ll mxcnt = 0, mxg = 0;
+    for(auto g : c){
+        ll cnt = 0;
+        ll edge = 0;
+        dfs(g, cnt, edge, dfs);
+        edge /= 2; // since we counted both u-v and v-u
+        mp[g] = {cnt, edge};
+        x -= cnt;
+        if(cnt >= mxcnt){
+            mxcnt = cnt;
+            mxg = g;
+        }
+    }
+
+    ll extraedge = 0;
+    for(ll i = 1; i <= n; i++){
+        if(vis[i] == 0){
+            ll cnt = 0;
+            ll edge = 0;
+            dfs(i, cnt, edge, dfs);
+            edge /= 2; // since we counted both u-v and v-u
+            extraedge += edge;
+        }
+    }
+
+    debug(mp);
+    debug(x);
+    debug(mxcnt);
+    debug(mxg);
+    mxcnt += x;
+    ll mxe = mp[mxg].ss;
+    mp[mxg] = {mxcnt, mxe};
+    debug(mp);
+
+    ll ans = 0;
+    for(auto g : c){
+        auto [cnt, edge] = mp[g];
+        ll mxedge = (cnt * (cnt - 1)) / 2;
+        mxedge -= edge;
+        ans += mxedge;
+    }
+    
+    cout << ans - extraedge << nl;
+
 }
 
 
@@ -119,7 +188,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

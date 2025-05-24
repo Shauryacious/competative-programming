@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,8 +108,46 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, k;
+    cin >> n >> k;
+
+    if (__builtin_popcount(k) == 1) {
+        for (ll i = 1; i <= n; i++) {
+            cout << i << " ";
+        }
+        cout << '\n';
+        return;
+    }
+
+    vector<ll> ans(n + 1, 0);
+    set<ll> st;
+    for (ll i = 1; i <= n; i++) st.insert(i);
+
+    // Assign valid (x, y) pairs such that x | y == k
+    for (ll x = 1; x <= n; x++) {
+        if (ans[x] != 0) continue;
+        ll y = k - x;
+        if (y <= 0 || y > n || x == y || ans[y] != 0) continue;
+        if ((x | y) == k) {
+            ans[x] = y;
+            ans[y] = x;
+            st.erase(x);
+            st.erase(y);
+        }
+    }
+
+    // Fill remaining positions with unused values
+    for (ll i = 1; i <= n; i++) {
+        if (ans[i] == 0) {
+            ans[i] = *st.begin();
+            st.erase(st.begin());
+        }
+    }
+
+    for (ll i = 1; i <= n; i++) {
+        cout << ans[i] << " ";
+    }
+    cout << '\n';
 }
 
 

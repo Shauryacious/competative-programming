@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -109,7 +109,59 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    vvll adj(n+1);
+    for(ll i=0; i<n; i++){
+        for(ll j=0; j<n; j++){
+            ll x; cin>>x;
+            if(x==1){
+                adj[i+1].pb(j+1);
+            }
+        }
+    }
+
+    vll ans(n+1, 0);
+
+    auto bfs = [&](ll u) -> void{
+        ll e = u;
+        vll vis(n+1, 0);
+        ll d = 1;
+
+        queue<ll> q;
+        q.push(u);
+        while(!q.empty()){
+            ll szz = q.size();
+            for(ll i=0; i<szz; i++){
+                ll v = q.front();
+                q.pop();
+                for(auto it: adj[v]){
+                    if(!vis[it]){
+                        if(it == e){
+                            ans[e] = d;
+                            return;
+                        }
+                        q.push(it);
+                        vis[it] = 1;
+                    }
+                }
+            }
+            d++;
+        }
+    };
+
+
+    for(ll u=1; u<=n; u++){
+        bfs(u);
+    }
+
+    for(ll i=1; i<=n; i++){
+        if(!ans[i]){
+            cout<<"NO WAY"<<nl;
+        }
+        else{
+            cout<<ans[i]<<nl;
+        }
+    }
+    
 }
 
 
@@ -119,7 +171,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

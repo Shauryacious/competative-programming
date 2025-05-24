@@ -108,8 +108,65 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvll adj(n+1 + m);
+    ll mm = m;
+    ll curr = n + 1;
+    while(mm--){
+        ll k; cin>>k;
+        while(k--){
+            ll x; cin>>x;
+            adj[curr].pb(x);
+            adj[x].pb(curr);
+        }
+        curr++;
+    }
+
+    // debug(adj);
+
+    vll vis(n + 1 + m, 0);
+
+    auto dfs = [&](ll u, ll& cnt, auto && dfs) -> void{
+        if(u <= n) cnt++;
+        vis[u] = 1;
+        for(auto v : adj[u]){
+            if(vis[v]) continue;
+            // if(v > n) continue; // Ignore the extra nodes
+            dfs(v, cnt, dfs);
+        }
+    };
+    
+    vll ans(n+ 1 + m, 0);
+
+    vll vis2(n + 1 + m, 0);
+    auto dfs2 = [&](ll u, ll& cnt, auto && dfs2) -> void{
+        vis2[u] = 1;
+        ans[u] = cnt;
+        for(auto v : adj[u]){
+            if(!vis2[v]){
+                dfs2(v, cnt, dfs2);
+            }
+        }
+    };
+
+
+    for(ll i = 1; i <= n; i++){
+        if(!vis[i]){
+            vis[i] = 1;
+            ll cnt = 0;
+            dfs(i, cnt, dfs);
+            debug(cnt);
+            dfs2(i, cnt, dfs2);
+        }
+    }
+
+    debug(ans);
+
+    for(ll i = 1; i <= n; i++){
+        cout << ans[i] << " ";
+    }
+    cout << nl;
+
 }
 
 
@@ -119,7 +176,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

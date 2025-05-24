@@ -107,9 +107,152 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+void print(vvll& a){
+    cout<<"----------------------\n";
+    for(auto i : a){
+        for(auto j : i){
+            cout<<j<<" ";
+        }
+        cout<<nl;
+    }
+    cout<<"----------------------\n";
+}
+
+// void printq(queue<pair<char, pll>> q){
+//     cout<<"----------------------\n";
+//     while(!q.empty()){
+//         cout<<q.top().ff<<" "<<q.top().ss.ff<<" "<<q.top().ss.ss<<nl;
+//         q.pop();
+//     }
+//     cout<<"----------------------\n";
+// }
+
+void printele(char ch, ll x, ll y){
+    cout<<"----------------------\n";
+    cout<<ch<<" "<<x<<" "<<y<<nl;
+    cout<<"----------------------\n";
+}
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvll a(n, vll(m));
+    vvll b(n, vll(m));
+    ll sx = -1, sy = -1;
+
+    queue<pair<char, pll>> q;
+
+    for(ll i = 0; i < n; i++){
+        for (ll j = 0; j < m; j++){
+            char ch; cin>>ch;
+            if(ch == '#'){
+                a[i][j] = 0;
+            }
+            else if(ch == 'M'){
+                a[i][j] = 0;
+                q.push({ch, {i, j}});
+            }
+            else if(ch == 'A'){
+                a[i][j] = 1;
+                sx = i; sy = j;
+            }
+            else{
+                a[i][j] = 1;
+            }
+        }
+    }
+
+    if(sx == 0 || sx == n-1 || sy == 0 || sy == m-1){
+        cout<<"YES"<<nl;
+        cout<<0<<nl;
+        return;
+    }
+
+    q.push({'A', {sx, sy}});
+
+    // print(a);
+    // printq(q);
+
+    vll dx = {0, 0, -1, 1};
+    vll dy = {-1, 1, 0, 0};
+    vector<char> dir = {'L', 'R', 'U', 'D'};
+
+    vvll vis(n, vll(m, 0));
+
+    bool found = false;
+    ll ex = -1, ey = -1;
+
+    vector<vector<char>> dirs(n, vector<char>(m));
+
+    ll d = 0;
+
+    while(!q.empty()){
+        ll szz = q.size();
+        while(szz--){
+            auto [ch, p] = q.front();
+            q.pop();
+            auto [x, y] = p;
+            if(ch == 'A'){
+                for(ll i = 0; i < 4; i++){
+                    ll nx = x + dx[i];
+                    ll ny = y + dy[i];
+                    if(nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+                    if(vis[nx][ny]) continue;
+                    if(a[nx][ny] == 0) continue;
+                    dirs[nx][ny] = dir[i];
+                    if(nx == 0 || nx == n - 1 || ny == 0 || ny == m - 1){
+                        found = true;
+                        ex = nx;
+                        ey = ny;
+                        break;
+                    }
+                    else{
+                        vis[nx][ny] = 1;
+                        q.push({ch, {nx, ny}});
+                    }
+                }
+            }
+            else{
+                for(ll i = 0; i < 4; i++){
+                    ll nx = x + dx[i];
+                    ll ny = y + dy[i];
+                    if(nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+                    if(a[nx][ny] == 0) continue;
+                    if(vis[nx][ny]) continue;
+                    vis[nx][ny] = 1;
+                    a[nx][ny] = 0;
+                    q.push({ch, {nx, ny}});
+                }
+            }
+        }
+        d++;
+        if(found) break;
+    }
+
+    if(!found){
+        cout<<"NO"<<nl;
+        return;
+    }
+
+    debug(d);
+    debug(found);
+    debug(ex);
+    debug(ey);
+
+    string ans = "";
+    ll x = ex, y = ey;
+    while(x != sx || y != sy){
+        ans += dirs[x][y];
+        if(dirs[x][y] == 'L') y++;
+        else if(dirs[x][y] == 'R') y--;
+        else if(dirs[x][y] == 'U') x++;
+        else if(dirs[x][y] == 'D') x--;
+    }
+    reverse(all(ans));
+
+
+    cout<<"YES"<<nl;
+    cout<<d<<nl;
+    cout<<ans<<nl;
 }
 
 
@@ -119,7 +262,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

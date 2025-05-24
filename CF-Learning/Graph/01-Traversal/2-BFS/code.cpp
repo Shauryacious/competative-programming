@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -107,10 +107,32 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+void bfs(ll s, vvll& adj, vll& vis, vll& dist) {
+    queue<ll> q;
+    q.push(s);
+    vis[s] = 1;
+    dist[s] = 0;
+
+    while(!q.empty()) {
+        ll u = q.front();
+        q.pop();
+        // cout<<u<<" ";
+
+        for(auto v: adj[u]) {
+            if(!vis[v]) {
+                vis[v] = 1;
+                dist[v] = dist[u] + 1;
+                q.push(v);
+            }
+        }
+    }
+
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
 }
+
+
 
 
 int main(){

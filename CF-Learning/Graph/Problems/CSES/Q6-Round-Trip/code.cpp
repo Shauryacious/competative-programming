@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,8 +108,69 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+
+    vvll adj(n+1);
+
+    for(ll i=0; i<m; i++){
+        ll u, v; cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    vll vis(n+1, 0);
+    bool possible = false;
+    vll par(n+1, -1);
+    ll s = -1, e = -1;
+
+    auto dfs = [&](ll u, ll p, auto && dfs) -> void {
+        if(possible) return;
+        vis[u] = 1;
+        par[u] = p;
+        for(auto v: adj[u]){
+            if(possible) return;
+            if(v == p) continue;
+            if(!vis[v]){
+                dfs(v, u, dfs);
+            }
+            else{
+                s = u;
+                e = v;
+                possible = true;
+                return;
+            }
+        }
+    };
+
+    for(ll i=1; i<=n; i++){
+        if(!vis[i]){
+            dfs(i, -1, dfs);
+            if(possible) break;
+        }
+    }
+
+    if(!possible){
+        cout<< "IMPOSSIBLE" << nl;
+        return;
+    }
+
+    vll ans;
+    debug(s);
+    debug(e);
+    debug(par);
+
+    ans.pb(e);
+    while(s != e){
+        ans.pb(s);
+        s = par[s];
+    }
+    ans.pb(s);
+    reverse(all(ans));
+    cout<< ans.size() << nl;
+    for(auto x: ans){
+        cout<< x << " ";
+    }
+    cout << nl;
 }
 
 
@@ -119,7 +180,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

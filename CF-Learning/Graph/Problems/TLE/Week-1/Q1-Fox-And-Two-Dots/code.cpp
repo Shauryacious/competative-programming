@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -107,10 +107,66 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+vector<ll> dx = {0, 0, -1, 1};
+vector<ll> dy = {-1, 1, 0, 0};
+
+void printvis(vector<vector<ll>> &vis) {
+    for(auto &row : vis) {
+        for(auto &cell : row) {
+            cout << cell << " ";
+        }
+        cout << nl;
+    }
 }
+
+void solve() {
+    ll n, m; cin >> n >> m;
+    vector<vector<ll>> v(n, vector<ll>(m));
+    
+    for(ll i = 0; i < n; i++) {
+        for(ll j = 0; j < m; j++) {
+            char c; cin >> c;
+            ll x = c - 'A' + 1;
+            v[i][j] = x;
+        }
+    }
+    debug(mp);
+
+    vector<vector<ll>> vis(n, vector<ll>(m, 0));
+    bool ans = false;
+    
+    auto dfs = [&](ll x, ll y, ll parx, ll pary, ll col, auto && dfs) -> void {
+        vis[x][y] = 1;
+        for(ll i = 0; i < 4; i++) {
+            ll xx = x + dx[i];
+            ll yy = y + dy[i];
+            if(xx < 0 || xx >= n || yy < 0 || yy >= m) continue;
+            if(xx == parx && yy == pary) continue;
+            if(v[xx][yy] != col) continue;
+            if(vis[xx][yy]){
+                ans = true;
+                return;
+            }
+            dfs(xx, yy, x, y, col, dfs); 
+        }
+    };
+    for(ll i = 0; i < n; i++) {
+        for(ll j = 0; j < m; j++) {
+            if(vis[i][j]) continue;
+            ll x = i, y = j;
+            ll u = v[x][y];
+            // cout << x << " " << y << " " << u << nl;
+            dfs(x, y, -1, -1, u, dfs);
+            if(ans) {
+                cout << "Yes" << '\n';
+                return;
+            }
+        }
+    }
+
+    cout << "No" << '\n';
+}
+
 
 
 int main(){
@@ -119,7 +175,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

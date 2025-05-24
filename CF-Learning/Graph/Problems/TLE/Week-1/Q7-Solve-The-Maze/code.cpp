@@ -107,9 +107,99 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvll a(n, vll(m));
+    vpll g, b;
+    for(ll i = 0; i < n; i++){
+        for(ll j = 0; j < m; j++){
+            char ch; cin>>ch;
+            if(ch == '#') a[i][j] = 0;
+            else if(ch == '.') a[i][j] = 1;
+            else if(ch == 'G'){
+                a[i][j] = 2;
+                g.pb({i, j});
+            }
+            else if(ch == 'B'){
+                a[i][j] = 3;
+                b.pb({i, j});
+            }
+        }
+    }
+
+    if(g.size() == 0){
+        cout << "YES" << nl;
+        return;
+    }
+
+    vll dx = {0, 0, 1, -1};
+    vll dy = {1, -1, 0, 0};
+
+    bool possible = true;
+
+    for(auto [x, y] : b){
+        for(ll i = 0; i < 4; i++){
+            ll nx = x + dx[i];
+            ll ny = y + dy[i];
+            if(nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+            if(a[nx][ny] == 0) continue;
+            if(a[nx][ny] == 2){
+                possible = false;
+                break;
+            }
+            if(a[nx][ny] == 1){
+                a[nx][ny] = 0;
+            }
+        }
+        if(!possible) break;
+    }
+
+    if(!possible){
+        pn; return;
+    }
+
+    ll ex = n-1, ey = m-1;
+
+    if(a[ex][ey] == 0){
+        possible = false;
+    }
+
+    if(!possible){
+        pn; return;
+    }
+
+    vvll vis(n, vll(m, 0));
+
+    auto dfs = [&](ll x, ll y,auto && dfs) -> void{
+        vis[x][y] = 1;
+        for(ll i = 0; i < 4; i++){
+            ll nx = x + dx[i];
+            ll ny = y + dy[i];
+            if(nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+            if(a[nx][ny] == 0) continue;
+            if(vis[nx][ny]) continue;
+            dfs(nx, ny, dfs);
+        }
+    };
+
+
+    dfs(ex, ey, dfs);
+
+    for(auto [x, y] : g){
+        if(vis[x][y] == 0){
+            possible = false;
+            break;
+        }
+    }
+
+
+    if(!possible){
+        pn; return;
+    }
+
+    cout << "YES" << nl;
 }
 
 

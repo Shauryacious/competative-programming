@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,10 +108,83 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
-}
+    ll n, m; cin >> n >> m;
+    vvll a(n, vll(m));
+    ll sx, sy, ex, ey;
 
+    for (ll i = 0; i < n; i++) {
+        for (ll j = 0; j < m; j++) {
+            char ch; cin >> ch;
+            if (ch == '#') a[i][j] = 0;
+            else if (ch == '.') a[i][j] = 1;
+            else if (ch == 'A') {
+                sx = i;
+                sy = j;
+                a[i][j] = 1;
+            }
+            else if (ch == 'B') {
+                ex = i;
+                ey = j;
+                a[i][j] = 1;
+            }
+        }
+    }
+
+    vll dx = {0, 0, -1, 1};
+    vll dy = {-1, 1, 0, 0};
+    vector<char> dir = {'L', 'R', 'U', 'D'};
+
+    vvll vis(n, vll(m, 0));
+    vector<vector<pair<pll, char>>> parent(n, vector<pair<pll, char>>(m, {{-1, -1}, 0}));
+
+    queue<pll> q;
+    q.push({sx, sy});
+    vis[sx][sy] = 1;
+
+    bool found = false;
+
+    while (!q.empty()) {
+        auto [x, y] = q.front(); q.pop();
+
+        if (x == ex && y == ey) {
+            found = true;
+            break;
+        }
+
+        for (ll j = 0; j < 4; j++) {
+            ll nx = x + dx[j];
+            ll ny = y + dy[j];
+            if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+            if (a[nx][ny] == 0) continue;
+            if (vis[nx][ny]) continue;
+
+            vis[nx][ny] = 1;
+            parent[nx][ny] = {{x, y}, dir[j]};
+            q.push({nx, ny});
+        }
+    }
+
+    if (!found) {
+        cout << "NO" << nl;
+        return;
+    }
+
+    // Backtrack the path from end to start
+    string ans = "";
+    ll x = ex, y = ey;
+    while (!(x == sx && y == sy)) {
+        auto [prev, d] = parent[x][y];
+        ans += d;
+        x = prev.ff;
+        y = prev.ss;
+    }
+
+    reverse(ans.begin(), ans.end());
+
+    cout << "YES" << nl;
+    cout << ans.size() << nl;
+    cout << ans << nl;
+}
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -119,7 +192,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -107,9 +107,74 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+void print(vvll &dist) {
+    for (ll i = 1; i < dist.size(); i++) {
+        for (ll j = 1; j < dist[i].size(); j++) {
+            if (dist[i][j] == INF) cout << "INF ";
+            else cout << dist[i][j] << " ";
+        }
+        cout << nl;
+    }
+    cout << nl;
+}
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m, k, s; cin>>n>>m>>k>>s;
+    vll a(n+1);
+    vvll goods(k+1);
+    for(ll i=1; i<=n; i++){
+        cin>>a[i];
+        goods[a[i]].pb(i); // storing the nodes of each good
+    }
+
+    vvll adj(n+1);
+    for(ll i=0; i<m; i++){
+        ll u, v; cin>>u>>v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    vvll dist(n+1, vll(k+1, INF));
+
+    for(ll goodType = 1; goodType <= k; goodType++){
+        queue<ll> q;
+        for(ll node : goods[goodType]){
+            dist[node][goodType] = 0; // distance to itself is 0
+            q.push(node);
+        }
+
+        ll d = 0;
+        while(!q.empty()){
+            ll szz = q.size();
+            d++;
+            while(szz--){
+                ll u = q.front();
+                q.pop();
+                for(ll v : adj[u]){
+                    if(dist[v][goodType] > d){
+                        dist[v][goodType] = d;
+                        q.push(v);
+                    }
+                }
+            }
+        }
+    }
+
+    // print(dist);
+
+    vll ans;
+
+    for(auto v : dist){
+        sort(all(v));
+        ll sm = accumulate(v.begin(), v.begin() + s, 0LL);
+        ans.pb(sm);
+    }
+
+    for(ll i = 1; i <= n; i++){
+        cout << ans[i] << " ";
+    }
+    cout << nl;
+
 }
 
 
@@ -119,7 +184,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

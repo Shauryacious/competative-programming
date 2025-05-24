@@ -109,7 +109,12 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    n--;
+    ll x = n/3, y = n/5, z = n/15;
+    ll xx = 3 * x * (x + 1) / 2;
+    ll yy = 5 * y * (y + 1) / 2;
+    ll zz = 15 * z * (z + 1) / 2;
+    cout << xx + yy - zz << nl;
 }
 
 

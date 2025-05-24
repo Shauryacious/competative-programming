@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,9 +108,43 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin >> n >> m;
+    vector<vector<ll>> adj(n + 1);
+    for (ll i = 0; i < m; i++) {
+        ll u, v; cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    vll vis(n + 1, 0);
+
+    // ✅ Fix: Add [&] to capture local variables
+    auto dfs = [&](ll u, auto&& dfs) -> void {
+        vis[u] = 1;
+        for (auto v : adj[u]) {
+            if (!vis[v]) {
+                dfs(v, dfs);
+            }
+        }
+    };
+
+    ll c = 0;
+    map<ll, ll> mp;
+    for (ll i = 1; i <= n; i++) {
+        if (!vis[i]) {
+            mp[c] = i;
+            dfs(i, dfs); // ✅ Call is fine as you intend
+            c++;
+        }
+    }
+
+    cout << c - 1 << nl;
+    c--;
+    for (ll i = 0; i < c; i++) {
+        cout << mp[i] << " " << mp[i + 1] << nl;
+    }
 }
+
 
 
 int main(){
@@ -119,7 +153,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

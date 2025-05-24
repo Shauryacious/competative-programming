@@ -1,7 +1,7 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Love you ∞ mumma <3
 
 #include<bits/stdc++.h>
 
@@ -108,8 +108,49 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvll a(n, vll(m));
+    for(ll i=0; i<n; i++){
+        for(ll j=0; j<m; j++){
+            char ch; cin>>ch;
+            if(ch == '#') a[i][j] = 0;
+            else a[i][j] = 1;
+        }
+    }
+
+    vvll vis(n, vll(m, 0));
+
+    vll dx = {0, 0, -1, 1};
+    vll dy = {-1, 1, 0, 0};
+
+    ll ans = 0;
+    auto dfs = [&](ll x, ll y, auto&& dfs) -> void {
+        vis[x][y] = 1;
+        for(ll i=0; i<4; i++){
+            ll nx = x + dx[i];
+            ll ny = y + dy[i];
+            if(nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+            if(vis[nx][ny]) continue;
+            if(a[nx][ny] == 0) continue;
+
+            dfs(nx, ny, dfs);
+        }
+    };
+
+
+    for(ll i=0; i<n; i++){
+        for(ll j=0; j<m; j++){
+            if(a[i][j] == 1){
+                if(vis[i][j] == 0){
+                    ans++;
+                    dfs(i, j, dfs);
+                }
+            }
+        }
+    }
+
+
+    cout<<ans<<nl;
 }
 
 
@@ -119,7 +160,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }
