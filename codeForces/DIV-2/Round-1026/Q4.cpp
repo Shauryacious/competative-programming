@@ -44,6 +44,7 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
+typedef vector<vpll> vvpll;
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
@@ -108,9 +109,59 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m;
+    cin >> n >> m;
+    vll b(n+1);
+    for (ll i = 1; i <= n; i++) cin >> b[i];
+    vvpll adj(n+1);
+    vll wts;
+    vector<ll> indegree(n+1, 0);
+    for (ll i = 0, u, v, w; i < m; i++) {
+        cin >> u >> v >> w;
+        adj[u].pb({v, w});
+        indegree[v]++;
+        wts.pb(w);
+    }
+    queue<ll> q;
+    for (ll i = 1; i <= n; i++)
+        if (indegree[i] == 0) q.push(i);
+    vll topo;
+    while (!q.empty()) {
+        ll u = q.front(); q.pop();
+        topo.pb(u);
+        for (auto &e : adj[u])
+            if (--indegree[e.first] == 0)
+                q.push(e.first);
+    }
+    sort(wts.begin(), wts.end());
+    wts.erase(unique(wts.begin(), wts.end()), wts.end());
+    auto ok = [&](ll X) {
+        vll dp2(n+1, LLONG_MIN);
+        dp2[1] = b[1];
+        for (ll u : topo) if (dp2[u] >= 0) {
+            for (auto &e : adj[u]) {
+                ll v = e.first, w = e.second;
+                if (w <= X && dp2[u] >= w)
+                    dp2[v] = max(dp2[v], dp2[u] + b[v]);
+            }
+        }
+        return dp2[n] >= 0;
+    };
+    ll ans = -1;
+    ll l = 0, r = (ll)wts.size() - 1;
+    while (l <= r) {
+        ll mid = (l + r) / 2;
+        if (ok(wts[mid])) {
+            ans = wts[mid];
+            r = mid - 1;
+        } else {
+            l = mid + 1;
+        }
+    }
+    cout << ans << "\n";
 }
+
+
 
 
 int main(){

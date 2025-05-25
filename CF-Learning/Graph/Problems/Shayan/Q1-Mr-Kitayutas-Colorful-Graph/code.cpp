@@ -35,6 +35,7 @@ using namespace __gnu_pbds;
 
 
 
+
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
@@ -44,7 +45,6 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
-
 #define vvpll vector<vpll>
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
@@ -104,14 +104,44 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
+
 // Macros
 #define all(x) (x).begin(), (x).end()
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvpll adj(n+1);
+    for(ll i = 0, u, v, w; i < m; i++) {
+        cin >> u >> v >> w;
+        adj[u].pb({v, w});
+        adj[v].pb({u, w});
+    }
+
+    ll q; cin >> q;
+
+    auto dfs = [&](ll u, ll e, ll col, vll& vis, ll& cnt, auto&& dfs) -> void {
+        vis[u] = 1;
+        for(auto [v, c] : adj[u]){
+            if(vis[v]) continue;
+            if(c != col) continue;
+            dfs(v, e, col, vis, cnt, dfs);
+        }
+        if(u == e) {
+            cnt++;
+        }
+    };
+
+    while(q--){
+        ll s, e; cin >> s >> e;
+        ll cnt = 0;
+        for(ll col = 1; col <= m; col++){
+            vll vis(n+1, 0);
+            dfs(s, e, col, vis, cnt, dfs);
+        }
+        cout << cnt << nl;
+    }
 }
 
 
@@ -121,7 +151,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

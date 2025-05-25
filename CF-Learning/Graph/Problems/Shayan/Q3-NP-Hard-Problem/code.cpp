@@ -35,6 +35,7 @@ using namespace __gnu_pbds;
 
 
 
+
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
@@ -44,7 +45,6 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
-
 #define vvpll vector<vpll>
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
@@ -110,8 +110,72 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvll adj(n + 1);
+    vll bad(n + 1, 0);
+    for(ll i = 0; i < m; i++){
+        ll u, v; cin>>u>>v;
+        bad[u] = bad[v] = 1;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    set<ll> bd; 
+    for(ll i = 1; i <= n; i++){
+        if(bad[i] == 0){
+            bd.insert(i);
+        }
+    }
+
+    vll col(n + 1, -1);
+    bool isbp = true;
+
+    auto dfs = [&](ll u, ll c, auto&& dfs) -> void {
+        if(!isbp) return;
+        col[u] = c;
+        for(auto v : adj[u]){
+            if(col[v] == -1){
+                dfs(v, c ^ 1, dfs);
+            } else if(col[v] == c){
+                isbp = false;
+                return;
+            }
+        }
+    };
+
+    for(ll i = 1; i <= n; i++){
+        if(col[i] == -1){
+            if(bd.find(i) != bd.end()){
+                continue; // Skip bad nodes
+            }
+            dfs(i, 0, dfs);
+            if(!isbp){
+                cout << -1 << nl;
+                return;
+            }
+        }
+    }
+
+    debug(col);
+    vll col0, col1;
+    for(ll i = 1; i <= n; i++){
+        if(col[i] == 0){
+            col0.pb(i);
+        } else if(col[i] == 1){
+            col1.pb(i);
+        }
+    }
+
+    cout << col0.size() << nl;
+    for(auto x : col0){
+        cout << x << " ";
+    }
+    cout << nl;
+    cout << col1.size() << nl;
+    for(auto x : col1){
+        cout << x << " ";
+    }
+    cout << nl;
 }
 
 
@@ -121,7 +185,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

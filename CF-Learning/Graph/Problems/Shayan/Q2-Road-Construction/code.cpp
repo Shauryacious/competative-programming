@@ -35,6 +35,7 @@ using namespace __gnu_pbds;
 
 
 
+
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
@@ -44,7 +45,6 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
-
 #define vvpll vector<vpll>
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
@@ -110,8 +110,27 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vll bad(n + 1, 0);
+    for(ll i = 0; i < m; i++) {
+        ll u, v; cin>>u>>v;
+        bad[u] = 1;
+        bad[v] = 1;
+    }
+    ll s = -1;
+    for(ll i = 1; i <= n; i++) {
+        if(bad[i] == 0) {
+            s = i;
+            break;
+        }
+    }
+
+    cout << n - 1 << nl;
+    for(ll i = 1; i <= n; i++) {
+        if(i != s) {
+            cout << s << " " << i << nl;
+        }
+    }
 }
 
 
@@ -121,7 +140,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

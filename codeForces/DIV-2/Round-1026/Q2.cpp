@@ -108,8 +108,31 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    string s; cin>>s;
+    ll n = s.size();
+    string t = "";
+    for(ll i=1; i<n-1; i++){
+        t += s[i];
+    }
+
+    bool is_valid_bracket_sequence = true;
+    ll balance = 0;
+    for (char c : t) {
+        if (c == '(') {
+            balance++;
+        } else if (c == ')') {
+            balance--;
+        }
+        if (balance < 0) {
+            is_valid_bracket_sequence = false;
+            break;
+        }
+    }
+    if (is_valid_bracket_sequence && balance == 0) {
+        cout << "NO" << nl;
+    } else {
+        cout << "YES" << nl;
+    }
 }
 
 

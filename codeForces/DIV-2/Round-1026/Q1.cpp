@@ -110,6 +110,48 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+    sort(all(a));
+    ll i = 0, j = n - 1;
+    ll ans1 = 0;
+    debug(a);
+    vll even(n), odd(n);
+    for(ll i=0; i<n; i++){
+        if(a[i] % 2 == 0){
+            even[i] = 1;
+        } else {
+            odd[i] = 1;
+        }
+    }
+
+    ll i1 = 0, j1 = n - 1;
+    ll cnt1 = 0, cnt2 = 0;
+    while(i1 < j1){
+        if(even[i1] == 1 && even[j1] == 1) break;
+        while(i1 < j1 && even[i1] == 0){
+            i1++;
+            cnt1++;
+        }
+        while(i1 < j1 && even[j1] == 0){
+            j1--;
+            cnt1++;
+        }
+    }
+
+    ll i2 = 0, j2 = n - 1;
+    while(i2 < j2){
+        if(odd[i2] == 1 && odd[j2] == 1) break;
+        while(i2 < j2 && odd[i2] == 0){
+            i2++;
+            cnt2++;
+        }
+        while(i2 < j2 && odd[j2] == 0){
+            j2--;
+            cnt2++;
+        }
+    }
+
+    ans1 = min(cnt1, cnt2);
+    cout << ans1 << nl;
 }
 
 

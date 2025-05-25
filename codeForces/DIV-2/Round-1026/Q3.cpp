@@ -108,10 +108,64 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
-}
+    int n;
+    cin >> n;
+    vll d(n);
+    for(int i = 0; i < n; i++) cin >> d[i];
+    vpll constr(n);
+    for(int i = 0; i < n; i++) cin >> constr[i].first >> constr[i].second;
 
+    vector<pll> dp(n+1);
+    dp[0] = {0, 0};
+    bool possible = true;
+
+    for(int i = 1; i <= n; i++) {
+        ll lo = LLONG_MAX, hi = LLONG_MIN;
+        ll prevLo = dp[i-1].first;
+        ll prevHi = dp[i-1].second;
+        ll L = constr[i-1].first;
+        ll R = constr[i-1].second;
+        
+        if(d[i-1] != 1) {
+            lo = min(lo, prevLo);
+            hi = max(hi, prevHi);
+        }
+        if(d[i-1] != 0) {
+            lo = min(lo, prevLo + 1);
+            hi = max(hi, prevHi + 1);
+        }
+        lo = max(lo, L);
+        hi = min(hi, R);
+        
+        if(lo > hi) {
+            possible = false;
+            break;
+        }
+        dp[i] = {lo, hi};
+    }
+
+    if(!possible) {
+        cout << -1 << '\n';
+        return;
+    }
+
+    vll ans(n);
+    ll h = dp[n].first;
+    for(int i = n; i >= 1; i--) {
+        ll prevLo = dp[i-1].first;
+        ll prevHi = dp[i-1].second;
+        if(d[i-1] != 1 && h >= prevLo && h <= prevHi) {
+            ans[i-1] = 0;
+            // h stays
+        } else {
+            ans[i-1] = 1;
+            h -= 1;
+        }
+    }
+
+    for(ll x : ans) cout << x << ' ';
+    cout << nl;
+}
 
 int main(){
     #ifndef ONLINE_JUDGE
