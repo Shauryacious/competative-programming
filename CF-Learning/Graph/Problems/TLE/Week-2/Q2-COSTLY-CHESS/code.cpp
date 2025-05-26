@@ -35,7 +35,6 @@ using namespace __gnu_pbds;
 
 
 
-
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
@@ -45,6 +44,7 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
+
 #define vvpll vector<vpll>
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
@@ -109,55 +109,46 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll cost(ll a, ll b, ll c, ll d) {
+    return a*c + b*d;
+}
+
 void solve() {
-    ll n, m; cin>>n>>m;
-    vvpll adj(n + 1);
-    for(ll i = 0; i < m; i++){
-        ll u, v, w; cin>>u>>v>>w;
-        adj[u].pb({v, w});
-        adj[v].pb({u, w});
-    }
+    ll sx, sy, ex, ey;
+    vll dx = {2, 2, -2, -2, 1, 1, -1, -1};
+    vll dy = {1, -1, 1, -1, 2, -2, 2, -2};
+    ll szz = 8;
+    while(cin >> sx >> sy >> ex >> ey) {
+        vvll b(8, vll(8, INF)); // chess board with costs
+        b[sx][sy] = 0; 
+        set<pair<ll, pair<ll, ll>>> pq; // {cost, (x, y)}
+        pq.insert({0, {sx, sy}});
 
-    vector<ll> dist(n + 1, INF);
-    vll parent(n + 1, -1);
-    dist[1] = 0;
-    set<pll> st; // min heap
-    ll s = 1;
-
-    st.insert({0, s}); // {distance, node}
-    while(!st.empty()){
-        auto [d, u] = *st.begin();
-        st.erase({d, u});
-        for(auto [v, w] : adj[u]){
-            if(d + w < dist[v]){
-                if(st.find({dist[v], v}) != st.end()){ // if v is already in the set
-                    st.erase({dist[v], v});
+        while(!pq.empty()) {
+            auto [d, pos] = *pq.begin();
+            pq.erase(*pq.begin());
+            auto [x, y] = pos;
+            for(ll i = 0; i < szz; i++) {
+                ll nx = x + dx[i];
+                ll ny = y + dy[i];
+                if(nx < 0 || ny < 0 || nx >= 8 || ny >= 8) continue;
+                ll w = cost(x, y, nx, ny);
+                if(d + w < b[nx][ny]){
+                    if(pq.count({b[nx][ny], {nx, ny}})) {
+                        pq.erase({b[nx][ny], {nx, ny}});
+                    }
+                    b[nx][ny] = d + w;
+                    pq.insert({b[nx][ny], {nx, ny}});
                 }
-                dist[v] = d + w;
-                parent[v] = u; // update parent
-                st.insert({dist[v], v}); // insert updated distance
             }
         }
-    }
 
-    if(dist[n] == INF) {
-        cout << "-1" << nl; // unreachable
-        return;
+        if(b[ex][ey] == INF) {
+            cout << "-1" << nl;
+        } else {
+            cout << b[ex][ey] << nl;
+        }
     }
-
-    vll path;
-    ll e = n;
-    path.pb(e);
-    while(e != s){
-        e = parent[e];
-        if(e == -1) break; // if no parent found
-        path.pb(e);
-    }
-    reverse(all(path));
-    for(auto x: path){
-        cout << x << " ";
-    }
-    cout << nl;
 }
 
 

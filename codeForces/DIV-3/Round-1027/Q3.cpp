@@ -35,7 +35,6 @@ using namespace __gnu_pbds;
 
 
 
-
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
@@ -45,6 +44,7 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
+
 #define vvpll vector<vpll>
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
@@ -110,54 +110,8 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, m; cin>>n>>m;
-    vvpll adj(n + 1);
-    for(ll i = 0; i < m; i++){
-        ll u, v, w; cin>>u>>v>>w;
-        adj[u].pb({v, w});
-        adj[v].pb({u, w});
-    }
-
-    vector<ll> dist(n + 1, INF);
-    vll parent(n + 1, -1);
-    dist[1] = 0;
-    set<pll> st; // min heap
-    ll s = 1;
-
-    st.insert({0, s}); // {distance, node}
-    while(!st.empty()){
-        auto [d, u] = *st.begin();
-        st.erase({d, u});
-        for(auto [v, w] : adj[u]){
-            if(d + w < dist[v]){
-                if(st.find({dist[v], v}) != st.end()){ // if v is already in the set
-                    st.erase({dist[v], v});
-                }
-                dist[v] = d + w;
-                parent[v] = u; // update parent
-                st.insert({dist[v], v}); // insert updated distance
-            }
-        }
-    }
-
-    if(dist[n] == INF) {
-        cout << "-1" << nl; // unreachable
-        return;
-    }
-
-    vll path;
-    ll e = n;
-    path.pb(e);
-    while(e != s){
-        e = parent[e];
-        if(e == -1) break; // if no parent found
-        path.pb(e);
-    }
-    reverse(all(path));
-    for(auto x: path){
-        cout << x << " ";
-    }
-    cout << nl;
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
 }
 
 
@@ -167,7 +121,7 @@ int main(){
     #endif
     fastio();
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }
