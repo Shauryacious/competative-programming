@@ -119,12 +119,12 @@ void solve() {
 
 
 int main(){
-    #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr);
-    #endif
+    // #ifndef ONLINE_JUDGE
+    //     freopen("Error.txt", "w", stderr);
+    // #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
+    setIn("input.txt");
+    setOut("output.txt");
     ll t = 1; 
     cin >> t;
     while(t--){

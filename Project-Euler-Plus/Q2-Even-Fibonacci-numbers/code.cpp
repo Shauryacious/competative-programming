@@ -58,9 +58,6 @@ typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_orde
     #define debug(x)
 #endif
 
-void setIn(string s) { freopen(s.c_str(), "r", stdin); }
-void setOut(string s) { freopen(s.c_str(), "w", stdout); }
-
 // DEEBUG
 
 void _print(ll t) {cerr << t;}
@@ -112,23 +109,55 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+
+vll evenFib, pref;
+
+void precom(){
+    const ll LIMIT = 40000000000000000LL;
+    // use __int128 just so a+b can never overflow even if we
+    // go a little past LIMIT by accident.
+    __int128 a = 1, b = 2;
+    evenFib.pb(2);
+
+    while (true) {
+        __int128 c = a + b;
+        if (c > LIMIT) 
+            break;
+        if ((c & 1) == 0) 
+            evenFib.pb((ll)c);
+        a = b;
+        b = c;
+    }
+
+    // build prefix sums in pref[]
+    pref.resize(evenFib.size());
+    pref[0] = evenFib[0];
+    for (int i = 1; i < (int)evenFib.size(); i++) {
+        pref[i] = pref[i-1] + evenFib[i];
+    }
 }
 
+void solve() {
+    ll n; 
+    cin >> n;
+    if (n < 2) {
+        cout << 0 << "\n";
+        return;
+    }
+    // find how many even fibs are ≤ n
+    int cnt = upper_bound(all(evenFib), n) - evenFib.begin();
+    // if cnt==0, no terms ≤n → sum=0; else sum = pref[cnt-1]
+    cout << (cnt ? pref[cnt-1] : 0) << "\n";
+}
 
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
-    ll t = 1; 
-    cin >> t;
-    while(t--){
-        solve();
-    }
+    precom();
+    ll T; 
+    cin >> T;
+    while (T--) solve();
     return 0;
 }

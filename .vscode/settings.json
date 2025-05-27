@@ -86,6 +86,7 @@
     "chrono": "cpp",
     "bitset": "cpp",
     "queue": "cpp",
-    "stack": "cpp"
+    "stack": "cpp",
+    "ostream": "cpp"
   }
 }

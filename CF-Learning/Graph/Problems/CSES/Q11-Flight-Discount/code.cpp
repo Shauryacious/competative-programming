@@ -58,9 +58,6 @@ typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_orde
     #define debug(x)
 #endif
 
-void setIn(string s) { freopen(s.c_str(), "r", stdin); }
-void setOut(string s) { freopen(s.c_str(), "w", stdout); }
-
 // DEEBUG
 
 void _print(ll t) {cerr << t;}
@@ -112,9 +109,51 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+void dijkstra(ll s, vvpll& adj, vll& dist){
+    dist[s] = 0;
+    set<pll> pq; // {distance, node}
+    pq.insert({0, s});
+    while(!pq.empty()){
+        auto [d, u] = *pq.begin();
+        pq.erase(*pq.begin());
+        for(auto& [v, w] : adj[u]){
+            if(d + w < dist[v]){
+                // Check
+                if(pq.count({dist[v], v})){
+                    pq.erase({dist[v], v});
+                }
+                dist[v] = d + w;
+                pq.insert({dist[v], v});
+            }
+        }
+    }
+}
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvpll adj(n + 1), revadj(n + 1);
+    vvll edges(m, vll(3));
+    for(ll i = 0; i < m; i++){
+        ll u, v, w; cin>>u>>v>>w;
+        adj[u].pb({v, w});
+        revadj[v].pb({u, w});
+        edges[i] = {u, v, w};
+    }
+
+    vll dist1toA(n + 1, INF), distNtoB(n + 1, INF);
+    dijkstra(1, adj, dist1toA);
+    dijkstra(n, revadj, distNtoB);
+    debug(dist1toA);
+    debug(distNtoB);
+
+    ll ans = INF;
+
+    for(auto e : edges){
+        ll u = e[0], v = e[1], w = e[2];
+        ans = min(ans, dist1toA[u] + w / 2 + distNtoB[v]);
+    }
+
+    cout<<ans<<nl;
 }
 
 
@@ -123,10 +162,8 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

@@ -110,8 +110,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, k; 
+    cin >> n >> k;
+    string s; 
+    cin >> s;
+
+    ll cnt0 = count(all(s), '0');
+    ll half = n / 2;
+
+    // Can't have more good pairs than half the string
+    if (k > half) {
+        pn;
+        return;
+    }
+
+    // Solve 2*x + (half - k) = cnt0  =>  x_num = cnt0 - half + k = 2*x
+    ll x_num = cnt0 - half + k;
+    
+    // Check x_num is even and x = x_num/2 lies in [0, k]
+    if (x_num >= 0 && x_num <= 2*k && x_num % 2 == 0) {
+        py;
+    } else {
+        pn;
+    }
 }
 
 

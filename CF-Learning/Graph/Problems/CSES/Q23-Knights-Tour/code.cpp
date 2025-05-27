@@ -58,9 +58,6 @@ typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_orde
     #define debug(x)
 #endif
 
-void setIn(string s) { freopen(s.c_str(), "r", stdin); }
-void setOut(string s) { freopen(s.c_str(), "w", stdout); }
-
 // DEEBUG
 
 void _print(ll t) {cerr << t;}
@@ -113,8 +110,72 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll sx, sy; cin>>sx>>sy; 
+    vvll board(9, vll(9, 0));
+
+    board[sx][sy] = 1; // Starting position of the knight
+
+    vll dx = {-2, 2, -2, 2, -1, 1, -1, 1};
+    vll dy = {-1, -1, 1, 1, -2, -2, 2, 2};
+
+    auto isValid = [&](ll x, ll y) -> bool {
+        if(x < 1 || x > 8 || y < 1 || y > 8 || board[x][y] != 0) {
+            return false; // Out of bounds or already visited
+        }
+        return true; // Valid position
+    };
+
+    auto outDegree = [&](ll x, ll y) -> ll {
+        ll cnt = 0;
+        for(ll i = 0; i < 8; i++) {
+            ll nx = x + dx[i];
+            ll ny = y + dy[i];
+            if(isValid(nx, ny)) {
+                cnt++;
+            }
+        }
+        return cnt; // Count of valid moves from (x, y)
+    };
+    debug(board);
+
+auto dfs = [&](ll x, ll y, ll move, auto &&dfs) -> bool {
+    board[x][y] = move;
+    if (move == 64) return true;   // 1) stop when tour is complete
+
+    ll bestx=-1, besty=-1, mnOutDeg=9;
+    for (ll i = 0; i < 8; i++) {
+        ll nx = x + dx[i], ny = y + dy[i];
+        if (!isValid(nx, ny)) continue;
+        ll d = outDegree(nx, ny);
+        // 2) simple random tie-break to avoid deterministic trap
+        if (d < mnOutDeg || (d == mnOutDeg && (rand()&1))) {
+            mnOutDeg = d; bestx = nx; besty = ny;
+        }
+    }
+    if (bestx == -1) {
+        board[x][y] = 0;            // undo on dead end
+        return false;
+    }
+    if (dfs(bestx, besty, move+1, dfs))
+        return true;
+
+    // if even that “best” path dead‐ended, undo and fail:
+    board[x][y] = 0;
+    return false;
+};
+
+
+    dfs(sx, sy, 1, dfs); // Start DFS from the knight's initial position with move number 1
+    debug(board);
+
+    // Output the board
+    for(ll i = 1; i <= 8; i++) {
+        for(ll j = 1; j <= 8; j++) {
+            cout << board[i][j] << " ";
+        }
+        cout << nl;
+    }
+
 }
 
 
@@ -123,10 +184,8 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

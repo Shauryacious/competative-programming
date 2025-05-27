@@ -109,9 +109,72 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n;
+    cin >> n;
+    vll xx, yy;
+    map<ll, ll> xxx, yyy;
+    for (ll i = 0; i < n; i++) {
+        ll x, y;
+        cin >> x >> y;
+        xx.pb(x);
+        yy.pb(y);
+        xxx[x]++;
+        yyy[y]++;
+    }
+    sort(all(xx));
+    sort(all(yy));
+
+    ll ans6 = INF, ans7 = INF;
+    if(xxx.size() == 2){
+        for(auto [x, f] : xxx){
+            if(f==1){
+                ans6 = yy[n-1]-yy[0]+2;
+            }
+        }
+    }
+
+    if(yyy.size() == 2){
+        for(auto [x, f] : yyy){
+            if(f==1){
+                ans7 = xx[n-1]-xx[0]+2;
+            }
+        }
+    }
+
+
+
+    ll diffx1 = xx[n - 1] - xx[0] + 1;
+    ll diffy1 = yy[n - 1] - yy[0] + 1;
+    ll ans1 = diffx1 * diffy1;
+
+    ll diffx2 = xx[n - 2] - xx[0] + 1;
+    ll ans2 = diffx2 * diffy1;
+    if (ans2 <= n - 1){
+        ans2 += min(diffx2, diffy1);
+    }
+
+    ll diffx3 = xx[n - 1] - xx[1] + 1;
+    ll ans3 = diffx3 * diffy1;
+    if (ans3 <= n - 1){
+        ans3 += min(diffx3, diffy1);
+    }
+
+    ll diffy2 = yy[n - 2] - yy[0] + 1;
+    ll ans4 = diffx1 * diffy2;
+    if (ans4 <= n - 1){
+        ans4 += min(diffx1, diffy2);
+    }
+
+    ll diffy3 = yy[n - 1] - yy[1] + 1;
+    ll ans5 = diffx1 * diffy3;
+    if (ans5 <= n - 1){
+        ans5 += min(diffx1, diffy3);
+    }
+
+    ll res = min({ans1, ans2, ans3, ans4, ans5, ans6, ans7}); 
+    cout << res << endl;
 }
 
 

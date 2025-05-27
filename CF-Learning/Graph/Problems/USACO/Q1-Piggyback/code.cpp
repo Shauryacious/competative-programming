@@ -58,9 +58,6 @@ typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_orde
     #define debug(x)
 #endif
 
-void setIn(string s) { freopen(s.c_str(), "r", stdin); }
-void setOut(string s) { freopen(s.c_str(), "w", stdout); }
-
 // DEEBUG
 
 void _print(ll t) {cerr << t;}
@@ -113,20 +110,73 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    freopen("piggyback.in", "r", stdin);
+    freopen("piggyback.out", "w", stdout);
+
+    ll a, b, c, n, m; cin >> a >> b >> c >> n >> m;
+    vvll adj(n+1);
+    for(ll i = 0; i < m; i++) {
+        ll u, v; cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    auto bfs = [&](ll s, vll& dist, vll& vis){
+        queue<ll> q;
+        q.push(s);
+        vis[s] = 1;
+        dist[s] = 0;
+        ll d = 0;
+        while(!q.empty()) {
+            ll sz = q.size();
+            d++;
+            while(sz--) {
+                ll u = q.front();
+                q.pop();
+                for(auto v : adj[u]) {
+                    if(!vis[v]) {
+                        vis[v] = 1;
+                        dist[v] = d;
+                        q.push(v);
+                    }
+                }
+            }
+        }
+    };
+
+
+    vll dist1(n+1, -1), dist2(n+1, -1), dist3(n+1, -1);
+    vll vis1(n+1, 0), vis2(n+1, 0), vis3(n+1, 0);
+
+    bfs(1, dist1, vis1);
+    bfs(2, dist2, vis2);
+    bfs(n, dist3, vis3);
+
+
+    ll ans = INF;
+    for(ll i = 1; i <= n; i++) {
+        ll node = i;
+        ll aa = dist1[node] * a;
+        ll bb = dist2[node] * b;
+        ll cc = dist3[node] * c;
+        ans = min(ans, aa + bb + cc);
+    }
+
+    if(ans == INF) {
+        cout << -1 << nl;
+    } else {
+        cout << ans << nl;
+    }
 }
 
 
 int main(){
-    #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr);
-    #endif
+    // #ifndef ONLINE_JUDGE
+    //     freopen("Error.txt", "w", stderr);
+    // #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

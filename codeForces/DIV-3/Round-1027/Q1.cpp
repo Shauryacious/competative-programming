@@ -111,7 +111,17 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll sq = sqrt(n);
+    if(n == 0){
+        cout<<0<<" "<<0<<nl;
+        return;
+    }
+    if(sq*sq == n){
+        cout<<sq-1<<" "<<1<<nl;
+    } 
+    else{
+        pm; return;
+    }
 }
 
 
