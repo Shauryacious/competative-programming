@@ -113,8 +113,33 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n; cin >> n;
+    vll a(n);
+    invec(a, n);
+
+    map<ll,ll> mp;
+    for (ll x : a) mp[x]++;
+
+    // v = [(hp, count), …] in sorted order by hp
+    vpll v;
+    for (auto &it : mp) 
+        v.emplace_back(it.first, it.second);
+
+    ll m = v.size();
+    // rem[i] = total # of monsters with hp >= v[i].first
+    vll rem(m);
+    for (ll i = m - 1; i >= 0; i--) {
+        rem[i] = v[i].second + (i + 1 < m ? rem[i+1] : 0);
+    }
+
+    ll ans = n;                         // <<<<— change here
+    for (ll i = 0; i < m; i++) {
+        ll x   = v[i].first;            // try x global hits
+        ll rmm = (i + 1 < m ? rem[i+1] : 0);
+        ans = min(ans, x + rmm);
+    }
+
+    cout << ans << "\n";
 }
 
 

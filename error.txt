@@ -1,8 +1,0 @@
-n = 2
-s = Red
-t = Purple
-s = Purple
-t = Brown
-idx = 4
-mp = [ {Brown,3} {Purple,2} {Red,1} ]
-rev_mp = [ {1,Red} {2,Purple} {3,Brown} ]

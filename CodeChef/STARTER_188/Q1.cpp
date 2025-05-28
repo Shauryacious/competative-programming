@@ -115,7 +115,22 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+
+    ll cnt0 = 0, cnt1 = 0, cnt2 = 0;
+    for(ll i=0; i<n; i++){
+        ll rem = a[i] % 3;
+        if(rem == 0) cnt0++;
+        else if(rem == 1) cnt1++;
+        else cnt2++;
+    }
+
+    if(cnt0 > 0 || (cnt1 >= 1 && cnt2 >= 1) || cnt1 >= 3 || cnt2 >= 3){
+        py;
+    } else {
+        pn;
+    }
 }
+
 
 
 int main(){
