@@ -113,8 +113,63 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, k; cin>>n>>k;
+    vll lvl(n);
+    invec(lvl, n);
+    vll gold(n);
+    invec(gold, n);
+    debug(lvl);
+    debug(gold);
+
+    vpll v(n);
+    for(ll i=0; i<n; i++){
+        v[i] = {lvl[i], gold[i]};
+    }
+
+    map<ll, ll> mp; // {lvl -> idx}
+    for(ll i=0; i<n; i++){
+        mp[lvl[i]] = i;
+    }
+
+    debug(mp);
+
+    auto cmp = [&](auto& a, auto& b) -> bool {
+        return a.ff < b.ff;
+    };
+
+    sort(all(v), cmp);
+
+    debug(v);
+
+    // create a min heap of size k
+    priority_queue<ll, vll, greater<ll>> pq; // min heap
+    ll curr = 0;
+    vll summ(n+1, 0);
+    for(ll i=1; i<n; i++){
+        ll idx = i-1;
+        pq.push(v[idx].ss);
+        curr += v[idx].ss;
+        if(pq.size() > k){
+            curr -= pq.top();
+            pq.pop();
+        }
+        summ[i] = curr;
+    }
+    debug(summ);    
+
+    vll ans(n, 0);
+    for(ll i=0; i<n; i++){
+        ll currlvl = i;
+        ans[mp[currlvl + 1]] = summ[i];
+    }
+
+    debug(ans);
+
+    for(ll i=0; i<n; i++){
+        cout << ans[i] << " ";
+    }
+    cout << nl;
+
 }
 
 

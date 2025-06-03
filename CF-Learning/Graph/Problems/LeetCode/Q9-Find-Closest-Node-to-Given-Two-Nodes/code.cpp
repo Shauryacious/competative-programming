@@ -18,7 +18,7 @@ using namespace __gnu_pbds;
 // Define Constants
 #define MOD 1000000007
 #define MOD1 998244353
-#define INF 4e18
+#define INF 1e18
 #define nl "\n"
 #define pb push_back
 #define ppb pop_back
@@ -113,37 +113,27 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    string s; cin >> s;
-    vector<pair<char,ll>> v;
-    for (ll i = 0; i < n; ) {
-        char c = s[i]; ll cnt = 0;
-        while (i < n && s[i] == c) { cnt++; i++; }
-        v.pb({c, cnt});
-    }
-    ll m = v.size();
-    vector<ll> AB(m-1,0), BC(m-1,0);
-    for (ll i = 0; i+1 < m; i++) {
-        if (v[i].first=='A' && v[i+1].first=='B') AB[i] = v[i].second * v[i+1].second;
-        if (v[i].first=='B' && v[i+1].first=='C') BC[i] = v[i].second * v[i+1].second;
-    }
-    vector<array<ll,2>> dp(m, { -(ll)4e18, -(ll)4e18 });
-    dp[0][0] = 0;
-    for (ll i = 0; i+1 < m; i++) {
-        array<ll,2> nxt = { -(ll)4e18, -(ll)4e18 };
-        for (int prevAB = 0; prevAB < 2; prevAB++) if (dp[i][prevAB] > -INF/2) {
-            ll cur = dp[i][prevAB];
-            nxt[0] = max(nxt[0], cur);
-            if (AB[i] > 0)   nxt[1] = max(nxt[1], cur + AB[i]);
-            if (BC[i] > 0 && prevAB == 0) nxt[0] = max(nxt[0], cur + BC[i]);
+    ll n, k; cin>>n>>k;
+    vll a(n); invec(a, n);
+
+    auto f = [&](ll N) -> bool {
+        
+    };
+
+    ll ans = *max_element(all(a));
+    ll l = 0, r = 1e8+10; 
+    while(l <= r){
+        ll m = (l + r) / 2;
+        if(f(m)){
+            ans = max(ans, m);
+            l = m + 1;
         }
-        dp[i+1] = nxt;
+        else{
+            r = m - 1;
+        }
     }
-    cout << max(dp[m-1][0], dp[m-1][1]) << '\n';
+    cout<<ans<<endl;
 }
-
-
-
 
 
 int main(){

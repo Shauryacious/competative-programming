@@ -18,7 +18,7 @@ using namespace __gnu_pbds;
 // Define Constants
 #define MOD 1000000007
 #define MOD1 998244353
-#define INF 4e18
+#define INF 1e18
 #define nl "\n"
 #define pb push_back
 #define ppb pop_back
@@ -112,38 +112,48 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin >> n;
-    string s; cin >> s;
-    vector<pair<char,ll>> v;
-    for (ll i = 0; i < n; ) {
-        char c = s[i]; ll cnt = 0;
-        while (i < n && s[i] == c) { cnt++; i++; }
-        v.pb({c, cnt});
-    }
-    ll m = v.size();
-    vector<ll> AB(m-1,0), BC(m-1,0);
-    for (ll i = 0; i+1 < m; i++) {
-        if (v[i].first=='A' && v[i+1].first=='B') AB[i] = v[i].second * v[i+1].second;
-        if (v[i].first=='B' && v[i+1].first=='C') BC[i] = v[i].second * v[i+1].second;
-    }
-    vector<array<ll,2>> dp(m, { -(ll)4e18, -(ll)4e18 });
-    dp[0][0] = 0;
-    for (ll i = 0; i+1 < m; i++) {
-        array<ll,2> nxt = { -(ll)4e18, -(ll)4e18 };
-        for (int prevAB = 0; prevAB < 2; prevAB++) if (dp[i][prevAB] > -INF/2) {
-            ll cur = dp[i][prevAB];
-            nxt[0] = max(nxt[0], cur);
-            if (AB[i] > 0)   nxt[1] = max(nxt[1], cur + AB[i]);
-            if (BC[i] > 0 && prevAB == 0) nxt[0] = max(nxt[0], cur + BC[i]);
-        }
-        dp[i+1] = nxt;
-    }
-    cout << max(dp[m-1][0], dp[m-1][1]) << '\n';
+vll p2;
+
+void pre(){
+    ll N = 1e5 + 5;
+    p2.resize(N);
+    p2[0] = 1;
+    for(ll i=1; i<N; i++) p2[i] = (p2[i-1] * 2) % MOD1;
 }
 
+void solve() {
+    ll n; cin>>n;
+    vll p(n), q(n);
+    invec(p, n);
+    invec(q, n);
 
+    vll mxp(n), mxq(n), ip(n), iq(n);
+    mxp[0]=p[0]; mxq[0]=q[0];
+    ip[0]=0; iq[0]=0;
 
+    for(ll i=1; i<n; i++){
+        if(p[i]>mxp[i-1]) mxp[i]=p[i], ip[i]=i;
+        else mxp[i]=mxp[i-1], ip[i]=ip[i-1];
+
+        if(q[i]>mxq[i-1]) mxq[i]=q[i], iq[i]=i;
+        else mxq[i]=mxq[i-1], iq[i]=iq[i-1];
+    }
+
+    vll res(n);
+    for(ll i=0; i<n; i++){
+        ll a=mxp[i], ia=ip[i];
+        ll b=mxq[i], ib=iq[i];
+        ll m=max(a,b), o=-1;
+
+        if(a==m) o=max(o, q[i-ia]);
+        if(b==m) o=max(o, p[i-ib]);
+
+        res[i]=(p2[m]+p2[o])%MOD1;
+    }
+
+    for(ll i=0; i<n; i++) cout<<res[i]<<" ";
+    cout<<nl;
+}
 
 
 int main(){
@@ -153,6 +163,7 @@ int main(){
     fastio();
     // setIn("input.txt");
     // setOut("output.txt");
+    pre();
     ll t = 1; 
     cin >> t;
     while(t--){
