@@ -122,8 +122,53 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vll fib(n);
+    fib[0] = 1;
+    fib[1] = 2;
+    for(ll i = 2; i < n; i++){
+        fib[i] = (fib[i - 1] + fib[i - 2]);
+    }
+    // ll totalvol = 0;
+    // for(ll i = 0; i < n; i++){
+    //     totalvol += fib[i]*fib[i]*fib[i];
+    // }
+    // debug(totalvol);
+    debug(fib);
+    vvll v(m, vll(3));
+    for(ll i = 0; i < m; i++){
+        cin>>v[i][0]>>v[i][1]>>v[i][2];
+        sort(v[i].begin(), v[i].end());
+    }
+    debug(v);
+
+    vll ans(m, 0);
+    ll last = fib[n - 1];
+    ll slast = fib[n - 2];
+    debug(last);
+    debug(slast);
+    for(ll i=0; i<m; i++){
+        if(v[i][2] >= last && v[i][1] >= last && v[i][0] >= last){
+            debug(i);
+            ll remw = v[i][2] - last;
+            ll remb = v[i][1] - last;
+            ll remh = v[i][0] - last;
+            debug(remw);
+            debug(remb);
+            debug(remh);
+            vll v2 = {remw, remb, remh};
+            sort(v2.begin(), v2.end());
+            debug(v2);
+            if(v2[2] >= slast || v2[1] >= slast || v2[0] >= slast){
+                ans[i] = 1; // can be made
+            }
+        }
+    }
+
+    for(ll i = 0; i < m; i++){
+        cout << ans[i];
+    }
+    cout << nl;
 }
 
 

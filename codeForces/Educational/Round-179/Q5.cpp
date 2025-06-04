@@ -59,7 +59,6 @@ typedef vector<pll> vpll;
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
 
-
 /*---------------------------------------------------------------------------------------------------------------------------*/
 #ifndef ONLINE_JUDGE
     #define debug(x) cerr << #x << " = "; _print(x); cerr << endl;
@@ -122,17 +121,48 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    ll times = 0;
-    while(n > 0){
-        times++;
-        n>>=1;
+    ll n, q; cin>>n>>q;
+    string s; cin>>s;
+    ll pc = 0, pb = 0;
+    while(pc < n && s[pc] != 'c') {
+        pc++;
     }
-    debug(times);
-    ll ans = 0;
-    ans += (times-1)*2;
-    ans += 3;
-    cout << ans << nl;
+    while(pb < n && s[pb] != 'b') {
+        pb++;
+    }
+    while(q--){
+        char x, y; cin>>x>>y;
+        if(y > x) continue; // dont replace
+        if(x == 'b' && y == 'a'){
+            if(pb < n && s[pb] == 'b') {
+                s[pb] = 'a';
+            }
+            while(pb < n && s[pb] != 'b') {
+                pb++;
+            }
+        }
+        else if(x == 'c' && y == 'b'){
+            if(pc < n && s[pc] == 'c') {
+                s[pc] = 'b';
+                if(pb > pc) {
+                    pb = pc;
+                }
+            }
+            while(pc < n && s[pc] != 'c') {
+                pc++;
+            }
+        }
+        else if(x == 'c' && y == 'a'){
+            if(pc < n && s[pc] == 'c') {
+                s[pc] = 'a';
+            }
+            while(pc < n && s[pc] != 'c') {
+                pc++;
+            }
+        }
+    }
+
+    cout << s << nl;
 }
 
 
