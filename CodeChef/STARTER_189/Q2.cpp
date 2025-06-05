@@ -120,9 +120,85 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, a, b, c, d;
+    cin >> n >> a >> b >> c >> d;
+
+    string s1 = "", s2 = "";
+    for (ll i = 0; i < n; i++) {
+        if (i & 1) {
+            s1 += '0';
+            s2 += '1';
+        } else {
+            s1 += '1';
+            s2 += '0';
+        }
+    }
+
+    string s3 = "", s4 = "";
+    for (ll i = 0; i < n / 2; i++) {
+        s3 += '0';
+    }
+    for (ll i = n / 2; i < n; i++) {
+        s3 += '1';
+    }
+    for (ll i = 0; i < (n + 1) / 2; i++) {
+        s4 += '0';
+    }
+    for (ll i = (n + 1) / 2; i < n; i++) {
+        s4 += '1';
+    }
+
+    string s5 = s3;
+    reverse(all(s5));
+    string s6 = s4;
+    reverse(all(s6));
+
+    string s7(n, '0');
+    string s8(n, '1');
+
+    auto calc = [&](string& s) -> ll {
+        ll nn = s.size();
+        ll cnt0 = 0, cnt1 = 0;
+        ll cnt01 = 0, cnt10 = 0;
+        ll c0 = 0, c1 = 0;
+
+        for (ll i = 0; i < nn; i++) {
+            if (s[i] == '0') {
+                cnt0++;
+                cnt10 += c1;
+                c0++;
+            } else {
+                cnt1++;
+                cnt01 += c0;
+                c1++;
+            }
+        }
+        return a * cnt0 + b * cnt1 + c * cnt01 + d * cnt10;
+    };
+
+    vector<string> v = {s1, s2, s3, s4, s5, s6, s7, s8};
+    ll ans = LLONG_MIN;
+
+    for (auto& s : v) {
+        ll val = calc(s);
+        ans = max(ans, val);
+        debug(s);
+        debug(val);
+    }
+
+    for (ll x = 0; x <= n; x++) {
+        ll c0 = x;
+        ll c1 = n - x;
+        ll v1 = a * c0 + b * c1 + c * (c0 * c1);
+        ans = max(ans, v1);
+        ll v2 = b * x + a * (n - x) + d * (x * (n - x));
+        ans = max(ans, v2);
+    }
+
+    if (ans < 0) ans = 0;
+    cout << ans << nl;
 }
 
 

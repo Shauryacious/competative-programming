@@ -120,9 +120,40 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+vll primes;
+
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    if(n == 2){
+        cout<<1<<" "<<2<<nl;
+        return;
+    }
+    else if(n == 3){
+        cout<<2<<" "<<1<<" "<<3<<nl;
+        return;
+    }
+
+    vll ans(n+1);
+    ans[1] = 2;
+    ans[2] = 1;
+    ans[3] = 3;
+
+    set<ll> st;
+    ll j = 2;
+    for(ll i = 4; i <= n; i++){
+        ans[i] = i;
+        if(primes[j] == i){
+            ans[i] = i;
+            swap(ans[i], ans[i-1]);
+            j++;
+        }
+    }
+
+    for(ll i = 1; i <= n; i++){
+        cout<<ans[i]<<" ";
+    }
+    cout<<nl;
+
 }
 
 
@@ -133,8 +164,11 @@ int main(){
     fastio();
     // setIn("input.txt");
     // setOut("output.txt");
+
     ll t = 1; 
     cin >> t;
+    primes = sieve(200005);
+    debug(primes);
     while(t--){
         solve();
     }

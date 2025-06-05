@@ -45,19 +45,9 @@ typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
 
-#define vvpll vector<vpll>
-
-
-// typedef tree<
-//     int,
-//     null_type,
-//     less_equal<int>, // less_equal for multiset functionality
-//     rb_tree_tag,
-//     tree_order_statistics_node_update> 
-//     pbds;
-
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
+
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 #ifndef ONLINE_JUDGE
@@ -65,9 +55,6 @@ typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_orde
 #else
     #define debug(x)
 #endif
-
-void setIn(string s) { freopen(s.c_str(), "r", stdin); }
-void setOut(string s) { freopen(s.c_str(), "w", stdout); }
 
 // DEEBUG
 
@@ -121,30 +108,34 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n, c; cin>>n>>c;
+    ll n; cin>>n;
     vll a(n); invec(a, n);
-    vll b(n); invec(b, n);
-    map<ll, ll> mp;
+
+    stack<pll> st; // {value, idx}
+
+    vll ans(n, 0);
+
     for(ll i=0; i<n; i++){
-        if(mp.find(a[i]) == mp.end()){
-            mp[a[i]] = b[i];
-        } else {
-            mp[a[i]] = min(mp[a[i]], b[i]);
+        ll x = a[i];
+
+        while(!st.empty() && st.top().ff >= x){
+            st.pop();
         }
+
+        if(st.empty()){
+            ans[i] = 0; // No smaller value to the left
+        }
+        else{
+            ans[i] = st.top().ss; // Nearest smaller value index
+        }
+
+        st.push({x, i + 1}); // Store the value and its index (1-based)
     }
 
-    ll sum = 0, cnt = 0;
-    for(auto it : mp){
-        if(it.ss < c){
-            sum += it.ss;
-            cnt++;
-        } 
+    for(ll i=0; i<n; i++){
+        cout << ans[i] << " ";
     }
-
-    ll ans = c*cnt - sum;
-    if(ans < 0) ans = 0;
-    cout<<ans<<nl;
-    debug(mp);
+    cout << nl;
 }
 
 
@@ -153,8 +144,6 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
     ll t = 1; 
     cin >> t;
     while(t--){

@@ -120,32 +120,47 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+vll primes;
+
 void solve() {
-    ll n, c; cin>>n>>c;
-    vll a(n); invec(a, n);
-    vll b(n); invec(b, n);
-    map<ll, ll> mp;
-    for(ll i=0; i<n; i++){
-        if(mp.find(a[i]) == mp.end()){
-            mp[a[i]] = b[i];
-        } else {
-            mp[a[i]] = min(mp[a[i]], b[i]);
+    ll n; cin>>n;
+    if(n == 2){
+        cout<<1<<" "<<2<<nl;
+        return;
+    } else if(n == 3){
+        cout<<2<<" "<<1<<" "<<3<<nl;
+        return;
+    }
+
+    vll ans(n+1);
+    ans[1] = 2; ans[2] = 1; ans[3] = 3;
+
+    set<ll> st;
+    for(ll i = 4; i <= n; i++){
+        st.insert(i);
+    }
+
+    ll j = 2;
+    for(ll i=4; i<=n && primes[j] <= n; i+=2){
+        ans[i] = primes[j];
+        st.erase(primes[j]);
+        j++;
+    }
+    debug(ans);
+
+    for(ll i = 4; i <= n; i++){
+        if(ans[i] == 0){
+            ans[i] = *st.begin();
+            st.erase(*st.begin());
         }
     }
+    debug(ans);
 
-    ll sum = 0, cnt = 0;
-    for(auto it : mp){
-        if(it.ss < c){
-            sum += it.ss;
-            cnt++;
-        } 
-    }
-
-    ll ans = c*cnt - sum;
-    if(ans < 0) ans = 0;
-    cout<<ans<<nl;
-    debug(mp);
+    for(ll i = 1; i <= n; i++) cout<<ans[i]<<" ";
+    cout<<nl;
 }
+
+// primes = [ 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 101 103 107 109 113 127 131 137 139 149 151 157 163 167 ]
 
 
 int main(){
@@ -155,8 +170,11 @@ int main(){
     fastio();
     // setIn("input.txt");
     // setOut("output.txt");
+
     ll t = 1; 
     cin >> t;
+    primes = sieve(200005);
+    // debug(primes);
     while(t--){
         solve();
     }
