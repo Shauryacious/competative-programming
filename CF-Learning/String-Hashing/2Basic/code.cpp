@@ -119,8 +119,8 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 class Hash {
-    const ll M = 1e9 + 7;
-    const ll B = 5689;
+    ll M = 1e9 + 7;
+    ll B = 5689;
 
     vector<ll> hash;
     vector<ll> Bpower;

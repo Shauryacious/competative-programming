@@ -120,73 +120,73 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-ll askdigit(){
-    cout<<"digit"<<endl;
-    ll res; cin>>res;
-    return res;
-}
-
-ll askdiv(ll x){
-    cout<<"div "<<x<<endl;
-    ll res; cin>>res;
-    return res;
-}
-
-ll askmul(ll x){
-    cout<<"mul "<<x<<endl;
-    ll res; cin>>res;
-    return res;
-}
-
-ll askadd(ll x){
-    cout<<"add "<<x<<endl;
-    ll res; cin>>res;
-    return res;
-}
-
 void solve() {
-    ll n; cin>>n;
-    askdigit(); // 1
-    askdigit(); // 2
-    askdigit(); // 3
+    string s; cin >> s;
+    ll n = s.size(), kk = 2;
 
-    ll res2 = askdiv(2); // 4
-    if(res2 == 1){
-        // now x = 1, 2, 3, 4
-        ll res22 = askdiv(2); // 5
-        if(res22 == 1){
-            res222 = askdiv(2); // 6
-            ll mulres = askmul(n); // 7
-            cout<<"!"<<endl;
-            return;
+    map<ll, ll> mp;
+    for(ll i = 0; i < n; i++){
+        mp[s[i] - 'a']++;
+    }
+
+    vpll v;
+    for(auto [ele, f] : mp){
+        v.pb({f, ele});
+    }
+    sort(all(v), greater<pll>());
+
+    auto f = [&](ll& x) -> bool {
+        // debug(x);
+        ll cnt = 0;
+        ll k = kk;
+        for(auto p : v){
+            ll f = p.ff;
+            ll ele = p.ss;
+            if(f >= k){
+                k = 0;
+            }
+            else{
+                k -= f;
+            }
+
+            if(k == 0){
+                cnt++;
+                k = kk;
+            }
+        }
+        // debug(cnt);
+
+        if(cnt >= x){
+            return true;
+        }
+
+        return false;
+    };
+
+    ll l = 0, r = n/kk, ans = 0;
+    debug(r);
+    while(l <= r){
+        ll m = (l + r) / 2;
+
+        if(f(m)){
+            ans = m;
+            l = m + 1;
+        }
+        else{
+            r = m - 1;
         }
     }
 
-    ll res3 = askdiv(3); // 5
-    if(res3 == 1){
-        // now x = 1, 2, 3
-        ll res33 = askdiv(3); // 5
-        ll res32 = askdiv(2); // 6
-        ll mulres = askmul(n); // 7
-        cout<<"!"<<endl;
-        return;
-    }
+    cout << ans << nl;
 
+    // vll res(n);
 
+    // for(auto p : v){
+    //     ll f = p.ff;
+    //     ll ele = p.ss;
 
-    ll res5 = askdiv(5); // 6
-    if(res5 == 1){
-        ll resmuln = askmul(n);
-        cout<<"!"<<endl;
-        return;
-    }
-
-    ll res7 = askdiv(7); // 7
-    if(res7 == 1){
-        ll resmuln = askmul(n);
-        cout<<"!"<<endl;
-        return;
-    }
+        
+    // }
 }
 
 

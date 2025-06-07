@@ -1,9 +1,24 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Codechef: https://www.codechef.com/users/shauryacious27
 
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <chrono>
+#include <random>
+#include <set>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+#include <cmath>
+#include <queue>
+#include <stack>
+#include <bitset>
+#include <numeric>
+#include <climits>
 
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
@@ -19,7 +34,7 @@ using namespace __gnu_pbds;
 #define MOD 1000000007
 #define MOD1 998244353
 #define INF 1e18
-#define nl "\n"
+#define nline "\n"
 #define pb push_back
 #define ppb pop_back
 #define mp make_pair
@@ -28,36 +43,18 @@ using namespace __gnu_pbds;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define py cout<<"YES"<<nl
-#define pn cout<<"NO"<<nl
-#define pm cout<<"-1"<<nl
-
-
-
 
 // Typedef
 typedef long long ll;
 typedef unsigned long long ull;
 typedef long double lld;
-typedef pair<ll, ll> pll;
 typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
-typedef vector<pll> vpll;
-
-#define vvpll vector<vpll>
-
-
-// typedef tree<
-//     int,
-//     null_type,
-//     less_equal<int>, // less_equal for multiset functionality
-//     rb_tree_tag,
-//     tree_order_statistics_node_update> 
-//     pbds;
 
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
+
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 #ifndef ONLINE_JUDGE
@@ -65,9 +62,6 @@ typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_orde
 #else
     #define debug(x)
 #endif
-
-void setIn(string s) { freopen(s.c_str(), "r", stdin); }
-void setOut(string s) { freopen(s.c_str(), "w", stdout); }
 
 // DEEBUG
 
@@ -117,90 +111,71 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 // Macros
 #define all(x) (x).begin(), (x).end()
+#define rep(i, j) for (ll i = 0; i < j; i++)
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
+#define sortvec(v) sort(v.begin(), v.end())
+#define revsortvec(v) sort(v.rbegin(), v.rend())
+#define maxvec(v) *max_element(v.begin(), v.end())
+#define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-ll askdigit(){
-    cout<<"digit"<<endl;
-    ll res; cin>>res;
-    return res;
-}
 
-ll askdiv(ll x){
-    cout<<"div "<<x<<endl;
-    ll res; cin>>res;
-    return res;
-}
+class Hash {
+    ll M = 1e9 + 7;
+    ll B = 5689;
 
-ll askmul(ll x){
-    cout<<"mul "<<x<<endl;
-    ll res; cin>>res;
-    return res;
-}
+    vector<ll> hash;
+    vector<ll> Bpower;
 
-ll askadd(ll x){
-    cout<<"add "<<x<<endl;
-    ll res; cin>>res;
-    return res;
-}
+public:
+    Hash(string s) {
+        int n = s.size();
+        // we will maintain a 1 based indexing
+        hash.assign(n + 1, 0);
+        Bpower.assign(n + 1, 1);
 
-void solve() {
-    ll n; cin>>n;
-    askdigit(); // 1
-    askdigit(); // 2
-    askdigit(); // 3
+        for (ll i = 1; i <= n; i++) {
+            char ch = s[i - 1];
+            ll curr_val = ch - 'a' + 1;
 
-    ll res2 = askdiv(2); // 4
-    if(res2 == 1){
-        // now x = 1, 2, 3, 4
-        ll res22 = askdiv(2); // 5
-        if(res22 == 1){
-            res222 = askdiv(2); // 6
-            ll mulres = askmul(n); // 7
-            cout<<"!"<<endl;
-            return;
+            hash[i] = (hash[i - 1] * B + curr_val) % M;
+            Bpower[i] = (Bpower[i - 1] * B) % M;
         }
     }
 
-    ll res3 = askdiv(3); // 5
-    if(res3 == 1){
-        // now x = 1, 2, 3
-        ll res33 = askdiv(3); // 5
-        ll res32 = askdiv(2); // 6
-        ll mulres = askmul(n); // 7
-        cout<<"!"<<endl;
-        return;
+    ll get(ll l, ll r) {
+        l++; r++; // to make it 1 based indexing
+        ll len = r - l + 1;
+
+        ll hash_val = (hash[r] - (hash[l - 1] * Bpower[len]) % M + M) % M; // modular sub
+
+        return hash_val;
     }
+};
 
+class Solution {
+  public:
+    vector<int> search(string &pat, string &txt) {
+        vector<int> ans;
+        Hash h(txt);
+        Hash p(pat);
+        ll m = pat.size();
+        ll n = txt.size();
 
+        ll ph = p.get(0, m - 1); // pattern hash    
 
-    ll res5 = askdiv(5); // 6
-    if(res5 == 1){
-        ll resmuln = askmul(n);
-        cout<<"!"<<endl;
-        return;
+        ll i = 0, j = m - 1;
+        while(j < n){
+            ll th = h.get(i, j); // text hash
+
+            if(th == ph){
+                ans.push_back(i+1);
+            }
+
+            i++;
+            j++;
+        }
+
+        return ans;
     }
-
-    ll res7 = askdiv(7); // 7
-    if(res7 == 1){
-        ll resmuln = askmul(n);
-        cout<<"!"<<endl;
-        return;
-    }
-}
-
-
-int main(){
-    #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr);
-    #endif
-    fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
-    ll t = 1; 
-    cin >> t;
-    while(t--){
-        solve();
-    }
-    return 0;
-}
+};

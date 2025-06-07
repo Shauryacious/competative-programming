@@ -123,6 +123,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+    ll cnt0 = count(all(a), 0), cnt1 = count(all(a), 1);
+    if(cnt0 == 0 || cnt1 == 0){
+        py;
+        return;
+    }
+    for(ll i=0; i<n-1; i++){
+        if(a[i] == 0 && a[i+1] == 0){
+            py; return;
+        }
+    }
+
+    pn; 
 }
 
 
