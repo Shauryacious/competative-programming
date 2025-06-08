@@ -9,3 +9,11 @@
 #define vll vector<ll>
 #define vvll vector<vll>
 #define all(x) (x).begin(), (x).end()
+
+
+class Solution {
+public:
+    int countPartitions(vector<int>& nums, int k) {
+        
+    }
+};

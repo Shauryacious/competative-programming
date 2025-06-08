@@ -121,30 +121,44 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 
+int dp[3005][3005];
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    int n; cin >> n;
+    vector<int> a(n); invec(a, n);
+    vector<int> b(n); invec(b, n);
 
-    vll rmax (n, 0), lmax(n, 0);
-    rmax[n - 1] = a[n - 1];
-    for (ll i = n - 2; i >= 0; i--) {
-        rmax[i] = max(rmax[i + 1], a[i]);
-    }
-    lmax[0] = a[0];
-    for (ll i = 1; i < n; i++) {
-        lmax[i] = max(lmax[i - 1], a[i]);
-    }
+    memset(dp, -1, sizeof(dp));
+    // dp[i][j] = no of valid vectors 'c'
+    // upto i, s.t. c[i-1] was j
 
-    ll ans = 0;
-    for (ll i = 0; i < n; i++) {
-        ans += min(lmax[i], rmax[i]) - a[i];
+    auto f = [&](int i, int j, auto && f) -> int {
+        if (i == n) {
+            return 1;
+        }
+
+        if (dp[i][j] != -1) return dp[i][j];
+
+        int ans = 0;
+        int l = max(a[i], j); // l should be greater than or equal to a[i] and j
+        int r = b[i]; // r should be less than or equal to b[i]
+        for (int k = l; k <= r; k++) {
+            ans += f(i + 1, k, f);
+            ans %= MOD1;
+        }
+
+        return dp[i][j] = ans;
+    };
+
+    int ans = 0;
+    int l = a[0], r = b[0];
+    for (int k = l; k <= r; k++) {
+        ans += f(1, k, f);
+        ans %= MOD1;
     }
 
     cout << ans << nl;
 }
-
-
-
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -154,7 +168,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

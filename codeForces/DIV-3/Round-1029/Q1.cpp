@@ -120,30 +120,10 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
-
-    vll rmax (n, 0), lmax(n, 0);
-    rmax[n - 1] = a[n - 1];
-    for (ll i = n - 2; i >= 0; i--) {
-        rmax[i] = max(rmax[i + 1], a[i]);
-    }
-    lmax[0] = a[0];
-    for (ll i = 1; i < n; i++) {
-        lmax[i] = max(lmax[i - 1], a[i]);
-    }
-
-    ll ans = 0;
-    for (ll i = 0; i < n; i++) {
-        ans += min(lmax[i], rmax[i]) - a[i];
-    }
-
-    cout << ans << nl;
 }
-
-
 
 
 int main(){
