@@ -91,3 +91,7 @@ int main() {
     cout << "All 26 test cases generated successfully (input00.txt to input25.txt).\n";
     return 0;
 }
+
+
+1 1 1 1 1 1 1 1 -1  
+

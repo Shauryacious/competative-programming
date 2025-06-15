@@ -45,19 +45,9 @@ typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
 
-#define vvpll vector<vpll>
-
-
-// typedef tree<
-//     int,
-//     null_type,
-//     less_equal<int>, // less_equal for multiset functionality
-//     rb_tree_tag,
-//     tree_order_statistics_node_update> 
-//     pbds;
-
 typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
+
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 #ifndef ONLINE_JUDGE
@@ -65,9 +55,6 @@ typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_orde
 #else
     #define debug(x)
 #endif
-
-void setIn(string s) { freopen(s.c_str(), "r", stdin); }
-void setOut(string s) { freopen(s.c_str(), "w", stdout); }
 
 // DEEBUG
 
@@ -122,32 +109,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll N = (1<<n);
+    vll a(N); invec(a, N);
 
-    ll cnt = 1;
-    set<ll> prev, curr;
-    prev.insert(a[0]);
-    for(ll i=1; i<n; i++){
-        ll x = a[i];
-        curr.insert(x);
-        if(prev.find(x) != prev.end()){ //found
-            prev.erase(x);
-        }
-        if(prev.empty()){
-            cnt++;
-            prev = curr;
-            curr.clear();
-        }
-        debug(i);
-        debug(curr);
-        debug(prev);
+    ll mx = *max_element(all(a));
+    vll ans(n, 1);
+    mx -= (n-1);
+    ans[0] = mx;
+
+    for(ll i=0; i<n; i++){
+        cout<<ans[i]<<" ";
     }
-
-    // if(curr.size() > 0){
-    //     cnt++;
-    // }
-
-    cout << cnt << nl;
+    cout<<nl;
 }
 
 
@@ -156,8 +129,6 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
     ll t = 1; 
     cin >> t;
     while(t--){

@@ -122,7 +122,40 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    vll a(n); 
+
+    ll i = 1, j = 2;
+    ll l = 0, r = n-1;
+    if(n&1){
+        ll times = n/2;
+        while(times--){
+            a[l] = i;
+            a[r] = j;
+            i += 2;
+            j += 2;
+            l++;
+            r--;
+        }
+        a[l] = i; // Middle element for odd n
+    }
+    else{
+        ll times = n/2;
+        while(times--){
+            a[l] = i;
+            a[r] = j;
+            i += 2;
+            j += 2;
+            l++;
+            r--;
+        }
+    }
+
+    debug(a);
+
+    for(ll i = 0; i < n; i++){
+        cout << a[i] << " ";
+    }
+    cout << nl;
 }
 
 

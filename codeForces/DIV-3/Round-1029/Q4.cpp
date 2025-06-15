@@ -120,11 +120,23 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
-}
+typedef __int128 int128;
 
+void solve() {
+    ll n; cin >> n;
+    vll a(n); invec(a, n);
+    ll denom = n * n - 1;
+    int128 num_y = (int128)a[0] * n - a[n-1];
+    if (denom <= 0 || num_y % denom != 0) { pn; return; }
+    ll y = (ll)(num_y / denom);
+    ll x = a[0] - y * n;
+    if (x < 0 || y < 0) { pn; return; }
+    for (ll i = 1; i <= n; ++i) {
+        int128 expect = (int128)x * i + (int128)y * (n - i + 1);
+        if (expect != a[i-1]) { pn; return; }
+    }
+    py;
+}
 
 int main(){
     #ifndef ONLINE_JUDGE

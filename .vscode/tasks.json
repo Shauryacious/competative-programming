@@ -1,23 +1,31 @@
+// .vscode/tasks.json
 {
   "version": "2.0.0",
   "tasks": [
     {
       "label": "compile",
       "type": "shell",
-      "command": "g++",
-      "args": ["-std=c++17", "-o", "${fileBasenameNoExtension}", "${file}"],
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      }
+      "command": "clang++",
+      "args": [
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-O2",
+        "-o",
+        "${fileBasenameNoExtension}",
+        "${file}"
+      ],
+      "group": { "kind": "build", "isDefault": false }
     },
     {
       "label": "compile and run",
       "type": "shell",
-      "command": "/opt/homebrew/Cellar/gcc/13.2.0/bin/g++-13 -std=c++17 -O2 -o ${fileBasenameNoExtension} ${file} && ./${fileBasenameNoExtension} < input.txt > output.txt",
-      "group": {
-        "kind": "build",
-        "isDefault": true
+      "command": "clang++ -std=c++17 -O2 -o ${fileBasenameNoExtension} ${file} && ./${fileBasenameNoExtension} < input.txt > output.txt",
+      "problemMatcher": ["$gcc"],
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
       }
     }
   ]

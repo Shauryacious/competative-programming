@@ -120,9 +120,50 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
+void solve(){
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    vll a(n), b(n);
+    invec(a,n); invec(b,n);
+    ll ans = 0;
+    for(ll i = 0; i < n; i++)
+        if(a[i] == b[i]) ans = max(ans, i + 1);
+    set<ll> od, ev;
+    bool flp = false;
+    for(ll i = n - 1; i >= 0; i--){
+        if(flp){
+            if(ev.count(a[i])) ans = max(ans, i + 1);
+            if(od.count(b[i])) ans = max(ans, i + 1);
+            od.insert(a[i]);
+            ev.insert(b[i]);
+        } else {
+            if(od.count(a[i])) ans = max(ans, i + 1);
+            if(ev.count(b[i])) ans = max(ans, i + 1);
+            ev.insert(a[i]);
+            od.insert(b[i]);
+        }
+        flp = !flp;
+    }
+    vll v1(n), v2(n);
+    for(ll i = 0; i < n; i++){
+        if(i % 2 == 0){
+            v1[i] = a[i];
+            v2[i] = b[i];
+        } else {
+            v1[i] = b[i];
+            v2[i] = a[i];
+        }
+    }
+    auto chk = [&](vll &v){
+        map<ll,ll> mp;
+        for(ll i = n - 1; i >= 0; i--){
+            ll idx = i + 1;
+            if(!mp[v[i]]) mp[v[i]] = idx;
+            else if(mp[v[i]] - idx >= 2) ans = max(ans, idx);
+        }
+    };
+    chk(v1);
+    chk(v2);
+    cout << ans << nl;
 }
 
 

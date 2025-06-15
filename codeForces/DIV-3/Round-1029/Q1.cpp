@@ -121,8 +121,33 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
+    ll n, k; cin>>n>>k;
     vll a(n); invec(a, n);
+    ll start = 0;
+    for(ll i=0; i<n; i++){
+        if(a[i] == 1){
+            start = i;
+            break;
+        }
+    }
+    ll cnt = 0, flag = 0;
+    for(ll i=n-1; i>=0; i--){
+        if(a[i] == 1){
+            flag = 1;
+        }
+        if(flag == 1 && i >= start){
+            cnt++;
+        }
+    }
+    debug(start);
+    debug(cnt);
+
+    if(cnt <= k){
+        cout << "YES" << nl;
+        return;
+    }
+
+    pn;
 }
 
 
