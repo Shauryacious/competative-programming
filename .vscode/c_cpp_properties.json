@@ -1,10 +1,10 @@
 {
   "configurations": [
     {
-      "name": "macOS‑AppleClang",
+      "name": "macos-clang-arm64",
       "includePath": ["${workspaceFolder}/**"],
-      "compilerPath": "/usr/bin/clang++",
-      "cStandard": "c17",
+      "compilerPath": "/usr/bin/clang",
+      "cStandard": "${default}",
       "cppStandard": "c++17",
       "intelliSenseMode": "macos-clang-arm64",
       "compilerArgs": ["-O2", "-std=c++17"]

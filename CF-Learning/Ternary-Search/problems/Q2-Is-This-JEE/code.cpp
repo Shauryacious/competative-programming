@@ -140,9 +140,41 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    double a = 1, b, c; 
+    cin >> b >> c;
+
+    // f(x) = (a*x^2 + b*x + c) / sin(x)
+    auto f = [&](double x) -> double {    
+        return (a * x * x + b * x + c) / sin(x);
+    };
+
+    double del = 1e-7; 
+    double l = 0 + del, r = (M_PI / 2.0) - del, ans = l;
+
+    while (r - l > del) {
+        double m1 = l + (r - l) / 3;
+        double m2 = r - (r - l) / 3;
+
+        if (f(m1) < f(m2)) {
+            r = m2;
+            ans = m1;
+        }
+        else if(f(m1) > f(m2)) {
+            l = m1;
+            ans = m2;
+        }
+        else {
+            l = m1;
+            r = m2;
+            ans = m1;
+        }
+    }
+
+    cout << fixed << setprecision(6) << f(ans) << nl;
 }
+
+
+
 
 
 int main(){

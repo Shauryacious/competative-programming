@@ -37,4 +37,20 @@ using namespace std;
 #define vll vector<ll>
 #define vvll vector<vll>
 #define all(x) (x).begin(), (x).end()
-#define INF 1e18
+
+
+class Solution {
+  public:
+    int minCost(vector<int>& heights, vector<int>& cost) {
+        int n = heights.size();
+        vii heights2 = heights;
+        sort(all(heights2));
+        int m = heights2[n / 2]; // median height
+        cout<<"Median Height: "<<m<<endl;
+        ll ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans += abs(heights[i] - m) * cost[i];
+        }
+        return (int)ans;
+    }
+};

@@ -141,7 +141,50 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    vll height(n), cost(n);
+    invec(height, n);
+    invec(cost, n);
+    debug(height);
+    debug(cost);
+
+    auto f = [&](ll x) -> ll {
+        ll ans = 0;
+        for (ll i = 0; i < n; i++) {
+            ll h = height[i], c = cost[i];
+            ans += (abs(h-x) * c);
+        }
+        return ans;
+    };
+
+
+    ll l = *min_element(all(height));
+    ll r = *max_element(all(height));
+    ll ans = INF;
+    while(l <= r){
+        ll m1 = l + (r - l) / 3;
+        ll m2 = r - (r - l) / 3;
+
+        ll c1 = f(m1); // cost at m1
+        ll c2 = f(m2); // cost at m2
+        debug(m1);
+        debug(m2);
+        debug(c1);
+        debug(c2);
+
+        if(c1 < c2){
+            ans = min(ans, c1);
+            r = m2 - 1; // move left
+        } else if(c1 > c2){
+            ans = min(ans, c2);
+            l = m1 + 1; // move right
+        } else {
+            ans = min(ans, c1);
+            l = m1 + 1;
+            r = m2 - 1;
+        }
+    }
+
+    cout << ans << nl;
 }
 
 

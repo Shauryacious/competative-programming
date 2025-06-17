@@ -140,10 +140,40 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
-}
+    double x1, y1, x2, y2, v1, v2;
+    cin >> x1 >> y1 >> x2 >> y2 >> v1 >> v2;
 
+    auto f = [&](double x) -> double {
+        double d1 = sqrt((x - x1) * (x - x1) + (y1 - 0) * (y1 - 0));
+        double d2 = sqrt((x - x2) * (x - x2) + (y2 - 0) * (y2 - 0));
+        double t1 = d1 / v1;
+        double t2 = d2 / v2;
+        return t1 + t2;
+    };
+
+    double l = min(x1, x2) - 1, r = max(x1, x2) + 1, ans = f(x1);
+    double del = 1e-7;
+
+    for(double i = 0; i < 100; i++) {
+        double m1 = l + (r - l) / 3.0;
+        double m2 = r - (r - l) / 3.0;
+
+        double t1 = f(m1);
+        double t2 = f(m2);
+        // debug(t1);
+        // debug(t2);
+
+        if (t1 < t2) {
+            r = m2;
+            ans = min(ans, t1);
+        } else {
+            l = m1;
+            ans = min(ans, t2);
+        }
+    }
+
+    cout << fixed << setprecision(5) << ans << nl;
+}
 
 int main(){
     #ifndef ONLINE_JUDGE

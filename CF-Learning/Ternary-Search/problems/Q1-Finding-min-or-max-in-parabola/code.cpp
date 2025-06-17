@@ -139,9 +139,36 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    auto f = [&](ll x) -> long double {
+        // f(x) = 2x^2 - 12x + 7
+        return (2 * x * x) - (12 * x) + 7;
+    };
+
+
+    long double l = 0, r = 10;
+    cin >> l >> r;
+    long double ans = 0;
+    while(r-l > 1e-6){
+        long double m1 = l + (r - l) / 3;
+        long double m2 = r - (r - l) / 3;
+
+        if(f(m1) < f(m2)){ //m2 is greater
+            r = m2;
+        }
+        else if(f(m1) > f(m2)){ //m1 is greater
+            l = m1;
+        }
+        else{ //both are equal
+            ans = l;
+            l = m1;
+            r = m2;
+        }
+    }
+
+    cout<< fixed << setprecision(6) << ans << nl;
 }
 
 
@@ -153,7 +180,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

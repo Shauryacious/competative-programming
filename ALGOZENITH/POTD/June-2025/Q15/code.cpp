@@ -142,6 +142,28 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+    vll ans(n, 0);
+    multiset<ll> mst;
+    ll curr = 0;
+    for(ll i=0; i<n; i++){
+        ll x = a[i];
+        curr++;
+        mst.insert(x);
+        if((*mst.begin()) >= curr){
+            ans[i] = curr;
+        }
+        else{
+            while(!mst.empty() && (*mst.begin()) < mst.size()){
+                mst.erase(mst.find(*mst.begin()));
+            }
+            ans[i] = mst.size();
+        }
+    }
+
+    for(ll i=0; i<n; i++){
+        cout << ans[i] << " ";
+    }
+    cout << nl;
 }
 
 

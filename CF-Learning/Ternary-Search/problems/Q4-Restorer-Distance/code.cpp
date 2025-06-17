@@ -140,8 +140,67 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, a, r, m; cin >> n >> a >> r >> m;
+    vll heights(n); invec(heights, n);
+
+    m = min(m, (a+r)); // move is equivalent to add + remove, so take the min
+
+    auto f = [&](ll& x) -> ll{
+        ll p = 0, q = 0; // p = need to add, q = extra to remove
+        for(auto h : heights){
+            if(h < x){
+                p += (x - h); // need to add
+            }else if(h > x){
+                q += (h - x); // need to remove
+            }
+        }
+
+        ll c = 0;
+
+        if(p >= q){
+            // move the extra to remove
+            c += q*m;
+            // add the remaining needed vacant space
+            ll rem = p - q;
+            c += rem * a; // add the remaining needed space
+        }
+        else{
+            c += p*m;
+            c += (q - p) * r; // remove the remaining extra space
+        }
+
+        return c;
+    };
+
+    ll lo = 0, hi = 1e9, ans = INF;
+    while(lo <= hi){
+        ll m1 = lo + (hi - lo) / 3;
+        ll m2 = hi - (hi - lo) / 3;
+
+        ll c1 = f(m1);
+        ll c2 = f(m2);
+
+        if(c1 < c2){
+            ans = min(ans, c1);
+            hi = m2 - 1; // move to left
+        }
+        else if(c1 > c2){
+            ans = min(ans, c2);
+            lo = m1 + 1; // move to right
+        }
+        else{
+            ans = min(ans, c1);
+            lo = m1 + 1; // move to right
+            hi = m2 - 1; // move to left
+        }
+    }
+
+    if(ans == INF){
+        cout << -1 << nl;
+    }
+    else{
+        cout << ans << nl;
+    }
 }
 
 
@@ -153,7 +212,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

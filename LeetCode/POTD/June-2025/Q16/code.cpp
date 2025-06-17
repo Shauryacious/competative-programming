@@ -37,4 +37,28 @@ using namespace std;
 #define vll vector<ll>
 #define vvll vector<vll>
 #define all(x) (x).begin(), (x).end()
-#define INF 1e18
+
+class Solution {
+public:
+    int maximumDifference(vector<int>& a) {
+        int n = a.size();
+        vii pre(n, 0), suff(n, 0);
+        pre[0] = a[0];
+        for(ll i=1; i<n; i++){
+            pre[i] = min(pre[i-1], a[i]);
+        }
+        suff[n-1] = a[n-1];
+        for(ll i=n-2; i>=0; i--){
+            suff[i] = max(suff[i+1], a[i]);
+        }
+
+        int ans = -1;
+        for(ll i=0; i<n; i++){
+            if(suff[i] > pre[i]){
+                ans = max(ans, suff[i] - pre[i]);
+            }
+        }
+
+        return ans;
+    }
+};
