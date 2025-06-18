@@ -140,10 +140,78 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
-}
+    ll n; ll s, x; 
+    cin >> n >> s >> x;
+    vll a(n); 
+    invec(a, n);
 
+    auto cnt = [&](const vll &v, ll t) {
+        map<ll, ll> f;
+        f[0] = 1;
+
+        ll ps = 0, nw = 0;
+        for (ll y : v) {
+            ps += y;
+            if (auto it = f.find(ps - t); it != f.end()) {
+                nw += it->second;
+            }
+            f[ps]++;
+        }
+        return nw;
+    };
+
+    ll res = 0;
+    vector<ll> bd;
+    bd.pb(-1);
+    for (ll i = 0; i < n; ++i) {
+        if (a[i] > x) {
+            bd.pb(i);
+        }
+    }
+    bd.pb(n);
+
+    for (ll i = 0; i + 1 < (ll)bd.size(); ++i) {
+        ll L = bd[i] + 1;
+        ll R = bd[i + 1] - 1;
+        ll len = R - L + 1;
+        if (len <= 0) {
+            continue;
+        }
+
+        vll sg;
+        sg.reserve(len);
+        vector<ll> px;
+        for (ll j = L; j <= R; ++j) {
+            sg.pb(a[j]);
+            if (a[j] == x) {
+                px.pb(j - L);
+            }
+        }
+
+        ll tot = cnt(sg, s);
+        ll wo  = 0;
+        ll pr  = -1;
+
+        for (ll id : px) {
+            ll l = pr + 1;
+            ll r = id - 1;
+            if (r >= l) {
+                vll tmp(sg.begin() + l, sg.begin() + r + 1);
+                wo += cnt(tmp, s);
+            }
+            pr = id;
+        }
+
+        if ((pr + 1) < len) {
+            vll tmp(sg.begin() + pr + 1, sg.end());
+            wo += cnt(tmp, s);
+        }
+
+        res += (tot - wo);
+    }
+
+    cout << res << nl;
+}
 
 int main(){
     #ifndef ONLINE_JUDGE

@@ -140,8 +140,84 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, m; cin>>n>>m;
+    vvll a(n, vll(m));
+    ll mx = 0;
+    vll r, c;
+    for(ll i = 0; i < n; i++){
+        for(ll j = 0; j < m; j++){
+            cin>>a[i][j];
+            if(a[i][j] > mx){
+                mx = a[i][j];
+                r.clear();
+                c.clear();
+                r.pb(i);
+                c.pb(j);
+            }
+            else if(a[i][j] == mx){
+                r.pb(i);
+                c.pb(j);
+            }
+        }
+    }
+
+    if(n == 1 || m == 1){
+        cout<<mx-1<<nl;
+        return;
+    }
+
+    vpll v1, v2;
+    for(ll i=0; i<r.size(); i++){
+        v1.pb({r[i], c[i]});
+        v2.pb({c[i], r[i]});
+    }
+
+    sort(all(v1));
+    sort(all(v2));
+
+    ll mxfreq = 0, mxfele = 0;
+    map<ll, ll> f1;
+    for(ll i = 0; i < r.size(); i++){
+        f1[r[i]]++;
+        if(f1[r[i]] > mxfreq){
+            mxfreq = f1[r[i]];
+            mxfele = r[i];
+        }
+    }
+
+    ll mxfreq2 = 0, mxfele2 = 0;
+    map<ll, ll> f2;
+    for(ll i = 0; i < c.size(); i++){
+        f2[c[i]]++;
+        if(f2[c[i]] > mxfreq2){
+            mxfreq2 = f2[c[i]];
+            mxfele2 = c[i];
+        }
+    }
+
+    ll ans1 = mx;
+    set<ll> st1;
+    for(ll i = 0; i < v1.size(); i++){
+        if(v1[i].ff != mxfele){
+            st1.insert(v1[i].ss);
+        }
+    }
+    if(st1.size() <= 1){
+        ans1 = mx - 1;
+    }
+
+    ll ans2 = mx;
+    set<ll> st2;
+    for(ll i = 0; i < v2.size(); i++){
+        if(v2[i].ff != mxfele2){
+            st2.insert(v2[i].ss);
+        }
+    }
+    if(st2.size() <= 1){
+        ans2 = mx - 1;
+    }
+
+    cout<<min(ans1, ans2)<<nl;
 }
 
 

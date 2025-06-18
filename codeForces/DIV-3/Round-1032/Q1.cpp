@@ -140,9 +140,21 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
+    ll n, s; cin>>n >> s;
     vll a(n); invec(a, n);
-    debug(a);
+    sort(all(a));
+    ll ans = 0;
+    if(s < a[0]) {
+        ans = a[n-1] - s;
+    }
+    else if(s > a[n-1]){
+        ans = s - a[0];
+    }
+    else{
+        ll l = s - a[0], r = a[n-1] - s;
+        ans = min(l, r) + a[n-1] - a[0];
+    }
+    cout << ans << nl;
 }
 
 

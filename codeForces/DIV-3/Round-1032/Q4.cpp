@@ -139,10 +139,63 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+void solve(){
+    ll n; cin >> n;
+    vector<ll> a(n), b(n);
+    invec(a, n);
+    invec(b, n);
+
+    vector<pair<ll,ll>> ops;
+
+    auto fixCol = [&]() {
+        for (ll i = 0; i < n; i++) {
+            if (a[i] > b[i]) {
+                swap(a[i], b[i]);
+                ops.pb({3, i+1});
+            }
+        }
+    };
+
+    auto fixA = [&]() {
+        for (ll i = 0; i < n-1; i++) {
+            if (a[i] > a[i+1]) {
+                swap(a[i], a[i+1]);
+                ops.pb({1, i+1});
+            }
+        }
+    };
+
+    auto fixB = [&]() {
+        for (ll i = 0; i < n-1; i++) {
+            if (b[i] > b[i+1]) {
+                swap(b[i], b[i+1]);
+                ops.pb({2, i+1});
+            }
+        }
+    };
+
+    auto toFix = [&]() -> bool {
+        for (ll i = 0; i < n-1; i++) {
+            if (a[i] >= a[i+1] || b[i] >= b[i+1]) return true;
+        }
+        for (ll i = 0; i < n; i++) {
+            if (a[i] >= b[i]) return true;
+        }
+        return false;
+    };
+
+    while (toFix()) {
+        fixCol();
+        fixA();
+        fixB();
+    }
+
+    cout << ops.size() << nl;
+    for (auto &[type, idx] : ops) {
+        cout << type << " " << idx << nl;
+    }
 }
+
 
 
 int main(){
