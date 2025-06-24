@@ -141,8 +141,34 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
+    ll n; cin >> n;
     vll a(n); invec(a, n);
+    vll b(n); invec(b, n);
+    auto f = [&](ll M) {
+        ll sum_other = 0, need_other = 0;
+        for (int i = 0; i < n; i++) {
+            ll slack = M - a[i];
+            if (slack < 0) return false;
+            ll self_add = min(slack, b[i]);
+            need_other += (b[i] - self_add);
+            sum_other += (slack - self_add) / 2;
+        }
+        return sum_other >= need_other;
+    };
+
+    ll lo = *max_element(all(a));
+    ll hi = lo + accumulate(all(b), 0LL);
+    ll ans = hi;
+    while (lo <= hi) {
+        ll mid = lo + (hi - lo) / 2;
+        if (f(mid)) {
+            ans = mid;
+            hi = mid - 1;
+        } else {
+            lo = mid + 1;
+        }
+    }
+    cout << ans << nl;
 }
 
 

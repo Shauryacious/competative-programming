@@ -42,3 +42,35 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e18
 
+
+
+class Solution {
+public:
+    bool validgroup(vector<int> &a, int k) {
+        int n = a.size();
+        if (n % k != 0) return false;
+
+        map<int, int> mp;
+        for (int i = 0; i < n; i++) {
+            mp[a[i]]++;
+        }
+
+        while (!mp.empty()) {
+            int start = mp.begin()->first;
+
+            // Try to form a group of size k starting from 'start'
+            for (int i = 0; i < k; i++) {
+                int curr = start + i;
+                if (mp.find(curr) == mp.end()) {
+                    return false;
+                }
+                mp[curr]--;
+                if (mp[curr] == 0) {
+                    mp.erase(curr);
+                }
+            }
+        }
+
+        return true;
+    }
+};

@@ -22,6 +22,8 @@
 #include<limits>
 #include<array>
 #include<utility>
+#include<iterator>
+#include<cstring>
 
 
 
@@ -140,14 +142,18 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    string s1, s2, s3; cin >> s1 >> s2 >> s3;
-    s1 += s2;
-    sort(s1.begin(), s1.end());
-    sort(s3.begin(), s3.end());
-    if (s1 == s3) {
-        cout << "YES" << nl;
-    } else {
-        cout << "NO" << nl;
+    ll q, n; cin>>q>>n;
+    if(q&1){
+        ll rt = sqrt(n);
+        while(rt*rt < n) rt++;
+        while(rt*rt > n) rt--;
+        (rt*rt == n) ? py : pn;
+    }
+    else{
+        ll rt = cbrt(n);
+        while(rt*rt*rt < n) rt++;
+        while(rt*rt*rt > n) rt--;
+        (rt*rt*rt == n) ? py : pn;
     }
 }
 
@@ -160,7 +166,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

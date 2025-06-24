@@ -42,3 +42,26 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e18
 
+class Solution {
+public:
+    int partitionArray(vector<int>& a, int k) {
+        int n = a.size();   
+        sort(all(a));
+        int ans = 0;
+        ii mn = a[0], mx = a[0];
+        for (int i = 0; i < n; i++) {
+            mn = min(mn, a[i]);
+            mx = max(mx, a[i]);
+            if (mx - mn > k) {
+                ans++;
+                mn = mx = a[i];
+            }
+        }
+
+        if (mn != mx) {
+            ans++;
+        }
+
+        return ans;
+    }
+};

@@ -141,9 +141,64 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, q;
+    cin >> n >> q;
+    string U, D;
+    cin >> U >> D;
+
+    ll cntU = count(all(U), '1');
+    ll cntD = count(all(D), '1');
+    if (cntU + cntD < n + 1) {
+        cout << -1 << nl;
+        return;
+    }
+
+    set<ll> onesU, onesD;
+    for (ll i = 0; i < n; ++i) {
+        if (U[i] == '1') onesU.insert(i);
+        if (D[i] == '1') onesD.insert(i);
+    }
+
+    ll ops = 0;
+    ll i = 0, j = n - 1;
+    while (true) {
+        while (i < n && U[i] == '1') ++i;
+        while (j >= 0 && D[j] == '1') --j;
+        if (i >= n || j < 0 || i - j >= 2) break;
+
+        ll costU = INF, costD = INF;
+        auto itU = onesU.upper_bound(i);
+        if (itU != onesU.end()) {
+            costU = *itU - i;
+        }
+        auto itD = onesD.upper_bound(j);
+        if (itD != onesD.begin()) {
+            --itD;
+            costD = j - *itD;
+        }
+
+        if (costU <= costD) {
+            ll i1 = *itU;
+            ops += costU;
+            U[i]   = '1';
+            U[i1]  = '0';
+            onesU.erase(itU);
+            onesU.insert(i);
+            ++i;
+        } else {
+            ll j1 = *itD;
+            ops += costD;
+            D[j]   = '1';
+            D[j1]  = '0';
+            onesD.erase(itD);
+            onesD.insert(j);
+            --j;
+        }
+    }
+
+    cout << ops << nl;
 }
+
 
 
 int main(){

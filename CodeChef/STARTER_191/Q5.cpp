@@ -142,7 +142,36 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    vll a(2*n+1); 
+    for(ll i=1; i<=2*n; i++){
+        cin >> a[i];
+    }
+    set<ll> st;
+    for(ll i=1; i<=n; i++){
+        st.insert(i);
+    }
+
+
+    for(ll i=2; i<=2*n; i+=2){
+        if(a[i] == a[i-1] && st.find(a[i]) != st.end()){ //found
+            st.erase(a[i]);
+            a[i] = 0;
+            a[i-1] = 0;
+        }
+    }
+    debug(a);
+
+    ll ans = 0;
+
+    map<ll, vpll> mp;
+    mp.clear();
+
+    for(ll i=2; i<=2*n; i+=2){
+        if(a[i] == 0) continue;
+        mp[a[i]].pb({i-1, a[i-1]});
+    }
+
+    debug(mp);
 }
 
 
