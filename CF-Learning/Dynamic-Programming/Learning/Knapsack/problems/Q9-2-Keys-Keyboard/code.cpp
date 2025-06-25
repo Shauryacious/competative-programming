@@ -42,3 +42,26 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
+class Solution {
+public:
+    int minSteps(int n) {
+        if(n==1) return 0;
+
+        auto f = [&](int curr, int clip, auto && f) -> int {
+            if(curr > n) return INF;
+            if(curr == n) return 0;
+
+            // copy the current value to the clipboard
+            // but only when the current value is not equal to the clipboard value
+            int copy = 1 + (curr == clip ? INF : f(curr, curr, f));
+
+            // paste the value from the clipboard
+            int paste = 1 + f(curr + clip, clip, f);
+
+            // return the minimum of copy and paste operations
+            return min(copy, paste);
+        };
+
+        return 1+ f(1, 1, f);
+    }
+};

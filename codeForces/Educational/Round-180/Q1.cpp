@@ -142,8 +142,31 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll a, x, y; cin>>a>>x>>y;
+    ll mn = min(x, y);
+    ll mx = max(x, y);
+
+    if(a < mn || a > mx){
+        py;
+        return;
+    }
+
+    ll a1 = abs(a - x);
+    ll a2 = abs(a - y);
+    ll da = min(a1, a2);
+
+    for(ll i=min(x, y); i<= max(x, y); i++){
+        if(i == a) continue; // skip the point a
+        ll dx = abs(i-x);
+        ll dy = abs(i-y);
+        ll db = max(dx, dy);
+        if(db < da){
+            py;
+            return;
+        }
+    }
+
+    pn;
 }
 
 

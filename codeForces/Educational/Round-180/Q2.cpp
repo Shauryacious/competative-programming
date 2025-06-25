@@ -144,6 +144,59 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+    ll is0 = false;
+    for(ll i=0; i<n-1; i++){
+        if(abs(a[i] - a[i+1]) <= 1){
+            is0 = true;
+            break;
+        }
+    }
+
+    if(is0){
+        cout<<0<<endl;
+        return;
+    }
+
+    if(n == 2){
+        pm;
+        return;
+    }
+
+    auto f = [&](ll l, ll r, ll x) -> bool {
+        return (l <= x && x <= r);
+    };
+
+    ll is1 = 0;
+
+    for(ll i=0; i<n-2; i++){
+        ll x = a[i] - 1;
+        ll y = a[i] + 1;
+        ll mn = min(a[i+1], a[i+2]);
+        ll mx = max(a[i+1], a[i+2]);
+        if(f(mn, mx, x) || f(mn, mx, y) || f(mn, mx, a[i])){
+            is1 = 1;
+            break;
+        }
+    }
+
+    for(ll i=n-1; i>=2; i--){
+        ll x = a[i] - 1;
+        ll y = a[i] + 1;
+        ll mn = min(a[i-1], a[i-2]);
+        ll mx = max(a[i-1], a[i-2]);
+        if(f(mn, mx, x) || f(mn, mx, y) || f(mn, mx, a[i])){
+            is1 = 1;
+            break;
+        }
+    }
+
+    if(is1){
+        cout<<1<<endl;
+        return;
+    }
+
+    pm;
+    return;
 }
 
 

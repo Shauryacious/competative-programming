@@ -142,43 +142,39 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll N; cin>>N;
-    vll a(N); invec(a, N);
+    string s; cin>>s;
+    ll n = s.size();
+    int k; cin>>k;
+    vector<string> v(k);
 
-    ll mx = *max_element(all(a));
+    map<string, int> dp;
 
-    auto f = [&](ll i, ll rem, ll sum, auto && f, ll n) -> ll {
-        if(i >= n){
-            if(rem == 0){
-                if(sum > 2*mx){
-                    return 1;
-                }
-                else{
-                    return 0;
-                }
-            }
-            else{
-                return 0;
-            }
+    for(int i = 0; i < k; i++){
+        cin>>v[i];
+    }
+
+    auto f = [&](string curr, auto && f) -> ll {
+        if(curr.size() > n){
+            return 0;
+        }
+        if(curr.size() == n){
+            return curr == s;
         }
 
-        int ways = 0;
-
-        //Take
-        if(rem){
-            ways += f(i + 1, rem - 1, sum + a[i], f, n);
+        if(dp.find(curr) != dp.end()){
+            return dp[curr];
+        }
+        
+        ll ans = 0;
+        for(int i = 0; i < k; i++){
+            ans += f(curr + v[i], f);
+            ans %= MOD;
         }
 
-        //Not Take
-        ways += f(i + 1, rem, sum, f, n);
-
-        return ways;
+        return dp[curr] = ans;
     };
 
-    ll ans = 0;
-    ans += f(0, 3, 0, f, N);
-    // ans += f(0, 2, mx, f, N-1);
-
+    ll ans = f("", f);
     cout << ans << nl;
 }
 
@@ -191,7 +187,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

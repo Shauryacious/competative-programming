@@ -142,44 +142,8 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll N; cin>>N;
-    vll a(N); invec(a, N);
-
-    ll mx = *max_element(all(a));
-
-    auto f = [&](ll i, ll rem, ll sum, auto && f, ll n) -> ll {
-        if(i >= n){
-            if(rem == 0){
-                if(sum > 2*mx){
-                    return 1;
-                }
-                else{
-                    return 0;
-                }
-            }
-            else{
-                return 0;
-            }
-        }
-
-        int ways = 0;
-
-        //Take
-        if(rem){
-            ways += f(i + 1, rem - 1, sum + a[i], f, n);
-        }
-
-        //Not Take
-        ways += f(i + 1, rem, sum, f, n);
-
-        return ways;
-    };
-
-    ll ans = 0;
-    ans += f(0, 3, 0, f, N);
-    // ans += f(0, 2, mx, f, N-1);
-
-    cout << ans << nl;
+    ll n; cin>>n;
+    vll a(n); invec(a, n);
 }
 
 

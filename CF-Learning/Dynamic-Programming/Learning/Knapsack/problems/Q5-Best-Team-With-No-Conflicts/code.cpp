@@ -40,5 +40,11 @@ using namespace std;
 #define vll vector<ll>
 #define vvll vector<vll>
 #define all(x) (x).begin(), (x).end()
-#define INF 1e9
+#define INF 1e18
 
+class Solution {
+public:
+    int bestTeamScore(vector<int>& scores, vector<int>& ages) {
+        
+    }
+};
