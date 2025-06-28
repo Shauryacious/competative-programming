@@ -35,7 +35,6 @@ using namespace std;
 #define pii pair<int, int>
 #define vpii vector<pii>
 #define pb push_back
-#define ppb pop_back    
 #define MOD 1000000007
 #define ll long long
 #define vll vector<ll>
@@ -45,39 +44,23 @@ using namespace std;
 
 class Solution {
 public:
-    vector<vector<string>> partition(string s) {
-        int n = s.size();
+    int maxProfit(vector<int>& p) {
+        int n = p.size();
 
-        vector<vector<string>> ans;
+        int bd = 0, sd = 0; // buying day, selling day
+        int profit = 0;
 
-        auto isPalindrome = [&](int l, int r) -> bool {
-            while(l < r) {
-                if(s[l] != s[r]) return false;
-                l++;
-                r--;
+        for(int i=0; i<n-1; i++){
+            if(p[i] <= p[i+1]){ // if price is increasing
+                sd = i+1; // update selling day
+            } else {
+                profit += (p[sd] - p[bd] > 0 ? p[sd] - p[bd] : 0); // add profit if any
+                bd = i+1; // update buying day to current day
+                sd = i+1; // reset selling day to current day
             }
-            return true;
-        };
+        }
 
-        auto f = [&](int idx, vector<string> &curr, auto && f) -> void {
-            if(idx == n) {
-                ans.pb(curr);
-                return;
-            }
-
-            for(ll i = idx; i < n; i++) {
-                if(isPalindrome(idx, i)) {
-                    string sub = s.substr(idx, i - idx + 1);
-                    curr.pb(sub);
-                    f(i + 1, curr, f);
-                    curr.ppb(); // backtrack
-                }   
-            }
-        };
-
-        vector<string> curr;
-        f(0, curr, f);
-
-        return ans;
+        profit += (p[sd] - p[bd] > 0 ? p[sd] - p[bd] : 0); // add profit for the last segment
+        return profit; // return total profit
     }
 };

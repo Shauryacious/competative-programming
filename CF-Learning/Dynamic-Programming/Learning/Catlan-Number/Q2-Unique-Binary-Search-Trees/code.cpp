@@ -35,7 +35,6 @@ using namespace std;
 #define pii pair<int, int>
 #define vpii vector<pii>
 #define pb push_back
-#define ppb pop_back    
 #define MOD 1000000007
 #define ll long long
 #define vll vector<ll>
@@ -43,41 +42,21 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
+
 class Solution {
 public:
-    vector<vector<string>> partition(string s) {
-        int n = s.size();
+    int numTrees(int n) {
+        int dp[21];
+        memset(dp, 0, sizeof(dp));
+        dp[0] = 1; // Base case: 1 way to form an empty tree
+        dp[1] = 1; // Base case: 1 way to form a tree with one node
 
-        vector<vector<string>> ans;
-
-        auto isPalindrome = [&](int l, int r) -> bool {
-            while(l < r) {
-                if(s[l] != s[r]) return false;
-                l++;
-                r--;
+        for(int i=2; i<=n; i++){
+            for(int j=1; j<=i; j++){
+                dp[i] += dp[j-1] * dp[i-j];
             }
-            return true;
-        };
+        }
 
-        auto f = [&](int idx, vector<string> &curr, auto && f) -> void {
-            if(idx == n) {
-                ans.pb(curr);
-                return;
-            }
-
-            for(ll i = idx; i < n; i++) {
-                if(isPalindrome(idx, i)) {
-                    string sub = s.substr(idx, i - idx + 1);
-                    curr.pb(sub);
-                    f(i + 1, curr, f);
-                    curr.ppb(); // backtrack
-                }   
-            }
-        };
-
-        vector<string> curr;
-        f(0, curr, f);
-
-        return ans;
+        return dp[n];
     }
 };

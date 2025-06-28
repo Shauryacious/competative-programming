@@ -142,48 +142,30 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n);
-    invec(a, n);
-    ll total = accumulate(all(a), 0LL);
-    if (total % 3 == 0) {
-        pn;
+    ll n; cin>>n;
+    if(n&1) {
+        cout << "0" << nl;
         return;
     }
 
-    vector<ll> pref(n);
-    pref[0] = a[0];
-    for (int i = 1; i < n; i++) pref[i] = pref[i-1] + a[i];
+    ll dp[65];
 
+    auto f = [&](ll x, auto && f) -> ll {
+        if(x == 0) return 0;
+        if(x == 2) return 2;
 
-    bool any_bad = false;
-    for (ll x : pref) if (x % 3 == 0) any_bad = true;
-    if (!any_bad) {
-        py;
-        return;
-    }
+        if(dp[x] != -1) return dp[x];
 
-    int id = -1;
-    for (int i = 0; i < n; i++) {
-        if (pref[i] % 3 == 0) {
-            id = i;
-            break;
-        }
-    }
+        ll ans = 2 * f(x - 2, f);
 
-    bool ok = false;
-    for (int k = id + 1; k < n; k++) {
-        if (pref[k] % 3 != 0 && (total - pref[k]) % 3 != 0) {
-            ok = true;
-            break;
-        }
-    }
+        return dp[x] = ans;
+    };
 
-    if (ok) py;
-    else pn;
+    memset(dp, -1, sizeof(dp));
+
+    ll ans = f(n, f);
+    cout << ans << nl;
 }
-
-
 
 
 int main(){
@@ -194,7 +176,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

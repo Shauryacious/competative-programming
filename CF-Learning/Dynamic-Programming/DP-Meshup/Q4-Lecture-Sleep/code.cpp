@@ -142,47 +142,44 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n);
-    invec(a, n);
-    ll total = accumulate(all(a), 0LL);
-    if (total % 3 == 0) {
-        pn;
-        return;
+    ll n , k ;  cin >> n >> k ;
+    vll a ( n ) ;  invec ( a , n ) ;
+    vll b ( n ) ;  invec ( b , n ) ;
+
+    /*  prefix of unaffected a[i] * b[i]  */
+    vll pref ( n + 1 , 0 ) ;
+    for ( ll i = 0 ; i < n ; ++ i ) {
+        pref [ i + 1 ] = pref [ i ] + a [ i ] * b [ i ] ;
     }
 
-    vector<ll> pref(n);
-    pref[0] = a[0];
-    for (int i = 1; i < n; i++) pref[i] = pref[i-1] + a[i];
-
-
-    bool any_bad = false;
-    for (ll x : pref) if (x % 3 == 0) any_bad = true;
-    if (!any_bad) {
-        py;
-        return;
+    /*  suffix of unaffected a[i] * b[i]  */
+    vll suff ( n + 1 , 0 ) ;
+    for ( ll i = n - 1 ; i >= 0 ; -- i ) {
+        suff [ i ] = suff [ i + 1 ] + a [ i ] * b [ i ] ;
     }
 
-    int id = -1;
-    for (int i = 0; i < n; i++) {
-        if (pref[i] % 3 == 0) {
-            id = i;
-            break;
+    debug(pref);
+    debug(suff);
+
+    /*  sliding-window part  */
+    ll i = 0 , j = 0 ;
+    ll curr = 0 , ans = 0 ;
+
+    while ( j < n ) {
+        curr += a [ j ] ;                               //  b[j] becomes 1
+        if ( j - i + 1 == k ) {                         //  window hits size k
+            ans = max ( ans ,
+                         pref [ i ]           //  left block
+                       + curr                 //  modified block
+                       + suff [ j + 1 ] ) ;   //  right block
+            curr -= a [ i ] ;                            //  slide
+            i++ ;
         }
+        j++ ;
     }
 
-    bool ok = false;
-    for (int k = id + 1; k < n; k++) {
-        if (pref[k] % 3 != 0 && (total - pref[k]) % 3 != 0) {
-            ok = true;
-            break;
-        }
-    }
-
-    if (ok) py;
-    else pn;
+    cout << ans << nl ;
 }
-
 
 
 
@@ -194,7 +191,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

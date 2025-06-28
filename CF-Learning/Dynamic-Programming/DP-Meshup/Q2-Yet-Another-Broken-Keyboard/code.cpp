@@ -141,48 +141,71 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-void solve() {
-    ll n; cin >> n;
-    vll a(n);
-    invec(a, n);
-    ll total = accumulate(all(a), 0LL);
-    if (total % 3 == 0) {
-        pn;
-        return;
+ll n, m, k, x, y, z, a, b, c;
+
+string s, t;
+
+// Greedy solution
+// void solve() {
+//     ll n, k; cin>>n>>k;
+//     string s; cin>>s;
+//     vll v(26, 0);
+//     for(ll i=0; i<k; i++){
+//         char c; cin>>c;
+//         v[c - 'a'] = 1;
+//     }
+
+//     for(ll i=0; i<n; i++){
+//         s[i] = (v[s[i] - 'a'] == 1) ? '1' : '0';
+//     }
+
+//     debug(s);
+
+//     ll ans = 0;
+//     for(ll i=0; i<n; i++){
+//         ll cnt1 = 0;
+//         while(i < n && s[i] == '1'){
+//             cnt1++;
+//             i++;
+//         }
+//         ans += (cnt1 * (cnt1 + 1)) / 2;
+//     }
+
+//     cout << ans << nl;
+
+// }
+
+void solve(){
+    cin >> n >> k;
+    cin >> s;
+
+    // mark allowed letters as '1', others as '0'
+    vll v(26, 0);
+    for (ll i = 0; i < k; i++){
+        char c; cin >> c;
+        v[c - 'a'] = 1;
     }
-
-    vector<ll> pref(n);
-    pref[0] = a[0];
-    for (int i = 1; i < n; i++) pref[i] = pref[i-1] + a[i];
-
-
-    bool any_bad = false;
-    for (ll x : pref) if (x % 3 == 0) any_bad = true;
-    if (!any_bad) {
-        py;
-        return;
+    for (ll i = 0; i < n; i++){
+        s[i] = (v[s[i] - 'a'] ? '1' : '0');
     }
+    debug(s);
 
-    int id = -1;
-    for (int i = 0; i < n; i++) {
-        if (pref[i] % 3 == 0) {
-            id = i;
-            break;
+    ll ans = 0;
+    // f(i) returns the length of the valid suffix starting at i
+    auto f = [&](ll i, auto&& f) -> ll {
+        if (i == n) return 0;
+        ll nextLen = f(i + 1, f);
+        ll currLen = 0;
+        if (s[i] == '1'){
+            currLen = nextLen + 1;
+            ans += currLen;
         }
-    }
+        return currLen;
+    };
 
-    bool ok = false;
-    for (int k = id + 1; k < n; k++) {
-        if (pref[k] % 3 != 0 && (total - pref[k]) % 3 != 0) {
-            ok = true;
-            break;
-        }
-    }
-
-    if (ok) py;
-    else pn;
+    f(0, f);
+    cout << ans << "\n";
 }
-
 
 
 
@@ -194,7 +217,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

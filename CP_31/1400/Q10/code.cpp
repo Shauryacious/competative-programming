@@ -35,7 +35,6 @@ using namespace std;
 #define pii pair<int, int>
 #define vpii vector<pii>
 #define pb push_back
-#define ppb pop_back    
 #define MOD 1000000007
 #define ll long long
 #define vll vector<ll>
@@ -43,41 +42,47 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
+
 class Solution {
+    
+
 public:
-    vector<vector<string>> partition(string s) {
-        int n = s.size();
-
-        vector<vector<string>> ans;
-
-        auto isPalindrome = [&](int l, int r) -> bool {
-            while(l < r) {
-                if(s[l] != s[r]) return false;
-                l++;
-                r--;
+    int primeSubarray(vector<int>& a, int k) {
+        vii primes(50005, 1);
+        for(int i=2; i*i <= 50002; i++){
+            if(primes[i]){
+                for(int j=i*i; j<=50002; j+=i){
+                    primes[j] = 0;
+                }
             }
-            return true;
-        };
+        }
 
-        auto f = [&](int idx, vector<string> &curr, auto && f) -> void {
-            if(idx == n) {
-                ans.pb(curr);
-                return;
+        set<ii> st;
+        for(int i=2; i<=50002; i++){
+            if(primes[i]){
+                st.insert(i);
+            }
+        }
+
+        // for(auto it : st){
+        //     cout<<it<<" ";
+        // }
+        // cout<<endl;
+
+        int n = a.size();
+        int i = 0, j = 0;
+        multiset<int> mnst;
+        multiset<ii, greater<ii>> mxst;
+
+        int ans = 0;
+        int i = 0, j = 0;
+        while(j < n){
+            if(st.find(a[j]) != st.end()){
+                mnst.insert(a[j]);
+                mxst.insert(a[j]);
             }
 
-            for(ll i = idx; i < n; i++) {
-                if(isPalindrome(idx, i)) {
-                    string sub = s.substr(idx, i - idx + 1);
-                    curr.pb(sub);
-                    f(i + 1, curr, f);
-                    curr.ppb(); // backtrack
-                }   
-            }
-        };
-
-        vector<string> curr;
-        f(0, curr, f);
-
-        return ans;
+            
+        }
     }
 };

@@ -35,7 +35,6 @@ using namespace std;
 #define pii pair<int, int>
 #define vpii vector<pii>
 #define pb push_back
-#define ppb pop_back    
 #define MOD 1000000007
 #define ll long long
 #define vll vector<ll>
@@ -43,41 +42,36 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
+
 class Solution {
 public:
-    vector<vector<string>> partition(string s) {
-        int n = s.size();
+    int paintWalls(vector<int>& c, vector<int>& t) {
+        int n = c.size();
 
-        vector<vector<string>> ans;
+        int dp[505][505];
 
-        auto isPalindrome = [&](int l, int r) -> bool {
-            while(l < r) {
-                if(s[l] != s[r]) return false;
-                l++;
-                r--;
+        auto f = [&](int i, int rem, auto && f) -> int {
+            if(i == n){
+                if(rem <= 0) return 0;
+                return INF;
             }
-            return true;
+
+            if(rem <= 0) rem = 0;
+
+            if(dp[i][rem] != -1) return dp[i][rem];
+
+            int ans = INF;
+            //paint the current wall
+            ans = min(ans, c[i] + f(i + 1, rem - t[i] - 1, f));
+
+            //don't paint the current wall
+            ans = min(ans, f(i + 1, rem, f));
+
+            return dp[i][rem] = ans;
         };
 
-        auto f = [&](int idx, vector<string> &curr, auto && f) -> void {
-            if(idx == n) {
-                ans.pb(curr);
-                return;
-            }
-
-            for(ll i = idx; i < n; i++) {
-                if(isPalindrome(idx, i)) {
-                    string sub = s.substr(idx, i - idx + 1);
-                    curr.pb(sub);
-                    f(i + 1, curr, f);
-                    curr.ppb(); // backtrack
-                }   
-            }
-        };
-
-        vector<string> curr;
-        f(0, curr, f);
-
+        memset(dp, -1, sizeof(dp));
+        int ans = f(0, n, f);
         return ans;
     }
 };

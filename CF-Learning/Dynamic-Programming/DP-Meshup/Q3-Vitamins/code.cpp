@@ -141,49 +141,54 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll dp[100005][10];
+
 void solve() {
-    ll n; cin >> n;
-    vll a(n);
-    invec(a, n);
-    ll total = accumulate(all(a), 0LL);
-    if (total % 3 == 0) {
-        pn;
-        return;
-    }
+    ll n; cin>>n;
+    vll c(n), v(n);
+    for(ll i=0; i<n; i++){
+        cin>>c[i];
 
-    vector<ll> pref(n);
-    pref[0] = a[0];
-    for (int i = 1; i < n; i++) pref[i] = pref[i-1] + a[i];
-
-
-    bool any_bad = false;
-    for (ll x : pref) if (x % 3 == 0) any_bad = true;
-    if (!any_bad) {
-        py;
-        return;
-    }
-
-    int id = -1;
-    for (int i = 0; i < n; i++) {
-        if (pref[i] % 3 == 0) {
-            id = i;
-            break;
+        string s; cin>>s;
+        ll x = 0;
+        for(auto ch : s){
+            ll val = ch - 'A';
+            x |= (1 << val);
         }
+        v[i] = x;
     }
+    debug(c);
+    debug(v);
 
-    bool ok = false;
-    for (int k = id + 1; k < n; k++) {
-        if (pref[k] % 3 != 0 && (total - pref[k]) % 3 != 0) {
-            ok = true;
-            break;
+
+    auto f = [&](ll i, ll currmask, auto && f) -> ll {
+        if(i == n){
+            if(currmask == 7) return 0;
+            return INF;
         }
-    }
 
-    if (ok) py;
-    else pn;
+        if(dp[i][currmask] != -1) return dp[i][currmask];
+
+        ll ans = INF;
+        // include ith vitamin
+        ans = min(ans, c[i] + f(i + 1, currmask | v[i], f));
+
+        // exclude ith vitamin
+        ans = min(ans, f(i + 1, currmask, f));
+
+        return dp[i][currmask] = ans;
+    };
+
+    memset(dp, -1, sizeof(dp));
+    ll ans = f(0, 0, f);
+
+
+    if(ans == INF) {
+        cout << -1 << nl;
+    } else {
+        cout << ans << nl;
+    }
 }
-
-
 
 
 int main(){
@@ -194,7 +199,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

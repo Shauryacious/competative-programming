@@ -142,48 +142,41 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin >> n;
-    vll a(n);
-    invec(a, n);
-    ll total = accumulate(all(a), 0LL);
-    if (total % 3 == 0) {
-        pn;
-        return;
-    }
+    ll n, k, d; cin>>n>>k>>d;
 
-    vector<ll> pref(n);
-    pref[0] = a[0];
-    for (int i = 1; i < n; i++) pref[i] = pref[i-1] + a[i];
+    ll dp[105][2];
+    memset(dp, -1, sizeof(dp)); 
 
-
-    bool any_bad = false;
-    for (ll x : pref) if (x % 3 == 0) any_bad = true;
-    if (!any_bad) {
-        py;
-        return;
-    }
-
-    int id = -1;
-    for (int i = 0; i < n; i++) {
-        if (pref[i] % 3 == 0) {
-            id = i;
-            break;
+    auto f = [&](ll curr, ll isd, auto && f) -> ll {
+        // cout<<"curr: "<<curr<<" isd: "<<isd<<nl;
+        if(curr > n) {
+            return 0; // if we have used more than n digits
         }
-    }
-
-    bool ok = false;
-    for (int k = id + 1; k < n; k++) {
-        if (pref[k] % 3 != 0 && (total - pref[k]) % 3 != 0) {
-            ok = true;
-            break;
+        if(curr == n) {
+            return isd; // if we have used at least one d
         }
-    }
 
-    if (ok) py;
-    else pn;
+        if(dp[curr][isd] != -1) {
+            return dp[curr][isd];
+        }
+
+        ll ans = 0;
+        for(ll i=1; i<=k; i++) {
+            if(i >= d) { 
+                ans += f(curr + i, 1, f);
+                ans %= MOD;
+            } else {
+                ans += f(curr + i, isd, f);
+                ans %= MOD;
+            }
+        }
+
+        return dp[curr][isd] = ans;
+    };
+
+    ll ans = f(0, 0, f);
+    cout << ans << nl;
 }
-
-
 
 
 int main(){
@@ -194,7 +187,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }
