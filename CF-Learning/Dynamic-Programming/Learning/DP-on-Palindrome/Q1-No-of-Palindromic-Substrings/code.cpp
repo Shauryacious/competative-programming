@@ -42,27 +42,34 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    int countSubstrings(string s) {
+        int n = s.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        int dp[1001][1001]; // dp[i][j] = 1 if s[i..j] is a palindrome, else 0
+        memset(dp, 0, sizeof(dp));
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
+        for(int l = 1; l <= n; l++){
+            for(int i = 0; i+l-1 < n; i++){
+                int j = i + l - 1;
+                if(l == 1) {
+                    dp[i][j] = 1; // single character is a palindrome
+                } else if(l == 2) {
+                    dp[i][j] = (s[i] == s[j]) ? 1 : 0; // two characters are a palindrome if they are equal
+                } else {
+                    dp[i][j] = (s[i] == s[j] && dp[i+1][j-1]) ? 1 : 0; // check outer characters and inner substring
                 }
             }
-        };
-        
+        }
+
+        int count = 0;  
+        for(int i = 0; i < n; i++) {
+            for(int j = i; j < n; j++) {
+                count += dp[i][j]; // count all palindromic substrings
+            }
+        }
+
+        return count;
     }
 };

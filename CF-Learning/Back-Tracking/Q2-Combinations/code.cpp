@@ -42,27 +42,35 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    vector<vector<int>> combine(int n, int k) {
+        vector<int> a(n);
+        iota(a.begin(), a.end(), 1); 
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        vector<vector<int>> ans;
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int i, int j, vector<int>& curr, auto && f) -> void {
+            if(curr.size() == k) {
+                ans.push_back(curr);
+                return;
             }
+
+            if(i == n) return;
+
+            // Include the current element
+            curr.push_back(a[i]);
+            f(i + 1, j + 1, curr, f);
+            curr.pop_back();
+
+
+            // Exclude the current element
+            f(i + 1, j, curr, f);
         };
-        
+
+        vector<int> curr;
+        f(0, 0, curr, f);
+
+        return ans;
     }
 };

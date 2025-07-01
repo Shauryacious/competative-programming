@@ -42,27 +42,36 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+public:
+    bool canPartition(vector<int>& a) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        int sm = accumulate(all(a), 0);
 
-            while(i < n){
-                if(a[i] < h){
+        if (sm&1) return false;
 
-                }
-                else{
+        int dp[201][20001];
+        memset(dp, -1, sizeof(dp));
 
-                }
+        auto f = [&](int i, int curr, auto && f) -> bool {
+            if(i == n){
+                return curr == sm / 2;
             }
+
+            if(dp[i][curr] != -1) return dp[i][curr];
+
+            bool ans = false;
+
+            // Include the current element
+            ans |= f(i + 1, curr + a[i], f);
+
+            // Exclude the current element
+            ans |= f(i + 1, curr, f);
+
+            return dp[i][curr] = ans;
         };
-        
+
+        return f(0, 0, f);
     }
 };

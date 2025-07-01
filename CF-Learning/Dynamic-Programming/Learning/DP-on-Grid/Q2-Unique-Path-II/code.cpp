@@ -42,27 +42,38 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& g) {
+        int n = g.size(), m = g[0].size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        //Edge case: If the starting or ending cell is an obstacle, return 0
+        if(g[0][0] == 1 || g[n-1][m-1] == 1) return 0;
 
-            while(i < n){
-                if(a[i] < h){
+        int dp[101][101];
+        memset(dp, -1, sizeof(dp));
 
-                }
-                else{
+        auto f = [&](int i, int j, auto && f) -> int {
+            if(i == n-1 && j == m-1) return 1;
+            if(i >= n || j >= m) return 0;
 
-                }
+            if(dp[i][j] != -1) return dp[i][j];
+
+            int ans = 0;
+
+            // If the current cell is an obstacle, return 0
+            if(i+1 < n && g[i+1][j] == 0){
+                ans += f(i + 1, j, f);
             }
+
+            // If the current cell is an obstacle, return 0
+            if(j+1 < m && g[i][j+1] == 0){
+                ans += f(i, j + 1, f); 
+            }
+
+            return dp[i][j] = ans;
         };
-        
+
+        return f(0, 0, f);
     }
 };

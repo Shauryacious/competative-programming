@@ -1,1 +1,2 @@
-7
+Length of LCS: 3
+LCS: bba

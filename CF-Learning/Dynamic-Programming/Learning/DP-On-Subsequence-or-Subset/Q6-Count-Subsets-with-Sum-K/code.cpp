@@ -42,27 +42,31 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
+int findWays(vector<int>& a, int k){
+    int n = a.size();
 
-class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+    vvii dp(n + 1, vii(k + 1, -1));
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+    auto f = [&](int i, int curr, auto && f) -> int {
+        if(curr > k) return 0;
+        if(i == n){
+            return curr == k;
+        }
 
-            while(i < n){
-                if(a[i] < h){
+        if(dp[i][curr] != -1) return dp[i][curr];
 
-                }
-                else{
+        int ans = 0;
 
-                }
-            }
-        };
-        
-    }
-};
+        // Include the current element
+        ans += f(i + 1, curr + a[i], f);
+        ans %= MOD;
+
+        // Exclude the current element
+        ans += f(i + 1, curr, f);
+        ans %= MOD;
+
+        return dp[i][curr] = ans % MOD;
+    };
+
+    return f(0, 0, f);
+}

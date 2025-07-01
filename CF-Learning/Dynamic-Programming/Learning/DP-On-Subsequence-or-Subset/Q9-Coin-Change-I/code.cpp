@@ -42,27 +42,35 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+public:
+    int coinChange(vector<int>& a, int t) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        ll dp[20][10005];
+        memset(dp, -1, sizeof(dp));
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int i, ll curr, auto && f) -> ll {
+            if(curr < 0) return INF;
+            if(i == n) {
+                return curr == 0 ? 0 : INF;
             }
+
+            if(dp[i][curr] != -1) return dp[i][curr];
+
+            
+            ll ans = INF;
+
+            //Include the coin
+            ans = min(ans, 1 + f(i, curr - a[i], f));
+
+            //Exclude the coin
+            ans = min(ans, f(i + 1, curr, f));
+
+            return dp[i][curr] = ans;
         };
-        
+
+        ll ans = f(0, t, f);
+        return ans == INF ? -1 : (int)ans;
     }
 };

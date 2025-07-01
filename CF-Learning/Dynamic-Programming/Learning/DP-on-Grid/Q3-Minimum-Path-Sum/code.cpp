@@ -42,27 +42,32 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    int minPathSum(vector<vector<int>>& g) {
+        int n = g.size(), m = g[0].size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        vvll dp(n, vll(m, -1));
 
-            while(i < n){
-                if(a[i] < h){
+        auto f = [&](int i, int j, auto && f) -> ll {
+            if(i == n-1 && j == m-1) return g[i][j];
+            if(i >= n || j >= m) return INF;
 
-                }
-                else{
+            if(dp[i][j] != -1) return dp[i][j];
 
-                }
-            }
+            ll ans = INF;
+
+            // down
+            ans = min(ans, (ll)(g[i][j]) + f(i + 1, j, f));
+
+            // right
+            ans = min(ans, (ll)(g[i][j]) + f(i, j + 1, f));
+
+            return dp[i][j] = ans;
         };
-        
+
+        ll ans = f(0, 0, f);
+
+        return (int)ans;
     }
 };

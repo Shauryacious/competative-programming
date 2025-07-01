@@ -42,27 +42,33 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
   public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+    bool checkSubsequenceSum(int n, vector<int>& a, int k) {
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        vector<vector<int>> dp(n + 1, vector<int>(k + 1, -1));
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int i, int curr, auto && f) -> int {
+            if(curr > k){
+                return 0;
             }
+
+            if(i == n){
+                return curr == k ? 1 : 0;
+            }
+
+            if(dp[i][curr] != -1){
+                return dp[i][curr];
+            }
+
+            int ans = 0;
+
+            ans |= f(i + 1, curr + a[i], f);
+            ans |= f(i + 1, curr, f);
+
+            return dp[i][curr] = ans;
         };
-        
+
+        return f(0, 0, f);
     }
 };

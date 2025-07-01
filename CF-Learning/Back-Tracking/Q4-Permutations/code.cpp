@@ -42,27 +42,29 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+public:
+    vvii permute(vii& a) {
         int n = a.size();
+        vvii ans;
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        auto f = [&](vii& curr, int mask, auto &&f) -> void {
+            if(curr.size() == n){
+                ans.pb(curr);
+                return;
+            }
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
+            for(int i = 0; i < n; i++){
+                if((mask & (1 << i)) == 0){ // if i-th bit is not set yet
+                    curr.pb(a[i]);
+                    f(curr, mask | (1 << i), f);
+                    curr.pop_back();
                 }
             }
         };
-        
+
+        vii curr;
+        f(curr, 0, f);
+        return ans;
     }
 };

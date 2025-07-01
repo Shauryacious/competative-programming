@@ -44,25 +44,38 @@ using namespace std;
 
 
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    int numWays(int steps, int n) {
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        int dp[505][505];
+        memset(dp, -1, sizeof(dp));    
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int rem, int curr, auto && f) -> int {
+            if(curr < 0 || curr >= n) return 0;
+            if(rem == 0){
+                if(curr == 0) return 1;
+                return 0;
             }
+
+            if(dp[rem][curr] != -1) return dp[rem][curr];
+
+            int ans = 0;
+
+            // Move left
+            ans += f(rem - 1, curr - 1, f);
+            ans %= MOD;
+
+            // Move right
+            ans += f(rem - 1, curr + 1, f);
+            ans %= MOD;
+
+            // Stay in place
+            ans += f(rem - 1, curr, f);
+            ans %= MOD;
+
+            return dp[rem][curr] = ans;
         };
-        
+
+        return f(steps, 0, f);
     }
 };

@@ -42,27 +42,27 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
   public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+    vector<string> generateBinaryStrings(int n) {
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        vector<string> ans;
 
-            while(i < n){
-                if(a[i] < h){
+        auto f = [&](string curr, int last, auto && f) -> void {
+            if(curr.size() == n) {
+                ans.push_back(curr);
+                return;
+            }
 
-                }
-                else{
-
-                }
+            if(last == 1){
+                f(curr + '0', 0, f);
+            } else {
+                f(curr + '0', 0, f);
+                f(curr + '1', 1, f);
             }
         };
-        
+
+        f("", 0, f);
+        return ans;
     }
 };

@@ -42,27 +42,35 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
   public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+    int countPartitions(vector<int>& a, int d) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        int off = 300;
+        int dp[51][1000];
+        memset(dp, -1, sizeof(dp));
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int i, int curr, auto && f) -> int {
+            if(i == n){
+                return curr == d;
             }
+
+            if(dp[i][curr + off] != -1) return dp[i][curr + off];
+
+            int ans = 0;
+
+            // Include the current element
+            ans += f(i + 1, curr + a[i], f);
+
+            // Exclude the current element
+            ans += f(i + 1, curr - a[i], f);
+
+            return dp[i][curr + off] = ans;
         };
-        
+
+        int ans = f(0, 0, f);
+
+        return ans;
     }
 };

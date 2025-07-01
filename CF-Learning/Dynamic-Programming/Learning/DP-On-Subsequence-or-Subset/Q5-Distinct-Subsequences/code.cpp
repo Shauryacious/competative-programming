@@ -44,25 +44,42 @@ using namespace std;
 
 
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    int numDistinct(string s, string t) {
+        int n = s.size(), m = t.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        int dp[1001][1001];
+        memset(dp, -1, sizeof(dp));
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int i, int j, auto && f) -> int {
+            if(i >= n || j >= m){
+                return 0;
             }
+
+            if(dp[i][j] != -1){
+                return dp[i][j];
+            }
+
+            int ans = 0;
+
+            if(i < n && j < m && s[i] == t[j]){
+                ans = 1 + f(i + 1, j + 1, f); 
+            }
+
+            // CASE 1: skip current character in s
+            ans += f(i + 1, j, f);
+
+            // CASE 2: skip current character in t 
+            ans += f(i, j + 1, f);
+
+            // CASE 3: skip current character in both s and t
+            ans += f(i + 1, j + 1, f);
+
+
+            return dp[i][j] = ans;
         };
-        
+
+        int ans = f(0, 0, f);
+        return ans;
     }
 };

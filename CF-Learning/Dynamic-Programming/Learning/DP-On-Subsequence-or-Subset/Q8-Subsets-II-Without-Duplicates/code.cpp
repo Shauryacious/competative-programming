@@ -42,27 +42,38 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& a) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        sort(a.begin(), a.end());
 
-            while(i < n){
-                if(a[i] < h){
+        vvii ans;
 
-                }
-                else{
-
-                }
+        auto f = [&](int i, vii& v, auto&& f) -> void {
+            if (i == n) {
+                ans.pb(v);
+                return;
             }
+
+            // Include the current element
+            v.pb(a[i]);
+            f(i + 1, v, f);
+            v.pop_back();
+
+            // Skip duplicates
+            while (i + 1 < n && a[i] == a[i + 1]) {
+                i++;
+            }
+
+            // Exclude the current element
+            f(i + 1, v, f);
         };
-        
+
+        vii v;
+        f(0, v, f);
+
+        return ans;
     }
 };

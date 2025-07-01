@@ -42,27 +42,36 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    int minDistance(string s1, string s2) {
+        int n = s1.size(), m = s2.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        int dp[505][505];
+        memset(dp, -1, sizeof(dp));
 
-            while(i < n){
-                if(a[i] < h){
+        auto f = [&](int i, int j, auto && f) -> int {
+            if(i == n || j == m) return 0;
 
-                }
-                else{
+            if(dp[i][j] != -1) return dp[i][j];
 
-                }
+            int ans = 0;
+
+            if(i < n && j < m && s1[i] == s2[j]) {
+                ans = max(ans, 1 + f(i + 1, j + 1, f));
             }
+            else{
+                ans = max(ans, f(i + 1, j, f)); 
+                ans = max(ans, f(i, j + 1, f));
+            }
+
+            return dp[i][j] = ans;
         };
-        
+
+        int lcs = f(0, 0, f);
+        cout<<lcs<<endl;
+
+        int ans = (n - lcs) + (m - lcs);
+        return ans;
     }
 };

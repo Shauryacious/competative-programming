@@ -42,27 +42,37 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
   public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+    int perfectSum(vector<int>& a, int t) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        int dp[1001][1001];
+        memset(dp, -1, sizeof(dp)); 
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int i, int curr, auto && f) -> int {
+            if(curr > t){
+                return 0; // If current sum exceeds target, no valid subsequence
             }
+            if(i == n){
+                return curr == t;
+            }
+
+            if(dp[i][curr] != -1) {
+                return dp[i][curr];
+            }
+
+            int ans = 0;
+
+            // Include the current element
+            ans += f(i + 1, curr + a[i], f);
+
+            // Exclude the current element
+            ans += f(i + 1, curr, f);
+
+            return dp[i][curr] = ans;
         };
-        
+
+        return f(0, 0, f);
     }
 };

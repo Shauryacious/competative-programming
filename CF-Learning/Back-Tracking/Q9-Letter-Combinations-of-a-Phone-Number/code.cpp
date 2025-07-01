@@ -42,27 +42,38 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    vector<string> letterCombinations(string s) {
+        unordered_map<char, string> mp = 
+        {
+            {'2', "abc"},
+            {'3', "def"},
+            {'4', "ghi"},
+            {'5', "jkl"},
+            {'6', "mno"},
+            {'7', "pqrs"},
+            {'8', "tuv"},
+            {'9', "wxyz"}
+        };
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        vector<string> ans;
+        if (s.empty()) return ans;
 
-            while(i < n){
-                if(a[i] < h){
+        auto f = [&](int i, string curr, auto && f) -> void {
+            if (i == s.size()) {
+                ans.pb(curr);
+                return;
+            }
 
-                }
-                else{
-
-                }
+            for(auto ch : mp[s[i]]) {
+                curr.pb(ch);
+                f(i + 1, curr, f);
+                curr.pop_back();
             }
         };
-        
+
+        f(0, "", f);
+        return ans;
     }
 };

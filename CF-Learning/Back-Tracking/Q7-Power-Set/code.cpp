@@ -42,27 +42,35 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
   public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+    vector<string> AllPossibleStrings(string s) {
+        int n = s.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        vector<string> ans;
 
-            while(i < n){
-                if(a[i] < h){
-
+        auto f = [&](int i, string& curr, auto && f) -> void {
+            if(i == n) {
+                if (!curr.empty()) {
+                    ans.push_back(curr);
                 }
-                else{
-
-                }
+                return;
             }
+
+            // Include the current character
+            curr.push_back(s[i]);
+            f(i + 1, curr, f);
+            curr.pop_back();
+
+            // Exclude the current character
+            f(i + 1, curr, f);
         };
-        
+
+        string curr = "";
+        f(0, curr, f);
+
+        sort(all(ans));
+
+        return ans;
     }
 };

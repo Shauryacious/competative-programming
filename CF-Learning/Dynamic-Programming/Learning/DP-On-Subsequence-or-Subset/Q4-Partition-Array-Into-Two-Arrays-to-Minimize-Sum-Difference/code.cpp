@@ -42,27 +42,37 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+public:
+    int minimumDifference(vector<int>& a) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
 
-            while(i < n){
-                if(a[i] < h){
+        map<pii, int> dp;
 
+        int off = 1e7;
+
+        auto f = [&](int i, int diff, int l, int r, auto && f) -> int {
+            if(i == n) {
+                if(l == r) {
+                    return abs(diff);
                 }
-                else{
-
-                }
+                return INF;
             }
+
+            if(dp.find({i, diff + off}) != dp.end()) {
+                return dp[{i, diff + off}];
+            }
+
+            // Include the current element in the first subset
+            int a1 = f(i + 1, diff + a[i], l+1, r, f);
+
+            // Include the current element in the second subset
+            int a2 = f(i + 1, diff - a[i], l, r+1, f);
+
+            return dp[{i, diff + off}] = min(a1, a2);
         };
-        
+
+        return f(0, 0, 0, 0, f);
     }
 };

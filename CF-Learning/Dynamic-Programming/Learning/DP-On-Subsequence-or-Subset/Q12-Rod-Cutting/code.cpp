@@ -45,24 +45,32 @@ using namespace std;
 
 class Solution {
   public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+    int cutRod(vector<int> &a) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        int dp[1001][1001];
+        memset(dp, -1, sizeof(dp));
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int i, int curr, auto && f) -> int {
+            if(curr > n) return -INF; // Impossible to cut further
+            if(i == n){
+                if(curr == n) return 0;
+                return -INF; // Not possible to cut further
             }
+
+            if(dp[i][curr] != -1) return dp[i][curr];
+
+            int ans = 0;
+
+            // Take -> dont move the pointer -> unbounded knapsack
+            ans = max(ans, a[i] + f(i, curr + i + 1, f));
+
+            // Not take
+            ans = max(ans, f(i + 1, curr, f));
+
+            return dp[i][curr] = ans;
         };
         
+        return f(0, 0, f);
     }
 };

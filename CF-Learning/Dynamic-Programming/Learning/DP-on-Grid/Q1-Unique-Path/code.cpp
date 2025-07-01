@@ -42,27 +42,29 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+public:
+    int uniquePaths(int m, int n) {
+        int dp[101][101];
+        memset(dp, -1, sizeof(dp));
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        auto f = [&](int i, int j, auto && f) -> int {
+            if(i == n-1 && j == m-1) return 1;
+            if(i >= n || j >= m) return 0;
 
-            while(i < n){
-                if(a[i] < h){
+            if(dp[i][j] != -1) return dp[i][j];
 
-                }
-                else{
+            int ans = 0;
 
-                }
-            }
+            ans += f(i + 1, j, f); // down
+            // ans %= MOD;
+
+            ans += f(i, j + 1, f); // right
+            // ans %= MOD;
+
+            return dp[i][j] = ans;
         };
-        
+
+        return f(0, 0, f);
     }
 };

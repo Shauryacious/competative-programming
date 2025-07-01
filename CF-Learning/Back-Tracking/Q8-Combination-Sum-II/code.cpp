@@ -42,27 +42,39 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-  public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& a, int t) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        sort(a.begin(), a.end());
 
-            while(i < n){
-                if(a[i] < h){
+        vector<vector<int>> ans;
 
+        auto f = [&](int i, int curr, vii& v, auto && f) -> void {
+            if(curr > t) return;
+
+            if(i == n){
+                if(curr == t){
+                    ans.push_back(v);
                 }
-                else{
-
-                }
+                return;
             }
+
+
+            // Include the current element
+            v.push_back(a[i]);
+            f(i + 1, curr + a[i], v, f);
+            v.pop_back();
+
+            // Exclude the current element
+            while(i + 1 < n && a[i] == a[i + 1]) i++; // Skip duplicates
+            f(i + 1, curr, v, f);
         };
-        
+
+        vii v;
+        f(0, 0, v, f);
+
+        return ans;
     }
 };

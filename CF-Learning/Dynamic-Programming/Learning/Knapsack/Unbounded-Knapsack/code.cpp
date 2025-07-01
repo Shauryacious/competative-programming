@@ -45,24 +45,31 @@ using namespace std;
 
 class Solution {
   public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
-        int n = a.size();
+    int knapSack(vector<int>& val, vector<int>& wt, int W) {
+        int n = val.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        vvii dp(n + 1, vii(W + 1, -1));
+        
+        auto f = [&](int i, int currwt, auto&& f) -> int {
+            if(currwt > W) return -INF; 
 
-            while(i < n){
-                if(a[i] < h){
+            if(i == n) return 0;
 
-                }
-                else{
+            if(dp[i][currwt] != -1) return dp[i][currwt];
 
-                }
-            }
+            // Include the current item
+            // Notice how we didnt move to the next item
+            // to allow for unbounded knapsack
+            int include = val[i] + f(i, currwt + wt[i], f);
+
+            // Exclude the current item
+            int exclude = f(i + 1, currwt, f);
+
+            return dp[i][currwt] = max(include, exclude);
         };
         
+        int ans = f(0, 0, f);
+
+        return ans;
     }
 };

@@ -42,27 +42,30 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
   public:
-    int maxMinHeight(vector<int> &a, int k, int w) {
+    vector<int> subsetSums(vector<int>& a) {
         int n = a.size();
 
-        auto f = [&](int h) -> bool{
-            int i = 0;
-            int kk = k;
-            int currinc = 0;
-            int endidx = 0;
+        vii ans;
 
-            while(i < n){
-                if(a[i] < h){
-
-                }
-                else{
-
-                }
+        auto f = [&](int i, int sum, auto&& f) -> void {
+            if (i == n) {
+                ans.pb(sum);
+                return;
             }
-        };
+
+            // include the current element
+            f(i + 1, sum + a[i], f);
+
+            // exclude the current element
+            f(i + 1, sum, f);   
+
+        };  
+
+        f(0, 0, f);
+        sort(all(ans));
         
+        return ans;
     }
 };
