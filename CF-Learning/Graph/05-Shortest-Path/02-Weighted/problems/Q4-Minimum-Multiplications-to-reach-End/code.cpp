@@ -40,13 +40,43 @@ using namespace std;
 #define ll long long
 #define vll vector<ll>
 #define vvll vector<vll>
-#define pll pair<ll, ll>
-#define vpll vector<pll>
-#define vvpll vector<vpll>
 #define all(x) (x).begin(), (x).end()
-#define INF 1e18
+#define INF 1e9
 #define ff first
 #define ss second
 
+class Solution {
+  public:
+    int minimumMultiplications(vector<int>& a, int s, int e) {
+        int N = 1e5;
+        vii dist(N, INF);
+        dist[s] = 0;
 
+        set<pii> pq; //{dist, node}
+        pq.insert({0, s});
 
+        while(!pq.empty()){
+            auto it = *pq.begin();
+            pq.erase(pq.begin());
+
+            int d = it.ff, u = it.ss;
+
+            for(auto x : a){
+                int v = (u * x) % N;
+                if(d + 1 < dist[v]){
+                    if(pq.count({dist[v], v})){
+                        pq.erase({dist[v], v});
+                    }
+
+                    dist[v] = d + 1;
+                    pq.insert({dist[v], v});
+                }
+            }
+        }
+
+        if(dist[e] == INF) {
+            return -1; // If the end node is unreachable
+        }
+        return dist[e];
+    }
+};

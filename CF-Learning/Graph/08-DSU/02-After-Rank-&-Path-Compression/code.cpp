@@ -3,14 +3,37 @@
 // Codeforces: https://codeforces.com/profile/Shauryacious
 // Love you mumma <3
 
-#include<bits/stdc++.h>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<set>
+#include<map>
+#include<cmath>
+#include<queue>
+#include<stack>
+#include<bitset>
+#include<unordered_map>
+#include<unordered_set>
+#include<chrono>
+#include<random>
+#include<string>
+#include<functional>
+#include<iomanip>
+#include<limits>
+#include<array>
+#include<utility>
+#include<functional>
+#include<iterator>
+#include<cstring>
 
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
+
+
+// #include<ext/pb_ds/assoc_container.hpp>
+// #include<ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
 using namespace chrono;
-using namespace __gnu_pbds;
+// using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -44,11 +67,19 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
-typedef vector<vector<pll>> vvpll;
+#define vvpll vector<vpll>
 
-typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
+
+// typedef tree<
+//     int,
+//     null_type,
+//     less_equal<int>, // less_equal for multiset functionality
+//     rb_tree_tag,
+//     tree_order_statistics_node_update> 
+//     pbds;
+
+// typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
-
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 #ifndef ONLINE_JUDGE
@@ -56,6 +87,9 @@ typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_orde
 #else
     #define debug(x)
 #endif
+
+void setIn(string s) { freopen(s.c_str(), "r", stdin); }
+void setOut(string s) { freopen(s.c_str(), "w", stdout); }
 
 // DEEBUG
 
@@ -108,40 +142,47 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
 void solve() {
-    ll n, m; cin>>n>>m;
-    vvpll adj(n + 1);
-    for(ll i = 0; i < m; i++){
-        ll u, v, w; cin>>u>>v>>w;
-        adj[u].pb({v, w});
+    ll n; cin>>n;
+
+    vll par(n + 1);
+    vll rank(n + 1, 0); // Optional: to keep track of the rank of each set
+
+    for (ll i = 1; i <= n; i++) {
+        par[i] = i; // Initially, each node is its own parent
     }
 
-    set<pll> pq; // min heap
-    vll dist(n + 1, INF);
-    dist[1] = 0;
-    pq.insert({1, 0}); // {node, distance}
 
-    while(!pq.empty()){
-        auto [u, d] = *pq.begin();
-        pq.erase(pq.begin());
-
-        for(auto [v, w] : adj[u]){
-            if(dist[u] + w < dist[v]){
-                if(pq.count({v, dist[v]})) {
-                    pq.erase({v, dist[v]});
-                }
-                dist[v] = dist[u] + w;
-                pq.insert({v, dist[v]});
-            }
+    auto find = [&](ll x, auto && find) -> ll {
+        if (par[x] == x) {
+            return x; // If x is its own parent, return x
         }
-    }
 
-    for(ll i = 1; i <= n; i++){
-        if(dist[i] == INF) cout << "-1 ";
-        else cout << dist[i] << " ";
-    }
-    cout << nl;
+        // recursively find the parent of x
+        //! Path compression: update the parent of x to its root !//
+        return par[x] = find(par[x], find);
+    };
 
+
+    //! Note: union is a reserved keyword in C++, so we use Union instead
+
+    auto Union = [&](ll x, ll y) -> void {
+        ll parx = find(x, find);
+        ll pary = find(y, find);
+
+        if(parx == pary) return; //already in same set
+
+        // Jo bada hai wo papa banega
+        if(rank[parx] > rank[pary]) {
+            par[pary] = parx; // Make parx the parent of pary
+        } else if(rank[pary] > rank[parx]) {
+            par[parx] = pary; // Make pary the parent of parx
+        } else {
+            par[pary] = parx; // Make parx the parent of pary
+            rank[parx]++; // Increase the rank of the new root
+        }
+    };
 
 }
 
@@ -151,8 +192,10 @@ int main(){
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
+    // setIn("input.txt");
+    // setOut("output.txt");
     ll t = 1; 
-    // cin >> t;
+    cin >> t;
     while(t--){
         solve();
     }

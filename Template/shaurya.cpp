@@ -22,6 +22,7 @@
 #include<limits>
 #include<array>
 #include<utility>
+#include<functional>
 #include<iterator>
 #include<cstring>
 

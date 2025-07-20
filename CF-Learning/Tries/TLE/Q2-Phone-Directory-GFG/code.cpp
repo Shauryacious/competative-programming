@@ -114,63 +114,77 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define minvec(v) *min_element(v.begin(), v.end())
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
-class TrieNode {
-public:
-    bool isSpecial;
-    TrieNode* children[26];
-    vector<int> strings; // index of strings which passes through this node
-    TrieNode() {
-        isSpecial = false;
-        for(int i=0; i<26; i++){
-            children[i] = NULL;
+class Solution {
+    class TrieNode {
+    public:
+        vector<TrieNode*> children;
+        bool isSpecial;
+        vector<int> indexes;
+        TrieNode() {
+            children.assign(26, NULL);
+            isSpecial = false;
         }
-    }
-};
+    };
 
-class Trie{
-public:
-    TrieNode* root;
-    Trie(){
-        root = new TrieNode();
-    }
+    class Trie {
+    public:
+        TrieNode* root;
+        Trie() {
+            root = new TrieNode();
+        }
 
-    void insert(string s, int idx){
-        TrieNode* curr = root;
-        for(char ch : s){
-            int i = ch - 'a';
-            if(curr->children[i] == NULL){
-                curr->children[i] = new TrieNode();
+        void insert(string s, int idx) {
+            TrieNode* curr = root;
+            for (auto ch : s) {
+                if (curr->children[ch - 'a'] == NULL) {
+                    curr->children[ch - 'a'] = new TrieNode();
+                }
+                curr = curr->children[ch - 'a'];
+                curr->indexes.pb(idx);
             }
-            curr->strings.push_back(idx);
-            curr = curr->children[i];
+            curr->isSpecial = true;
         }
-        curr->strings.push_back(idx);
-        curr->isSpecial = true;
-    }
 
-    vector<vector<string>> displayContactsHelper(string word, vector<strings>& contacts){
         vector<vector<string>> ans;
-        TrieNode* curr = root;
-        for(char ch : word){
-            int i = ch - 'a';
-            if(curr->children[i] != NULL){
-                for(auto strs : curr->children[i]->strings){
-                    ans.push_back(contacts[strs]);
-                }                           
+
+        void search(string s, vector<string> &contacts) {
+            TrieNode* curr = root;
+            int i = 0;
+            for (i = 0; i < s.length(); i++) {
+                char ch = s[i];
+                vector<string> temp;
+
+                if (curr->children[ch - 'a'] == NULL) break;
+
+                curr = curr->children[ch - 'a'];
+                for (auto idx : curr->indexes) {
+                    temp.pb(contacts[idx]);
+                }
+                ans.pb(temp);
+            }
+
+            while (i < s.length()) {
+                ans.pb({"0"});
+                i++;
             }
         }
-        
-    }
+    };
 
-}
-
-class Solution{
 public:
-    vector<vector<string>> displayContacts(int n, string contact[], string s){
-        vector<string> contacts(contact, contact + n);
+    vector<vector<string>> displayContacts(int n, string c[], string s) {
+        set<string> uniqueContacts(c, c + n);  // **Fixed: Removing duplicates**
+        vector<string> contacts(uniqueContacts.begin(), uniqueContacts.end());
+
+        Trie* t = new Trie();
+        for (int i = 0; i < contacts.size(); i++) {
+            t->insert(contacts[i], i);
+        }
+
+        t->search(s, contacts);
+
+        return t->ans;
     }
 };
-
 
 // https://www.youtube.com/watch?v=WafalqRuXJs
 // https://www.geeksforgeeks.org/problems/phone-directory4628/1

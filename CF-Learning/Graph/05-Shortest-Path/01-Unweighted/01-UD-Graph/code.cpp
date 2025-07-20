@@ -42,42 +42,44 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-public:
-    bool canFinish(int n, vector<vector<int>>& pre) {
-        vector<vector<int>> adj(n);
-        vector<int> indeg(n, 0);
+  public:
+    // Function to find the shortest path from source to all other nodes
+    vector<int> shortestPath(vector<vector<int>>& adj, int s) {
+        int n = adj.size();
+        vector<int> dist(n, INF);
+        dist[s] = 0;
 
-        for(auto p : pre){
-            int a = p[0], b = p[1];
-            adj[b].pb(a);
-            indeg[a]++;
-        }
-
-        vector<int> topo;
-
+        vector<int> vis(n, 0);
+        
         queue<int> q;
-
-        for(int i = 0; i < n; i++) {
-            if(indeg[i] == 0) {
-                q.push(i);
-            }
-        }
-
-        while(!q.empty()) {
-            int u = q.front();
-            q.pop();
-            topo.pb(u);
-
-            for(auto v : adj[u]) {
-                indeg[v]--;
-                if(indeg[v] == 0) {
-                    q.push(v);
+        q.push(s);
+        vis[s] = 1;
+        int d = 0;
+        while (!q.empty()) {
+            int sz = q.size();
+            while(sz--) {
+                int u = q.front();
+                q.pop();
+                
+                for (int v : adj[u]) {
+                    if(vis[v] == 0) {
+                        vis[v] = 1;
+                        dist[v] = min(dist[v], d + 1);
+                        q.push(v);
+                    }
                 }
             }
+            d++;
         }
 
-        return topo.size() == n;
+        // If a node is unreachable, set its distance to -1
+        for (int i = 0; i < n; i++) {
+            if (dist[i] == INF) {
+                dist[i] = -1;
+            }
+        }
+
+        return dist;
     }
 };

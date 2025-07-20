@@ -34,19 +34,37 @@ using namespace std;
 #define vvii vector<vector<int>>
 #define pii pair<int, int>
 #define vpii vector<pii>
-#define vvpii vector<vpii>
 #define pb push_back
 #define MOD 1000000007
 #define ll long long
 #define vll vector<ll>
 #define vvll vector<vll>
-#define pll pair<ll, ll>
-#define vpll vector<pll>
-#define vvpll vector<vpll>
 #define all(x) (x).begin(), (x).end()
-#define INF 1e18
-#define ff first
-#define ss second
+#define INF 1e9
 
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int tgas = accumulate(all(gas), 0);
+        int tcost = accumulate(all(cost), 0);
 
+        if(tgas < tcost) {
+            return -1; // Not enough gas to complete the circuit
+        }
 
+        int n = gas.size();
+
+        int stidx = 0, currgas = 0;
+
+        for(int i = 0; i < n; i++) {
+            currgas += gas[i] - cost[i];
+
+            if(currgas < 0) {
+                stidx = i + 1; // Reset starting index
+                currgas = 0; // Reset current gas
+            }
+        }
+
+        return stidx;
+    }
+};

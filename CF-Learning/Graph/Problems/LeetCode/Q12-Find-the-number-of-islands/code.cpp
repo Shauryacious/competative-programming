@@ -42,42 +42,40 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define INF 1e9
 
-
 class Solution {
-public:
-    bool canFinish(int n, vector<vector<int>>& pre) {
-        vector<vector<int>> adj(n);
-        vector<int> indeg(n, 0);
+  public:
+    int countIslands(vector<vector<char>>& g) {
+        int n = g.size(), m = g[0].size();
 
-        for(auto p : pre){
-            int a = p[0], b = p[1];
-            adj[b].pb(a);
-            indeg[a]++;
-        }
+        vvii vis(n, vii(m, 0));
 
-        vector<int> topo;
+        vii di = {-1, 1, 0, 0, -1, -1, 1, 1};
+        vii dj = {0, 0, -1, 1, -1, 1, -1, 1};
 
-        queue<int> q;
+        auto dfs = [&](int i, int j, auto && dfs) -> void {
+            vis[i][j] = 1;
 
-        for(int i = 0; i < n; i++) {
-            if(indeg[i] == 0) {
-                q.push(i);
+            for (int d = 0; d < 8; d++) {
+                int ni = i + di[d];
+                int nj = j + dj[d];
+
+                if(ni < 0 || ni >= n || nj < 0 || nj >= m) continue;
+                if(vis[ni][nj]) continue;
+                if(g[ni][nj] == 'W') continue;
+                dfs(ni, nj, dfs);
             }
-        }
-
-        while(!q.empty()) {
-            int u = q.front();
-            q.pop();
-            topo.pb(u);
-
-            for(auto v : adj[u]) {
-                indeg[v]--;
-                if(indeg[v] == 0) {
-                    q.push(v);
+        };
+        
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if(g[i][j] == 'L' && vis[i][j] == 0) {
+                    ans++;
+                    dfs(i, j, dfs);
                 }
             }
         }
 
-        return topo.size() == n;
+        return ans;
     }
 };

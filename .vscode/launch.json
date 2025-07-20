@@ -1,33 +1,13 @@
-// .vscode/launch.json
-
 {
   "version": "0.2.0",
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
-      "type": "cppdbg",
+      "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/build/Debug/outDebug",
-      "args": [
-        "<",
-        "${workspaceFolder}/input.txt",
-        ">",
-        "${workspaceFolder}/output.txt",
-        "2>",
-        "${workspaceFolder}/error.txt"
-      ],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "lldb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ]
+      "args": [],
+      "cwd": "/Users/shauryaagrawal/Desktop/Competitive_P/CF-Learning/Graph/05-Shortest-Path/02-Weighted/02-DAG-topo-sort-logic",
+      "program": "/Users/shauryaagrawal/Desktop/Competitive_P/CF-Learning/Graph/05-Shortest-Path/02-Weighted/02-DAG-topo-sort-logic/build/Debug/outDebug"
     }
   ]
 }

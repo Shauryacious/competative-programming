@@ -50,3 +50,39 @@ using namespace std;
 
 
 
+class Solution {
+  public:
+    int maxRectSum(vector<vector<int>>& g) {
+        int n = g.size(), m = g[0].size();
+
+        auto kadane = [&](vii& a) -> int {
+            int n = a.size();
+            int mx = a[0], sm = a[0];
+            for(int i = 1; i < n; i++){
+                if(sm + a[i] >= a[i]){
+                    sm += a[i];
+                } else {
+                    sm = a[i];
+                }
+                mx = max(mx, sm);
+            }
+            return mx;
+        };
+
+        int ans = -INF;
+        // cs = column start 
+        // ce = column end
+        for(int cs = 0; cs < m; cs++){
+            vii arr(n, 0);
+            for(int ce = cs; ce < m; ce++){
+                for(int i = 0; i < n; i++){
+                    arr[i] += g[i][ce];
+                }
+                int currSum = kadane(arr);
+                ans = max(ans, currSum);
+            }
+        }
+
+        return ans;
+    }
+};

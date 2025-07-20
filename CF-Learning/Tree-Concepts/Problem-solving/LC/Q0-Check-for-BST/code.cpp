@@ -34,19 +34,29 @@ using namespace std;
 #define vvii vector<vector<int>>
 #define pii pair<int, int>
 #define vpii vector<pii>
-#define vvpii vector<vpii>
 #define pb push_back
 #define MOD 1000000007
 #define ll long long
 #define vll vector<ll>
 #define vvll vector<vll>
-#define pll pair<ll, ll>
-#define vpll vector<pll>
-#define vvpll vector<vpll>
 #define all(x) (x).begin(), (x).end()
-#define INF 1e18
-#define ff first
-#define ss second
+#define INF 1e9
 
+struct Node {
+    int data;
+    Node *left;
+    Node *right;
 
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
 
+class Solution {
+  public:
+    bool isBST(Node* root) {
+        
+        auto isbst = [&](Node* u, auto && isbst)
+    }
+};
