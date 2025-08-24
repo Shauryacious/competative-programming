@@ -139,18 +139,19 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+// PPAP Algo -> PoP -> Ans -> Push
 vll nge(vll& a){
     ll n = a.size();
     stack<ll> st;
     vll ans(n, -1); // Initialize with -1
     // POP -> ANS -> PUSH
     for(ll i=n-1; i>=0; i--){
-        // POP
-        while(!st.empty() && a[i] >= st.top()){
+        // POP -> PP
+        while(!st.empty() && a[i] >= st.top()){ //Jab tab tum st.top() se bade ho tab tak pop karte raho -> to get the nge
             st.pop();
         }
 
-        // ANS
+        // ANS -> A
         if(!st.empty()){
             ans[i] = st.top();
         }
@@ -158,7 +159,7 @@ vll nge(vll& a){
             ans[i] = -1; 
         }
 
-        // PUSH
+        // PUSH -> P
         st.push(a[i]);
     }
 

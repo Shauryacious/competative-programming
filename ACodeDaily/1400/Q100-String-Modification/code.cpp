@@ -144,8 +144,11 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+    string s; cin>>s;
+    ll mn = min_element(all(s)) - s.begin();
+    debug(mn);
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE

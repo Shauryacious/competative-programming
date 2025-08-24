@@ -49,73 +49,73 @@ using namespace std;
 #define ss second
 
 
+#include <bits/stdc++.h>
+using namespace std;
 
-
-
-class TrieNode{
+class TrieNode {
 public:
-    bool isSpecial;
-    vector<TrieNode*> children;
-    TrieNode(){
-        isSpecial = false;
-        children.assign(2, NULL);
+    int isSpecial;
+    unordered_map<int, TrieNode*> children;
+    TrieNode() {
+        isSpecial = 0;
     }
-
 };
 
-class Trie{
+class Trie {
 public:
     TrieNode* root;
-    Trie(){
+    Trie() {
         root = new TrieNode();
     }
 
-    void insert(int num){
+    void insert(int n) {
         TrieNode* curr = root;
-        for(int i=31; i>=0; i--){
-            int bit = (((1<<i) & num) > 0) ? 1 : 0;
-            if(curr->children[bit] == NULL){
+        for (int i = 31; i >= 0; i--) {
+            int bit = (1 << i) & n ? 1 : 0;
+            if (curr->children.find(bit) == curr->children.end()) {
                 curr->children[bit] = new TrieNode();
             }
             curr = curr->children[bit];
         }
-        curr->isSpecial = true;
+        curr->isSpecial = 1;
     }
 
-    int findMaxXor(int num){
+    int getMaxXOR(int n) {
         TrieNode* curr = root;
-        int mx = 0; // max xor candidate
-        for(int i=31; i>=0; i--){
-            int bit = (((1<<i) & num) > 0) ? 1 : 0;
-            int oppobit = bit^1^0; // 1^1 = 0 and 0^1 = 1
-            if(curr->children[oppobit] != NULL){
-                if(oppobit == 1){
-                    mx |= (1<<i);
-                }
+        int maxXOR = 0;
+        for (int i = 31; i >= 0; i--) {
+            int bit = (1 << i) & n ? 1 : 0;
+            int oppobit = bit ^ 1;
+            if (curr->children.find(oppobit) != curr->children.end()) {
+                maxXOR |= (1 << i);
                 curr = curr->children[oppobit];
             } else {
-                if(bit == 1){
-                    mx |= (1<<i);
-                }
                 curr = curr->children[bit];
             }
         }
-        return mx ^ num;
+        return maxXOR;
     }
-    
 };
 
 class Solution {
 public:
-    int findMaximumXOR(vector<int>& nums) {
+    int maxSubarrayXOR(int n, int a[]) {
         Trie* t = new Trie();
-        for(int num : nums){
-            t->insert(num);
+        vector<int> preXor(n);
+        preXor[0] = a[0];
+        for (int i = 1; i < n; i++) {
+            preXor[i] = preXor[i - 1] ^ a[i];
         }
+
+        t->insert(0); // Handle subarrays starting at index 0
         int ans = 0;
-        for(int num : nums){
-            ans = max(ans, t->findMaxXor(num));
+
+        for (int i = 0; i < n; i++) {
+            t->insert(preXor[i]);
+            int curr = t->getMaxXOR(preXor[i]);
+            ans = max(ans, curr);
         }
+
         return ans;
     }
 };

@@ -142,9 +142,19 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll INV2 = 499122177; // (1/2 mod 998244353)
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n; cin >> n;
+    bool anyGt1 = false;
+    ll ones = 0;
+    for (ll i = 0; i < n; i++) {
+        ll a; cin >> a;
+        if (a == 1) ones++;
+        else anyGt1 = true;
+    }
+    if (!anyGt1) cout << (ones & 1) << nl;
+    else cout << INV2 << nl;
 }
 
 int main(){

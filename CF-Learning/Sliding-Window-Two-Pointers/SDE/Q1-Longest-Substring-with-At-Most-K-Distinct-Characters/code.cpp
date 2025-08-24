@@ -47,14 +47,37 @@ using namespace std;
 #define INF 1e18
 #define ff first
 #define ss second
+
+
+
 class Solution {
-public:
-    int findKthLargest(vector<int>& a, int k) {
-        multiset<int> mst;
-        for(auto x : mst){
-            mst.insert(x);
-            if(mst.size() > k) mst.erase(mst.find(*mst.begin()));
+  public:
+    int longestKSubstr(string& s, int k) {
+        int n = s.size();
+
+        set<char> st;
+        multiset<char> mst;
+
+        int i = 0, j = 0;
+        int ans = 0;
+
+        while(j < n){
+            st.insert(s[j]);
+            mst.insert(s[j]);
+            if(st.size() == k){
+                ans = max(ans, (j-i+1));
+            }
+
+            while(st.size() > k && i <= j){
+                mst.erase(mst.find(s[i]));
+                if(mst.find(s[i]) == mst.end()){
+                    st.erase(s[i]);
+                }
+                i++;
+            }
+            j++;
         }
-        return *mst.begin();
+        
+        return ans == 0 ? -1 : ans;
     }
 };

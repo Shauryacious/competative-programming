@@ -119,7 +119,7 @@ class Solution {
     public:
         vector<TrieNode*> children;
         bool isSpecial;
-        vector<int> indexes;
+        vector<int> indexes; //indxes of contacts that pass through this node
         TrieNode() {
             children.assign(26, NULL);
             isSpecial = false;

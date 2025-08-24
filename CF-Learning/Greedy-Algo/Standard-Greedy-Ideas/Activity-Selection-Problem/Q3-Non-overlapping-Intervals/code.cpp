@@ -44,17 +44,37 @@ using namespace std;
 #define vpll vector<pll>
 #define vvpll vector<vpll>
 #define all(x) (x).begin(), (x).end()
-#define INF 1e18
+#define INF 1e9
 #define ff first
 #define ss second
+
+
 class Solution {
 public:
-    int findKthLargest(vector<int>& a, int k) {
-        multiset<int> mst;
-        for(auto x : mst){
-            mst.insert(x);
-            if(mst.size() > k) mst.erase(mst.find(*mst.begin()));
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        int n = intervals.size();
+
+
+        auto cmp = [&](auto& a, auto& b) {
+            if(a[1] == b[1]) {
+                return a[0] < b[0]; // If end times are equal, sort by start time
+            }
+            return a[1] < b[1]; // Sort by end time
+        };
+        sort(intervals.begin(), intervals.end(), cmp);
+
+
+        //Initialize t with -INF and not with 0
+        int mx = 0, t = -INF;
+
+        for(auto i : intervals){
+            int st = i[0], en = i[1];
+            if(st >= t) {
+                mx++;
+                t = en; // Update the end time to the current interval's end time
+            }
         }
-        return *mst.begin();
+
+        return n - mx; // Return the number of intervals to remove  
     }
 };

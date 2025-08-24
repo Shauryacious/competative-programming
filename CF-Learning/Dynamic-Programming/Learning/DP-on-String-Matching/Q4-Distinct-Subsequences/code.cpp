@@ -47,14 +47,14 @@ using namespace std;
 #define INF 1e18
 #define ff first
 #define ss second
+
+
+
 class Solution {
 public:
-    int findKthLargest(vector<int>& a, int k) {
-        multiset<int> mst;
-        for(auto x : mst){
-            mst.insert(x);
-            if(mst.size() > k) mst.erase(mst.find(*mst.begin()));
-        }
-        return *mst.begin();
+    int numDistinct(string s, string t) {
+        int n = s.size(), m = t.size();
+
+        auto f = [&](int i, int j, auto && f) -> 
     }
 };

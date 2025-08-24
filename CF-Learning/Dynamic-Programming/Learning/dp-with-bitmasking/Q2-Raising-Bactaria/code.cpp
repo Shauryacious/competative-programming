@@ -1,39 +1,16 @@
 // Author : Shaurya Agrawal
 // Linkedin: https://www.linkedin.com/in/shauryacious/
 // Codeforces: https://codeforces.com/profile/Shauryacious
-// Love you mumma <3
+// Codechef: https://www.codechef.com/users/shauryacious27
 
-#include<iostream>
-#include<algorithm>
-#include<vector>
-#include<set>
-#include<map>
-#include<cmath>
-#include<queue>
-#include<stack>
-#include<bitset>
-#include<unordered_map>
-#include<unordered_set>
-#include<chrono>
-#include<random>
-#include<string>
-#include<functional>
-#include<iomanip>
-#include<limits>
-#include<array>
-#include<utility>
-#include<functional>
-#include<iterator>
-#include<cstring>
+#include<bits/stdc++.h>
 
-
-
-// #include<ext/pb_ds/assoc_container.hpp>
-// #include<ext/pb_ds/tree_policy.hpp>
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
 using namespace chrono;
-// using namespace __gnu_pbds;
+using namespace __gnu_pbds;
 
 // Speed
 #define fastio() ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr)
@@ -51,9 +28,6 @@ using namespace chrono;
 #define PI 3.141592653589793238462
 #define set_bits __builtin_popcountll
 #define sz(x) ((int)(x).size())
-#define py cout<<"YES"<<nl
-#define pn cout<<"NO"<<nl
-#define pm cout<<"-1"<<nl
 
 
 
@@ -67,19 +41,10 @@ typedef vector<ll> vll;
 typedef vector<vll> vvll;
 typedef vector<string> vs;
 typedef vector<pll> vpll;
-#define vvpll vector<vpll>
 
-
-// typedef tree<
-//     int,
-//     null_type,
-//     less_equal<int>, // less_equal for multiset functionality
-//     rb_tree_tag,
-//     tree_order_statistics_node_update> 
-//     pbds;
-
-// typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
+typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key, lower_bound, upper_bound
 // typedef tree<pair<ll, ll>, null_type, greater<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key for ascending
+
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 #ifndef ONLINE_JUDGE
@@ -87,9 +52,6 @@ typedef vector<pll> vpll;
 #else
     #define debug(x)
 #endif
-
-void setIn(string s) { freopen(s.c_str(), "r", stdin); }
-void setOut(string s) { freopen(s.c_str(), "w", stdout); }
 
 // DEEBUG
 
@@ -139,23 +101,29 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 // Macros
 #define all(x) (x).begin(), (x).end()
+#define rep(i, j) for (ll i = 0; i < j; i++)
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
+#define sortvec(v) sort(v.begin(), v.end())
+#define revsortvec(v) sort(v.rbegin(), v.rend())
+#define MAX(x) *max_element(all(x))
+#define MIN(x) *min_element(all(x))
+#define SUM(x) accumulate(all(x), 0LL)
+#define COUNT(x,u) count(all(x), u)
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n; cin >> n;
+    cout<< __builtin_popcountll(n) << nl;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
         freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

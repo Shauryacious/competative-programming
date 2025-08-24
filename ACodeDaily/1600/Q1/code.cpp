@@ -142,10 +142,36 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+
+
 void solve() {
     ll n; cin>>n;
-    vll a(n); invec(a, n);
+
+    string ans;
+
+    auto f = [&](auto && f) -> void {
+        if(n == 0) {
+            return;
+        }
+
+        if(n < 0) {
+            ans += "-";
+            n = -n;
+        }
+
+        ll x = n % 2;
+        n /= 2;
+        ans += to_string(x);
+
+        f(f);
+    };
+
+    f(f);
+
+    reverse(all(ans));
+    cout << ans << nl;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE
@@ -155,7 +181,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

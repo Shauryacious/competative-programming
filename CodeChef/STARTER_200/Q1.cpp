@@ -143,8 +143,10 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n, x, y; cin>> n >> x >> y;
+    ll k = y / x;
+    ll ans = (n + k - 1)/ k;
+    cout<< ans << nl;
 }
 
 int main(){
@@ -155,7 +157,7 @@ int main(){
     // setIn("input.txt");
     // setOut("output.txt");
     ll t = 1; 
-    cin >> t;
+    // cin >> t;
     while(t--){
         solve();
     }

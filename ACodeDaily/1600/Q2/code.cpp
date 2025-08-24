@@ -145,7 +145,52 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+
+    map<ll, ll> mp;
+    for(ll i = 0; i < n; i++){
+        mp[a[i]]++;
+    }
+
+    ll q; cin>>q;
+    while(q--){
+        ll x, y; cin>>x>>y;
+        
+        ll zz = (x * x) - (4 * y);
+        if(zz < 0){
+            cout << "0 ";
+            continue;
+        }
+        ll z = sqrt(zz);
+        if(z * z != zz){
+            cout << "0 ";
+            continue;
+        }
+
+        ll ans = 0;
+        ll a = (x + z) / 2;
+        ll b = (x - z) / 2;
+        if((a + b != x) || (a * b != y)){
+            cout << "0 ";
+            continue;
+        }
+
+        if(mp[a] == 0 || mp[b] == 0){
+            cout << "0 ";
+            continue;
+        }
+
+        if(a == b){
+            ans = (mp[a] * (mp[a] - 1)) / 2;
+        } else {
+            ans = mp[a] * mp[b];
+        }
+
+        cout << ans << " ";
+    }
+
+    cout << nl;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE

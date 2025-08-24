@@ -47,14 +47,38 @@ using namespace std;
 #define INF 1e18
 #define ff first
 #define ss second
+
+
+
 class Solution {
 public:
-    int findKthLargest(vector<int>& a, int k) {
-        multiset<int> mst;
-        for(auto x : mst){
-            mst.insert(x);
-            if(mst.size() > k) mst.erase(mst.find(*mst.begin()));
-        }
-        return *mst.begin();
+    int findLongestChain(vector<vector<int>>& pairs) {
+        int n = pairs.size();
+
+        //Step 1 : Sort to get them in Inc order
+        sort(pairs.begin(), pairs.end());
+
+        int dp[1005][1005];
+        memset(dp, -1, sizeof(dp));
+        int off = 1; //offset
+
+        auto f = [&](int prev, int i, auto && f) -> int {
+            if(i == n) return 0;
+
+            if(dp[prev + off][i] != -1) return dp[prev + off][i];
+
+            int ans = 0;
+
+            if(prev == -1 || pairs[prev][1] < pairs[i][0]){
+                ans = max(ans, 1 + f(i, i+1, f));
+            }
+
+            ans = max(ans, f(prev, i+1, f));
+
+            return dp[prev + off][i] = ans;
+        };
+
+        int ans = f(-1, 0, f);
+        return ans;
     }
 };

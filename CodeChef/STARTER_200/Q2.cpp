@@ -143,9 +143,24 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
 void solve() {
-    ll n; cin>>n;
+    ll n; cin >> n;
     vll a(n); invec(a, n);
+
+    auto build = [&](ll start) {
+        ll len = 0, expect = start;
+        for (ll x : a) {
+            if ((x & 1) == expect) {
+                len++;
+                expect ^= 1;
+            }
+        }
+        return len;
+    };
+
+    ll ans = max(build(0), build(1));
+    cout << ans << nl;
 }
+
 
 int main(){
     #ifndef ONLINE_JUDGE

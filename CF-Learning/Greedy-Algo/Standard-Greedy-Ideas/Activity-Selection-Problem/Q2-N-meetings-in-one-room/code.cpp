@@ -47,14 +47,41 @@ using namespace std;
 #define INF 1e18
 #define ff first
 #define ss second
+
+
+
 class Solution {
-public:
-    int findKthLargest(vector<int>& a, int k) {
-        multiset<int> mst;
-        for(auto x : mst){
-            mst.insert(x);
-            if(mst.size() > k) mst.erase(mst.find(*mst.begin()));
+  public:
+    int maxMeetings(vector<int>& start, vector<int>& end) {
+        int n = start.size();
+        vpii a(n);
+        for (int i = 0; i < n; i++) {
+            a[i] = {start[i], end[i]};
         }
-        return *mst.begin();
+
+        auto cmp = [&](auto& a, auto& b) -> bool {
+            if(a.second == b.second) {
+                return a.first < b.first; // If end times are equal, sort by start time
+            }
+            return a.second < b.second;
+        };
+
+        sort(a.begin(), a.end(), cmp);
+
+        // for(int i = 0; i < n; i++) {
+        //     cout << a[i].first << " " << a[i].second << endl;
+        // }
+
+
+        //start time with -1
+        int ans = 0, t = -1;
+        for (int i = 0; i < n; i++) {
+            if(a[i].ff > t) {
+                ans++;
+                t = a[i].ss; // Update the end time to the current meeting's end time
+            }
+        }
+
+        return ans;
     }
 };
