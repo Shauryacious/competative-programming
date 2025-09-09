@@ -138,22 +138,76 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 
 
 // Macros
-#define all(x) (x).begin(), (x).end()
+// #define all(x) (x).begin(), (x).end()
 #define invec(v, n) for (ll i = 0; i < n; i++) cin >> v[i]
 /*---------------------------------------------------------------------------------------------------------------------------*/
 
+ll ask(ll start, ll sz, vll& st){
+    cout << "? " << start << " " << sz << " ";
+    for(ll i = 0; i < sz; i++){
+        cout << st[i] << " ";
+    }
+    cout << endl;
+
+    ll len; 
+    if(!(cin >> len)) exit(0);
+    if(len == -1) exit(0);
+    return len;
+}
+
 void solve() {
-    ll n; cin>>n;
-    vll a(n); invec(a, n);
+    ll n; 
+    if(!(cin >> n)) return;
+
+    vll all(n);
+    iota(all.begin(), all.end(), 1);
+
+    vll f(n + 1, 0);
+    ll mx = 0, start = 1;
+    for(ll i = 1; i <= n; i++){
+        ll len = ask(i, n, all);
+        f[i] = len;
+        if(len > mx){
+            mx = len;
+            start = i;
+        }
+    }
+
+    vll path; path.reserve(mx);
+    vector<char> used(n + 1, 0);
+
+    ll x = start;
+    path.push_back(x);
+    used[x] = 1;
+
+    for(ll need = mx - 1; need >= 1; --need){
+        bool found = false;
+        for(ll y = 1; y <= n; ++y){
+            if(used[y]) continue;
+            if(f[y] != need) continue;
+
+            vll S = {x, y};
+            ll res = ask(x, 2, S);
+            if(res == 2){
+                path.push_back(y);
+                used[y] = 1;
+                x = y;
+                found = true;
+                break;
+            }
+        }
+    }
+
+    cout << "! " << (ll)path.size() << " ";
+    for(ll v : path) cout << v << " ";
+    cout << endl;
 }
 
 int main(){
     #ifndef ONLINE_JUDGE
-        freopen("Error.txt", "w", stderr);
+        // freopen("Error.txt", "w", stderr);
     #endif
     fastio();
-    // setIn("input.txt");
-    // setOut("output.txt");
     ll t = 1; 
     cin >> t;
     while(t--){

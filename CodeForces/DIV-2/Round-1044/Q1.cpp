@@ -145,6 +145,12 @@ vector<ll> sieve(ll n) {vector<ll> isPrime(n + 1, 1);for (ll i = 2; i * i <= n; 
 void solve() {
     ll n; cin>>n;
     vll a(n); invec(a, n);
+    sort(a.begin(), a.end());
+    bool ok = false;
+    for (int i = 1; i < n; ++i) {
+        if (a[i] == a[i-1]) { ok = true; break; }
+    }
+    (ok ? py : pn);
 }
 
 int main(){

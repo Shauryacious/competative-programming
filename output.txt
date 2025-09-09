@@ -1,5 +1,2 @@
-3
-3
-8
-8
-375
+Linked List : 410 420 430 440 450 460 470 
+Sum of Linked List : 3080
